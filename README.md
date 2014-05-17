@@ -8,7 +8,6 @@ A simple usage:
 $method = new CurrencyExchange\Methods\YahooFinance();
 $method->setFromCurrencyCode('EUR');
 $method->setToCurrencyCode('USD');
-
 $exchanger = new CurrencyExchange\Exchanger();
 $exchanger->setMethod($method);
 $result = $exchanger->exchange(14); // This method will exchange 14 Euros in the correspondant U.S. Dollars
