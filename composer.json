@@ -1,0 +1,8 @@
+{
+    "name": "teknoman/CurrencyExchange",
+    "autoload": {
+        "psr-0" : {
+            "teknoman\\CurrencyExchange" : "src"
+        }
+    }
+}
