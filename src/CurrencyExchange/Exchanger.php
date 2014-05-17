@@ -3,7 +3,7 @@
 namespace CurrencyExchange;
 
 /**
- * Class that make exchanges, you can select you preferred exchange method by using setMethod() method, otherwise it will use GrandTrunk method by default
+ * Class that make exchanges, your can select you preferred exchange method by using setMethod() method, otherwise it will use GrandTrunk method by default
  */
 class Exchanger
 {
