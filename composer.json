@@ -15,7 +15,7 @@
             "homepage": "https://www.linkedin.com/pub/cristiano-casciotti/45/254/13b",
             "role": "Developer"
         }
-    ]
+    ],
     "require": {
         "php": ">=5.3.3"
     },
