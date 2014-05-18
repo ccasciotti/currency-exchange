@@ -1,10 +1,23 @@
 {
     "name": "teknoman/currency-exchange",
     "type": "library",
+    "license": "GPL-2.0",
+    "keywords": [
+        "zf2",
+        "currency"
+    ],
     "description": "A module for Zend Framework 2 to make currency exchange in real time",
     "homepage": "https://github.com/teknoman/currency-exchange.git",
+    "authors": [
+        {
+            "name": "Cristiano Casciotti",
+            "email": "cristiano.casciotti@gmail.com",
+            "homepage": "https://www.linkedin.com/pub/cristiano-casciotti/45/254/13b",
+            "role": "Developer"
+        }
+    ]
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.3"
     },
     "autoload": {
         "psr-0" : {
