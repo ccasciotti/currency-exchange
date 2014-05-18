@@ -5,6 +5,8 @@ A Zend Framework 2 module to make currency exchanges.
 
 A simple usage:
 
+<?php
+
 $method = new CurrencyExchange\Methods\YahooFinance();
 $method->setFromCurrencyCode('EUR');
 $method->setToCurrencyCode('USD');
@@ -14,6 +16,8 @@ $exchanger->setMethod($method);
 $result = $exchanger->exchange(14); // This method will exchange 14 Euros in the correspondant U.S. Dollars
 
 Alternatively, you can use a more simple code:
+
+<?php
 
 $exchanger = new CurrencyExchange\Exchanger();
 
