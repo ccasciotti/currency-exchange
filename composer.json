@@ -8,7 +8,7 @@
     },
     "autoload": {
         "psr-0" : {
-            "teknoman\\currency-exchange" : "src"
+            "teknoman\\CurrencyExchange" : "src/"
         }
     }
 }
