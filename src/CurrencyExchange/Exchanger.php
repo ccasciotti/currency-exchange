@@ -46,10 +46,12 @@ class Exchanger
 			if (!class_exists($method))
 				throw new Exception\InvalidMethodException('Exchange method not found');
 
+			$method = new $method();
+
 			if (!($method instanceof Methods\AbstractMethod))
 				throw new Exception\InvalidMethodException('Invalid exchange method supplied');
 
-			$this->_method = new $method();
+			$this->_method = $method;
 		}
 		else if (is_object($method) && $method instanceof Methods\AbstractMethod)
 			$this->_method = $method;
