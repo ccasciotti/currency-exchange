@@ -23,3 +23,4 @@ $exchanger = new CurrencyExchange\Exchanger();
 
 // This method will exchange 14 Euros in the correspondant U.S. Dollars like the first, but it uses the default exchange method (GrandTrunk)
 $result = $exchanger->exchange(14, 'EUR', 'USD');
+```
