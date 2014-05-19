@@ -13,7 +13,7 @@ $method->setToCurrencyCode('USD');
 
 $exchanger = new CurrencyExchange\Exchanger();
 $exchanger->setMethod($method);
-$result = $exchanger->exchange(14); // This method will exchange 14 Euros in the correspondant U.S. Dollars
+$result = $exchanger->exchange(14); // This method will exchange 14 Euros in the correspondant U.S. Dollars using web service of Yahoo Finance
 ```
 Alternatively, you can use a more simple code:
 ```php
