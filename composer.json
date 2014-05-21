@@ -4,7 +4,8 @@
     "license": "GPL-3.0",
     "keywords": [
         "zf2",
-        "currency"
+        "currency",
+	"exchange"
     ],
     "description": "A module for Zend Framework 2 to make currency exchange in real time",
     "homepage": "https://github.com/teknoman/currency-exchange.git",
