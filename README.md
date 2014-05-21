@@ -8,12 +8,10 @@ A simple usage:
 <?php
 
 $method = new \CurrencyExchange\Methods\YahooFinance();
-$method->setFromCurrencyCode('EUR');
-$method->setToCurrencyCode('USD');
 
 $exchanger = new \CurrencyExchange\Exchanger();
 $exchanger->setMethod($method);
-$result = $exchanger->exchange(14); // This method will exchange 14 Euros in the correspondant U.S. Dollars using web service of Yahoo Finance
+$result = $exchanger->exchange(14, 'EUR', 'USD'); // This method will exchange 14 Euros in the correspondant U.S. Dollars using web service of Yahoo Finance
 ```
 
 Alternatively, you can use a more simple code:
@@ -26,9 +24,7 @@ $exchanger = new \CurrencyExchange\Exchanger();
 $result = $exchanger->exchange(14, 'EUR', 'USD');
 ```
 
-If you are behind a proxy, you can set it by invoking *setProxy()* method on $method or $exchanger instance:
+If you are behind a proxy, you can set it by invoking *setProxy()* method on $exchanger instance:
 ```php
-$method->setProxy('example.host.com:8080'); // In the format 'host:port'
-// or
 $exchanger->setProxy('example.host.com:8080'); // In the format 'host:port'
 ```
