@@ -10,123 +10,86 @@ use CurrencyExchange\Exception;
 abstract class AbstractMethod
 {
 	/**
-	 * @var $_templateUri The template uri that each exchange method must override with the http uri of web service
-	 */
-	protected $_templateUri = null;
-	
-	/**
-	 * @var $_uri The final uri with the $_fromCurrencyCode and $_toCurrencyCode set
+	 * @var CurrencyExchange\Uri The Uri object used to set currency codes and template uri for method
 	 */
 	protected $_uri = null;
 	
 	/**
-	 * @var $_fromCurrencyCode In the format of 3 character
+	 * @var CurrencyExchange\HttpClient 
 	 */
-	protected $_fromCurrencyCode = null;
+	protected $_httpClient = null;
 	
 	/**
-	 * @var $_toCurrencyCode In the format of 3 character
-	 */
-	protected $_toCurrencyCode = null;
-	
-	/**
-	 * @var $_proxy String in the format host:port
-	 */
-	protected $_proxy = null;
-	
-	/**
-	 * @var $_response Zend\Http\Response
+	 * @var Zend\Http\Response
 	 */
 	protected $_response = null;
-	
-	public function setFromCurrencyCode($code)
+
+	/**
+	 * Constructor set a new CurrencyExchange\Uri object and a new CurrencyExchange\HttpClient object
+	 */
+	public function __construct()
 	{
-		$this->_fromCurrencyCode = (string) $code;
-		return $this;
+		$this->setUri(new \CurrencyExchange\Uri())
+			->setHttpClient(new \CurrencyExchange\HttpClient());
 	}
 	
-	public function setToCurrencyCode($code)
-	{
-		$this->_toCurrencyCode = (string) $code;
-		return $this;
-	}
-	
+	/**
+	 * Returns uri object
+	 * @return CurrencyExchange\Uri
+	 */
 	public function getUri()
 	{
-		if (!$this->_templateUri)
-			throw new Exception\InvalidArgumentException('Template Uri not initialized!');
-
-		if (!$this->_fromCurrencyCode)
-			throw new Exception\InvalidArgumentException('"From Currency Code" not initialized!');
-
-		if (!$this->_toCurrencyCode)
-			throw new Exception\InvalidArgumentException('"To Currency Code" not initialized!');
-
-		$search = array('{%FROMCURRENCYCODE%}', '{%TOCURRENCYCODE%}');
-		$replace = array($this->_fromCurrencyCode, $this->_toCurrencyCode);
-
-		$this->_uri = str_replace($search, $replace, $this->_templateUri);
-
 		return $this->_uri;
 	}
 	
-	public function setProxy($proxy)
+	/**
+	 * Returns http client object
+	 * @return CurrencyExchange\HttpClient
+	 */
+	public function getHttpClient()
 	{
-		$proxy = (string) $proxy;
+		return $this->_httpClient;
+	}
 
-		if (!preg_match('/^[a-z0-9\.]+:[0-9]+$/iu', $proxy))
-			throw new Exception\InvalidArgumentException('Proxy must be a string according to format host:port');
-
-		$this->_proxy = $proxy;
+	/**
+	 * Set a new uri object to handle exchange method web service
+	 * @param CurrencyExchange\Uri $uri A new CurrencyExchange\Uri object
+	 * @return CurrencyExchange\Methods\AbstractMethod
+	 */
+	public function setUri(\CurrencyExchange\Uri $uri)
+	{
+		$this->_uri = $uri;
 		return $this;
 	}
 	
+	/**
+	 * Set a new http client object to handle exchange method web service
+	 * @param CurrencyExchange\HttpClient $client A new CurrencyExchange\HttpClient object
+	 * @return CurrencyExchange\Methods\AbstractMethod
+	 */
+	public function setHttpClient(\CurrencyExchange\HttpClient $client)
+	{
+		$this->_httpClient = $client;
+		return $this;
+	}
+
+	/**
+	 * Set response from CurrencyExchange\HttpClient object and return it
+	 * @return Zend\Http\Response
+	 */
 	public function getResponse()
 	{
+		if (!$this->_response)
+		{
+			$this->getHttpClient()->setUri($this->getUri()->getFinalUri());
+			$this->_response = $this->getHttpClient()->makeRequest()->getResponse();
+		}
+		
 		return $this->_response;
 	}
-	
-	public function downloadExchangeRate()
-	{
-		$request = new \Zend\Http\Request();
-		$request->setUri($this->getUri());
-		$request->setMethod('GET');
 
-		$curlOptions = array(
-			CURLOPT_HEADER => false,
-			CURLOPT_RETURNTRANSFER => true,
-		);
-
-		if ($this->_proxy)
-			$curlOptions[CURLOPT_PROXY] = $this->_proxy;
-
-		$adapter = new \Zend\Http\Client\Adapter\Curl();
-		$adapter->setOptions(array(
-			'curloptions' => $curlOptions
-		));
-
-		$client = new \Zend\Http\Client();
-		$client->setAdapter($adapter);
-
- 		$this->_response = $client->dispatch($request);
-
-		if ($this->_response->getStatusCode() != 200)
-			throw new Exception\ResponseException('Error ' . $this->_response->getStatusCode());
-
-		return $this;
-	}
-
-	public function getExchangeRate()
-	{
-		return $this->getResponse()->getBody();
-	}
-
-	public function exchange($amount)
-	{
-		$amount = (float) $amount;
-
-		$exchangeRate = $this->downloadExchangeRate()->getExchangeRate();
-
-		return (float) $exchangeRate * $amount;
-	}
+	/**
+	 * Each exchange method must override this method
+	 */
+	abstract public function getExchangeRate();
 }

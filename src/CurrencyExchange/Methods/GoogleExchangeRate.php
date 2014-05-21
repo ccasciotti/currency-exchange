@@ -6,7 +6,16 @@ use CurrencyExchange\Exception;
 
 class GoogleExchangeRate extends AbstractMethod
 {
-	protected $_templateUri = 'http://rate-exchange.appspot.com/currency?from={%FROMCURRENCYCODE%}&to={%TOCURRENCYCODE%}';
+	public function __construct()
+	{
+		parent::__construct(); // initialize Uri object and HttpClient object
+
+		// Set template uri for this exchange method
+		$this->getUri()->setTemplateUri('http://rate-exchange.appspot.com/currency?from={%FROMCURRENCY%}&to={%TOCURRENCY%}');
+
+		// Set http method for this exchange method
+		$this->getHttpClient()->setHttpMethod('GET');
+	}
 
 	public function getExchangeRate()
 	{

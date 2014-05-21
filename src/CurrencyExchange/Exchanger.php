@@ -64,11 +64,11 @@ class Exchanger
 	/**
 	 * Set proxy
 	 * @param string $proxy The proxy string in form host:port
-	 * @return CurrencyExchange\Exchanger
+	 * @return Exchanger
 	 */
 	public function setProxy($proxy)
 	{
-		$this->_method->setProxy($proxy);
+		$this->getMethod()->getHttpClient()->setProxy($proxy);
 		return $this;
 	}
 
@@ -79,14 +79,16 @@ class Exchanger
 	 * @param string|null $toCode Optional if you have already set in method object, if passed it will override the $toCurrencyCode of method instance
 	 * @return float
 	 */
-	public function exchange($amount, $fromCode = null, $toCode = null)
+	public function exchange($amount, $fromCode, $toCode)
 	{
-		if (is_string($fromCode))
-			$this->_method->setFromCurrencyCode($fromCode);
+		if (!$fromCode || !is_string($fromCode))
+			throw new Exception\InvalidArgumentException('"From code" must be supplied and must be a string');
 
-		if (is_string($toCode))
-			$this->_method->setToCurrencyCode($toCode);
+		if (!$toCode || !is_string($toCode))
+			throw new Exception\InvalidArgumentException('"To code" must be supplied and must be a string');
 
-		return $this->_method->exchange($amount);
+		$this->getMethod()->getUri()->setFromCurrency($fromCode)->setToCurrency($toCode);
+
+		return (float) $this->getMethod()->getExchangeRate() * (float) $amount;
 	}
 }
