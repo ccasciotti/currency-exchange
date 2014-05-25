@@ -8,8 +8,11 @@ class GrandTrunk extends AbstractMethod
 {
 	public function __construct()
 	{
-		// Initialize Uri object and HttpClient object
+		// Initialize HttpClient object
 		parent::__construct();
+
+		// Instantiate a new Uri object
+		$this->setUri(new \CurrencyExchange\Uri\UriGet());
 
 		// Set template uri for this exchange method
 		$this->getUri()->setTemplateUri('http://currencies.apps.grandtrunk.net/getlatest/{%FROMCURRENCY%}/{%TOCURRENCY%}');
@@ -20,6 +23,11 @@ class GrandTrunk extends AbstractMethod
 
 	public function getExchangeRate()
 	{
-		return (float) $this->getResponse()->getBody();
+		$rate = (float) $this->getResponse()->getBody();
+
+		if (!$rate)
+			throw new Exception\ResponseException('Exchange rate not found');
+
+		return $rate;
 	}
 }

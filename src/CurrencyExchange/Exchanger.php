@@ -3,23 +3,24 @@
 namespace CurrencyExchange;
 
 /**
- * Class that make exchanges, you can select your preferred exchange method by using setMethod() method, otherwise it will use GrandTrunk method by default
+ * Class that make exchanges, you can select your preferred exchange method by using setMethod() method, 
+ * otherwise it will use GrandTrunk method by default
  */
 class Exchanger
 {
 	/**
-	 * @var $_defaultMethodClass the default exchange method class
+	 * @var string the default exchange method class
 	 */
 	protected $_defaultMethodClass = '\CurrencyExchange\Methods\GrandTrunk';
-	
+
 	/**
-	 * @var $_method the exchange method object
+	 * @var CurrencyExchange\Methods\AbstractMethod current exchange method
 	 */
 	protected $_method = null;
 
 	/**
 	 * Constructor
-	 * @param object|string|null $method The exchange method used for getting exchange rate. It can be an object, a string or null. If null, it will be used the default exchange method class
+	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
 	 */
 	public function __construct($method = null)
 	{
@@ -36,7 +37,7 @@ class Exchanger
 	}
 
 	/**
-	 * @param object|string|null $method The exchange method used for getting exchange rate. It can be an object, a string or null. If null, it will be used the default exchange method class
+	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
 	 * @return CurrencyExchange\Exchanger
 	 */
 	public function setMethod($method = null)
@@ -60,11 +61,11 @@ class Exchanger
 
 		return $this;
 	}
-	
+
 	/**
-	 * Set proxy
+	 * Set proxy to HttpClient object
 	 * @param string $proxy The proxy string in form host:port
-	 * @return Exchanger
+	 * @return CurrencyExchange\Exchanger
 	 */
 	public function setProxy($proxy)
 	{
@@ -73,10 +74,10 @@ class Exchanger
 	}
 
 	/**
-	 * Make call to exchange() method of the current instantiated exchange method that downloads and retrive the exchange rates, then it multiplies to the $amount parameter.
+	 * Set currency codes, retrieve the exchange rate, and it multiplies to the $amount parameter.
 	 * @param float $amount The amount to exchange
-	 * @param string|null $fromCode Optional if you have already set in method object, if passed it will override the $fromCurrencyCode of method instance
-	 * @param string|null $toCode Optional if you have already set in method object, if passed it will override the $toCurrencyCode of method instance
+	 * @param string $fromCode Currency code according to the format of 3 uppercase characters
+	 * @param string $toCode Currency code according to the format of 3 uppercase characters
 	 * @return float
 	 */
 	public function exchange($amount, $fromCode, $toCode)

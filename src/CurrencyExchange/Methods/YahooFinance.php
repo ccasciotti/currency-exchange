@@ -8,7 +8,11 @@ class YahooFinance extends AbstractMethod
 {
 	public function __construct()
 	{
-		parent::__construct(); // initialize Uri object and HttpClient object
+		// Initialize HttpClient object
+		parent::__construct();
+
+		// Instantiate a new Uri object
+		$this->setUri(new \CurrencyExchange\Uri\UriGet());
 
 		// Set template uri for this exchange method
 		$this->getUri()->setTemplateUri('http://download.finance.yahoo.com/d/quotes.csv?s={%FROMCURRENCY%}{%TOCURRENCY%}=X&f=sl1d1t1ba&e=.csv');
@@ -22,7 +26,7 @@ class YahooFinance extends AbstractMethod
 		$values = explode(',', $this->getResponse()->getBody());
 
 		if (!is_array($values) || !isset($values[1]))
-			throw new Exception\InvalidArgumentException('Exchange rate not found');
+			throw new Exception\ResponseException('Exchange rate not found');
 
 		return (float) $values[1];
 	}

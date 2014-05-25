@@ -8,7 +8,11 @@ class GoogleExchangeRate extends AbstractMethod
 {
 	public function __construct()
 	{
-		parent::__construct(); // initialize Uri object and HttpClient object
+		// Initialize HttpClient object
+		parent::__construct();
+
+		// Instantiate a new Uri object
+		$this->setUri(new \CurrencyExchange\Uri\UriGet());
 
 		// Set template uri for this exchange method
 		$this->getUri()->setTemplateUri('http://rate-exchange.appspot.com/currency?from={%FROMCURRENCY%}&to={%TOCURRENCY%}');
@@ -20,6 +24,9 @@ class GoogleExchangeRate extends AbstractMethod
 	public function getExchangeRate()
 	{
 		$object = \Zend\Json\Json::decode($this->getResponse()->getBody());
+
+		if (!isset($object->rate))
+			throw new Exception\ResponseException('Exchange rate not found');
 
 		return (float) $object->rate;
 	}
