@@ -11,6 +11,7 @@ class UriGet extends AbstractUri
 {
 	/**
 	 * Returns the final uri with currency codes set
+	 * 
 	 * @return string
 	 */
 	public function getFinalUri()
@@ -34,6 +35,7 @@ class UriGet extends AbstractUri
 
 	/**
 	 * Set template uri with currency placeholders
+	 * 
 	 * @param string $templateUri
 	 * @return CurrencyExchange\Uri\UriGet
 	 */

@@ -25,15 +25,21 @@ abstract class AbstractMethod
 	protected $_response = null;
 
 	/**
-	 * Constructor set a new CurrencyExchange\HttpClient object
+	 * Constructor set a new CurrencyExchange\HttpClient object and initializes it with http type of uri
+	 * 
+	 * @return void
 	 */
 	public function __construct()
 	{
-		$this->setHttpClient(new \CurrencyExchange\HttpClient());
+		$httpClient = new \CurrencyExchange\HttpClient();
+		$httpClient->setHttpMethod($this->getUri()->getType()); // Set http method for this exchange method
+
+		$this->setHttpClient($httpClient);
 	}
 
 	/**
 	 * Returns uri object
+	 * 
 	 * @return CurrencyExchange\AbstractUri
 	 */
 	public function getUri()
@@ -43,6 +49,7 @@ abstract class AbstractMethod
 
 	/**
 	 * Returns http client object
+	 * 
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function getHttpClient()
@@ -52,6 +59,7 @@ abstract class AbstractMethod
 
 	/**
 	 * Set a new uri object to handle exchange method web service
+	 * 
 	 * @param CurrencyExchange\Uri\AbstractUri $uri A new CurrencyExchange\Uri\AbstractUri object
 	 * @return CurrencyExchange\Methods\AbstractMethod
 	 */
@@ -63,6 +71,7 @@ abstract class AbstractMethod
 
 	/**
 	 * Set a new http client object to handle exchange method's request and response
+	 * 
 	 * @param CurrencyExchange\HttpClient $client A new CurrencyExchange\HttpClient object
 	 * @return CurrencyExchange\Methods\AbstractMethod
 	 */
@@ -74,6 +83,7 @@ abstract class AbstractMethod
 
 	/**
 	 * Set response from CurrencyExchange\HttpClient object and return it
+	 * 
 	 * @return Zend\Http\Response
 	 */
 	public function getResponse()
@@ -88,7 +98,7 @@ abstract class AbstractMethod
 	}
 
 	/**
-	 * Each exchange method must override this method
+	 * Each exchange method must implement this method
 	 */
 	abstract public function getExchangeRate();
 }

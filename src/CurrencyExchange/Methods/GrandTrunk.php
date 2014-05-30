@@ -3,24 +3,29 @@
 namespace CurrencyExchange\Methods;
 
 use CurrencyExchange\Exception;
+use CurrencyExchange\Uri;
 
 class GrandTrunk extends AbstractMethod
 {
 	public function __construct()
 	{
-		// Initialize HttpClient object
+		// Instantiates a new GET Uri object
+		$uri = Uri\Factory::create('GET');
+		$uri->setTemplateUri('http://currencies.apps.grandtrunk.net/getlatest/{%FROMCURRENCY%}/{%TOCURRENCY%}');
+
+		// Set uri object
+		$this->setUri($uri);
+
+		// Istantiates and initializes HttpClient object
 		parent::__construct();
-
-		// Instantiate a new Uri object
-		$this->setUri(new \CurrencyExchange\Uri\UriGet());
-
-		// Set template uri for this exchange method
-		$this->getUri()->setTemplateUri('http://currencies.apps.grandtrunk.net/getlatest/{%FROMCURRENCY%}/{%TOCURRENCY%}');
-
-		// Set http method for this exchange method
-		$this->getHttpClient()->setHttpMethod('GET');
 	}
 
+	/**
+	 * Implementation of abstract method getExchangeRate
+	 * 
+	 * @throws CurrencyExchange\Exception\ResponseException
+	 * @return float
+	 */
 	public function getExchangeRate()
 	{
 		$rate = (float) $this->getResponse()->getBody();

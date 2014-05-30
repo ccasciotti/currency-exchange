@@ -9,18 +9,15 @@ namespace CurrencyExchange;
 class Exchanger
 {
 	/**
-	 * @var string the default exchange method class
-	 */
-	protected $_defaultMethodClass = '\CurrencyExchange\Methods\GrandTrunk';
-
-	/**
 	 * @var CurrencyExchange\Methods\AbstractMethod current exchange method
 	 */
 	protected $_method = null;
 
 	/**
-	 * Constructor
+	 * Constructor that invokes setMethod
+	 * 
 	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
+	 * @return void
 	 */
 	public function __construct($method = null)
 	{
@@ -28,7 +25,8 @@ class Exchanger
 	}
 
 	/**
-	 * Returns $_method object
+	 * Returns method object
+	 * 
 	 * @return CurrencyExchange\Methods\AbstractMethod
 	 */
 	public function getMethod()
@@ -37,33 +35,20 @@ class Exchanger
 	}
 
 	/**
+	 * Invokes factory method to instantiates a new Exchange Method object
+	 * 
 	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
 	 * @return CurrencyExchange\Exchanger
 	 */
 	public function setMethod($method = null)
 	{
-		if (is_string($method))
-		{
-			if (!class_exists($method))
-				throw new Exception\InvalidMethodException('Exchange method not found');
-
-			$method = new $method();
-
-			if (!($method instanceof Methods\AbstractMethod))
-				throw new Exception\InvalidMethodException('Invalid exchange method supplied');
-
-			$this->_method = $method;
-		}
-		else if (is_object($method) && $method instanceof Methods\AbstractMethod)
-			$this->_method = $method;
-		else
-			$this->_method = new $this->_defaultMethodClass();
-
+		$this->_method = Methods\Factory::create($method);
 		return $this;
 	}
 
 	/**
 	 * Set proxy to HttpClient object
+	 * 
 	 * @param string $proxy The proxy string in form host:port
 	 * @return CurrencyExchange\Exchanger
 	 */
@@ -75,9 +60,11 @@ class Exchanger
 
 	/**
 	 * Set currency codes, retrieve the exchange rate, and it multiplies to the $amount parameter.
+	 * 
 	 * @param float $amount The amount to exchange
 	 * @param string $fromCode Currency code according to the format of 3 uppercase characters
 	 * @param string $toCode Currency code according to the format of 3 uppercase characters
+	 * @throws CurrencyExchange\Exception\InvalidArgumentException
 	 * @return float
 	 */
 	public function exchange($amount, $fromCode, $toCode)

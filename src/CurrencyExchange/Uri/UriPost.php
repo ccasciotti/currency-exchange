@@ -11,6 +11,7 @@ class UriPost extends AbstractUri
 {
 	/**
 	 * Returns the final uri with currency codes set
+	 * 
 	 * @return string
 	 */
 	public function getFinalUri()
@@ -31,6 +32,7 @@ class UriPost extends AbstractUri
 
 	/**
 	 * Set template uri
+	 * 
 	 * @param string $templateUri
 	 * @return CurrencyExchange\Uri\UriPost
 	 */

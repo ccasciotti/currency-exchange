@@ -36,6 +36,8 @@ class HttpClient
 
 	/**
 	 * Constructor set default cURL options
+	 * 
+	 * @return void
 	 */
 	public function __construct()
 	{
@@ -63,6 +65,7 @@ class HttpClient
 
 	/**
 	 * Checks if Http method is GET
+	 * 
 	 * @return boolean
 	 */
 	public function isHttpGet()
@@ -72,6 +75,7 @@ class HttpClient
 
 	/**
 	 * Checks if Http method is POST
+	 * 
 	 * @return boolean
 	 */
 	public function isHttpPost()
@@ -90,7 +94,10 @@ class HttpClient
 	}
 
 	/**
+	 * Sets the Http method, only GET or POST are actually supported
+	 * 
 	 * @param string $httpMethod Can be GET or POST
+	 * @throws CurrencyExchange\Exception\InvalidArgumentException
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function setHttpMethod($httpMethod)
@@ -106,6 +113,7 @@ class HttpClient
 
 	/**
 	 * Set data to be sent via Http POST
+	 * 
 	 * @param array $postData
 	 * @return CurrencyExchange\HttpClient
 	 */
@@ -117,6 +125,7 @@ class HttpClient
 
 	/**
 	 * Add cURL option
+	 * 
 	 * @param int $curlOpt
 	 * @param mixed $value
 	 * @param boolean $override if true, the existent value of $curlOpt is overridden
@@ -134,6 +143,7 @@ class HttpClient
 
 	/**
 	 * Sets cURL options
+	 * 
 	 * @param array $options
 	 * @return CurrencyExchange\HttpClient
 	 */
@@ -145,6 +155,7 @@ class HttpClient
 
 	/**
 	 * Resets cURL options
+	 * 
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function resetCurlOptions()
@@ -155,7 +166,9 @@ class HttpClient
 
 	/**
 	 * Set proxy for the http client
+	 * 
 	 * @param string $proxy A string that identifies proxy server, in the format 'host:port'
+	 * @throws CurrencyExchange\Exception\InvalidArgumentException
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function setProxy($proxy)
@@ -171,6 +184,8 @@ class HttpClient
 
 	/**
 	 * Makes request to download exchange rate
+	 * 
+	 * @throws CurrencyExchange\Exception\ResponseException
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function makeRequest()
