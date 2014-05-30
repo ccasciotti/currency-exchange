@@ -12,6 +12,7 @@ class UriPost extends AbstractUri
 	/**
 	 * Returns the final uri with currency codes set
 	 * 
+	 * @throws CurrencyExchange\Exception\InvalidArgumentException
 	 * @return string
 	 */
 	public function getFinalUri()
@@ -26,7 +27,6 @@ class UriPost extends AbstractUri
 			throw new Exception\InvalidArgumentException('"To Currency Code" not set');
 
 		$this->_uri = $this->_templateUri;
-
 		return $this->_uri;
 	}
 

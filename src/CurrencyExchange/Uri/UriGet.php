@@ -12,6 +12,7 @@ class UriGet extends AbstractUri
 	/**
 	 * Returns the final uri with currency codes set
 	 * 
+	 * @throws CurrencyExchange\Exception\InvalidArgumentException
 	 * @return string
 	 */
 	public function getFinalUri()
@@ -29,7 +30,6 @@ class UriGet extends AbstractUri
 		$replace = array($this->_fromCurrency, $this->_toCurrency);
 
 		$this->_uri = str_replace($search, $replace, $this->_templateUri);
-
 		return $this->_uri;
 	}
 

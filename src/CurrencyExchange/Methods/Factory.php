@@ -15,7 +15,7 @@ class Factory
 	protected static $_defaultMethodClass = 'CurrencyExchange\Methods\GrandTrunk';
 
 	/**
-	 * Factory method to instantiates a new AbstractMethod object
+	 * Factory method that instantiates a new AbstractMethod object
 	 * 
 	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
 	 * @throws CurrencyExchange\Exception\InvalidMethodException
@@ -29,13 +29,14 @@ class Factory
 		if (is_string($method))
 		{
 			if (!class_exists($method))
-				throw new Exception\InvalidMethodException('Exchange method not found');
+				throw new Exception\InvalidMethodException('Exchange Method not found');
 
 			$method = new $method();
 		}
 
 		if (!($method instanceof AbstractMethod))
-			throw new Exception\InvalidMethodException('Invalid exchange method supplied');
+			throw new Exception\InvalidMethodException('Exchange Method must be an instance of AbstractMethod, ' . 
+				(is_object($method) ? get_class($method) : gettype($method)) . ' given');
 
 		return $method;
 	}

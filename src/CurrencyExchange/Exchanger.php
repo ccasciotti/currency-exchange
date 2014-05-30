@@ -9,7 +9,7 @@ namespace CurrencyExchange;
 class Exchanger
 {
 	/**
-	 * @var CurrencyExchange\Methods\AbstractMethod current exchange method
+	 * @var CurrencyExchange\Methods\AbstractMethod Current exchange method
 	 */
 	protected $_method = null;
 

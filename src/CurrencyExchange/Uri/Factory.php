@@ -10,7 +10,7 @@ use CurrencyExchange\Exception;
 class Factory
 {
 	/**
-	 * Factory method to instantiates a new AbstractUri object
+	 * Factory method that instantiates a new AbstractUri object
 	 * 
 	 * @param string $type The type of Uri, can be GET or POST
 	 * @throws CurrencyExchange\Exception\InvalidArgumentException
