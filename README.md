@@ -7,21 +7,18 @@ A simple usage:
 ```php
 <?php
 
-$method = new \CurrencyExchange\Methods\YahooFinance();
-
 $exchanger = new \CurrencyExchange\Exchanger();
-$exchanger->setMethod($method);
-$result = $exchanger->exchange(14, 'EUR', 'USD'); // This method will exchange 14 Euros in the correspondant U.S. Dollars using web service of Yahoo Finance
+
+// This method will exchange 14 Euros in the correspondant U.S. Dollars, it uses the default exchange method (GrandTrunk)
+$result = $exchanger->exchange(14, 'EUR', 'USD');
 ```
 
-Alternatively, you can use a more simple code:
+Alternatively, you can set your preferred exchange method:
 ```php
 <?php
 
-$exchanger = new \CurrencyExchange\Exchanger();
-
-// This method will exchange 14 Euros in the correspondant U.S. Dollars like the first, but it uses the default exchange method (GrandTrunk)
-$result = $exchanger->exchange(14, 'EUR', 'USD');
+$exchanger = new \CurrencyExchange\Exchanger('CurrencyExchange\Methods\YahooFinance');
+$result = $exchanger->exchange(14, 'EUR', 'USD'); // This method will exchange 14 Euros in the correspondant U.S. Dollars using web service of Yahoo Finance
 ```
 
 If you are behind a proxy, you can set it by invoking *setProxy()* method on $exchanger instance:
