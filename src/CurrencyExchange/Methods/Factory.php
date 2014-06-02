@@ -34,7 +34,7 @@ class Factory
 			$method = new $method();
 		}
 
-		if (!($method instanceof AbstractMethod))
+		if (!is_object($method) || !($method instanceof AbstractMethod))
 			throw new Exception\InvalidMethodException('Exchange Method must be an instance of AbstractMethod, ' . 
 				(is_object($method) ? get_class($method) : gettype($method)) . ' given');
 
