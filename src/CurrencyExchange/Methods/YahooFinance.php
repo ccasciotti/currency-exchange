@@ -12,7 +12,7 @@
 namespace CurrencyExchange\Methods;
 
 use CurrencyExchange\Exception;
-use CurrencyExchange\Uri\AbstractUri;
+use CurrencyExchange\HttpClient;
 use CurrencyExchange\Service\UriFactory;
 
 /**
@@ -24,7 +24,7 @@ class YahooFinance extends AbstractMethod
 	public function __construct()
 	{
 		/** @var CurrencyExchange\Uri\UriGet */
-		$uri = UriFactory::factory(AbstractUri::HTTP_GET);
+		$uri = UriFactory::factory(HttpClient::HTTP_GET);
 		$uri->setTemplateUri('http://download.finance.yahoo.com/d/quotes.csv?s={%FROMCURRENCY%}{%TOCURRENCY%}=X&f=sl1d1t1ba&e=.csv');
 
 		// Istantiates and initializes HttpClient and Uri objects

@@ -12,7 +12,7 @@
 namespace CurrencyExchange\Methods;
 
 use CurrencyExchange\Exception;
-use CurrencyExchange\Uri\AbstractUri;
+use CurrencyExchange\HttpClient;
 use CurrencyExchange\Service\UriFactory;
 
 /**
@@ -24,7 +24,7 @@ class GrandTrunk extends AbstractMethod
 	public function __construct()
 	{
 		/** @var CurrencyExchange\Uri\UriGet */
-		$uri = UriFactory::factory(AbstractUri::HTTP_GET);
+		$uri = UriFactory::factory(HttpClient::HTTP_GET);
 		$uri->setTemplateUri('http://currencies.apps.grandtrunk.net/getlatest/{%FROMCURRENCY%}/{%TOCURRENCY%}');
 
 		// Istantiates and initializes HttpClient and Uri objects

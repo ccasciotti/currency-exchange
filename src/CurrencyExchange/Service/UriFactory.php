@@ -11,6 +11,7 @@
 
 namespace CurrencyExchange\Service;
 
+use CurrencyExchange\HttpClient;
 use CurrencyExchange\Uri;
 use CurrencyExchange\Exception;
 
@@ -34,18 +35,18 @@ class UriFactory
 		/** @var string */
 		$type = strtoupper((string) $type);
 
-		if (!in_array($type, array(Uri\AbstractUri::HTTP_GET, Uri\AbstractUri::HTTP_POST))) {
+		if (!in_array($type, array(HttpClient::HTTP_GET, HttpClient::HTTP_POST))) {
 			throw new Exception\InvalidArgumentException('Unknown Uri type: ' . $type);
 		}
 
 		switch ($type) {
-			case Uri\AbstractUri::HTTP_GET :
+			case HttpClient::HTTP_GET :
 
 				/** @var CurrencyExchange\Uri\UriGet */
 				$uri = new Uri\UriGet($type);
 				break;
 
-			case Uri\AbstractUri::HTTP_POST : 
+			case HttpClient::HTTP_POST : 
 
 				/** @var CurrencyExchange\Uri\UriPost */
 				$uri = new Uri\UriPost($type);
