@@ -9,6 +9,9 @@ A simple usage:
 
 $exchanger = new \CurrencyExchange\Exchanger();
 
+// This method will print the current exchange rate from Euros to U.S. Dollars
+$result = $exchanger->getExchangeRate('EUR', 'USD');
+
 // This method will exchange 14 Euros in the correspondant U.S. Dollars, it uses the default exchange method (GrandTrunk)
 $result = $exchanger->exchange(14, 'EUR', 'USD');
 ```
