@@ -1,11 +1,25 @@
 <?php
 
+/**
+ * CurrencyExchange
+ * 
+ * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * 
+ * @link https://github.com/teknoman/currency-exchange
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+
 namespace CurrencyExchange\Uri;
 
+use CurrencyExchange\Currency;
+use CurrencyExchange\HttpClient;
 use CurrencyExchange\Exception;
 
 /**
  * Abstract Uri class, it contains commons methods for each uri type
+ * 
+ * @package CurrencyExchange
+ * @subpackage Uri
  */
 abstract class AbstractUri
 {
@@ -25,12 +39,12 @@ abstract class AbstractUri
 	protected $_type = null;
 
 	/**
-	 * @var string In the format of 3 character
+	 * @var CurrencyExchange\Currency
 	 */
 	protected $_fromCurrency = null;
 
 	/**
-	 * @var string In the format of 3 character
+	 * @var CurrencyExchange\Currency
 	 */
 	protected $_toCurrency = null;
 
@@ -38,7 +52,6 @@ abstract class AbstractUri
 	 * Constructor invokes setType method
 	 * 
 	 * @param string $type
-	 * @return void
 	 */
 	public function __construct($type)
 	{
@@ -95,57 +108,35 @@ abstract class AbstractUri
 	{
 		$type = strtoupper((string) $type);
 
-		if (!in_array($type, array('GET', 'POST')))
+		if (!in_array($type, array(HttpClient::HTTP_GET, HttpClient::HTTP_POST))) {
 			throw new Exception\InvalidArgumentException('Uri type must be GET or POST, ' . $type . ' given');
+		}
 
 		$this->_type = $type;
 		return $this;
 	}
 
 	/**
-	 * Checks if currency code supplied is in the right format
+	 * Set "From Currency" object
 	 * 
-	 * @param string $code
-	 * @return boolean
-	 */
-	protected function _checkCurrencyCode($code)
-	{
-		return preg_match('/^[A-Z]{3}$/', (string) $code);
-	}
-
-	/**
-	 * Set "From Currency" code
-	 * 
-	 * @param string $code
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @param CurrencyExchange\Currency $currency
 	 * @return CurrencyExchange\Uri\AbstractUri
 	 */
-	public function setFromCurrency($code)
+	public function setFromCurrency(Currency $currency)
 	{
-		$code = (string) $code;
-
-		if (!$this->_checkCurrencyCode($code))
-			throw new Exception\InvalidArgumentException('"From Currency" must have exactly 3 uppercase characters');
-
-		$this->_fromCurrency = $code;
+		$this->_fromCurrency = $currency;
 		return $this;
 	}
 
 	/**
-	 * Set "To Currency" code
+	 * Set "To Currency" object
 	 * 
-	 * @param string $code
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @param CurrencyExchange\Currency $currency
 	 * @return CurrencyExchange\Uri\AbstractUri
 	 */
-	public function setToCurrency($code)
+	public function setToCurrency(Currency $currency)
 	{
-		$code = (string) $code;
-
-		if (!$this->_checkCurrencyCode($code))
-			throw new Exception\InvalidArgumentException('"To Currency" must have exactly 3 uppercase characters');
-
-		$this->_toCurrency = $code;
+		$this->_toCurrency = $currency;
 		return $this;
 	}
 }

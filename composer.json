@@ -1,5 +1,6 @@
 {
     "name": "teknoman/currency-exchange",
+    "description": "A module for Zend Framework 2 to make currency exchange using several web services",
     "type": "library",
     "license": "GPL-3.0",
     "keywords": [
@@ -7,7 +8,6 @@
         "currency",
 		"exchange"
     ],
-    "description": "A module for Zend Framework 2 to make currency exchange in real time",
     "homepage": "https://github.com/teknoman/currency-exchange.git",
     "authors": [
         {
@@ -18,10 +18,12 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "zendframework/zend-http": "2.3.*",
+        "zendframework/zend-json": "2.3.*"
     },
     "autoload": {
-        "psr-0" : {
+        "psr-0": {
             "CurrencyExchange\\" : "src/"
         }
     }

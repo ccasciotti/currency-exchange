@@ -1,9 +1,37 @@
 <?php
 
+/**
+ * CurrencyExchange
+ * 
+ * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * 
+ * @link https://github.com/teknoman/currency-exchange
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+
 namespace CurrencyExchange;
 
+use Zend\Http\Request as HttpRequest;
+use Zend\Http\Client\Adapter\Curl as CurlAdapter;
+use Zend\Http\Client as ZendHttpClient;
+
+/**
+ * Class that makes request to the Uri currently set
+ * 
+ * @package CurrencyExchange
+ */
 class HttpClient
 {
+	/**
+	 * Constant for HTTP method GET
+	 */
+	const HTTP_GET = 'GET';
+
+	/**
+	 * Constant for HTTP method POST
+	 */
+	const HTTP_POST = 'POST';
+
 	/**
 	 * @var string The uri to call
 	 */
@@ -36,8 +64,6 @@ class HttpClient
 
 	/**
 	 * Constructor set default cURL options
-	 * 
-	 * @return void
 	 */
 	public function __construct()
 	{
@@ -70,7 +96,7 @@ class HttpClient
 	 */
 	public function isHttpGet()
 	{
-		return $this->_httpMethod === 'GET';
+		return $this->_httpMethod === static::HTTP_GET;
 	}
 
 	/**
@@ -80,7 +106,7 @@ class HttpClient
 	 */
 	public function isHttpPost()
 	{
-		return $this->_httpMethod === 'POST';
+		return $this->_httpMethod === static::HTTP_POST;
 	}
 
 	/**
@@ -104,8 +130,9 @@ class HttpClient
 	{
 		$httpMethod = strtoupper((string) $httpMethod);
 
-		if (!in_array($httpMethod, array('GET', 'POST')))
+		if (!in_array($httpMethod, array(static::HTTP_GET, static::HTTP_POST))) {
 			throw new Exception\InvalidArgumentException('Http method can be GET or POST, ' . $httpMethod . ' given');
+		}
 
 		$this->_httpMethod = $httpMethod;
 		return $this;
@@ -135,8 +162,9 @@ class HttpClient
 	{
 		$override = (bool) $override;
 
-		if ($override || !array_key_exists($curlOpt, $this->_curlOptions))
+		if ($override || !array_key_exists($curlOpt, $this->_curlOptions)) {
 			$this->_curlOptions[$curlOpt] = $value;
+		}
 
 		return $this;
 	}
@@ -175,8 +203,9 @@ class HttpClient
 	{
 		$proxy = (string) $proxy;
 
-		if (!preg_match('/^[a-z0-9\.]+:[0-9]+$/iu', $proxy))
+		if (!preg_match('/^[a-z0-9\.]+:[0-9]+$/iu', $proxy)) {
 			throw new Exception\InvalidArgumentException('Proxy must be a string according to format host:port');
+		}
 
 		$this->_proxy = $proxy;
 		return $this;
@@ -190,31 +219,36 @@ class HttpClient
 	 */
 	public function makeRequest()
 	{
-		$request = new \Zend\Http\Request();
+		/** @var Zend\Http\Request */
+		$request = new HttpRequest();
 		$request->setUri($this->_uri);
 		$request->setMethod($this->_httpMethod);
 
-		if ($this->_proxy)
+		if ($this->_proxy) {
 			$this->addCurlOption(CURLOPT_PROXY, $this->_proxy);
-
-		if ($this->isHttpPost())
-		{
-			$this->addCurlOption(CURLOPT_POST, true);
-			$this->addCurlOption(CURLOPT_POSTFIELDS, $this->getPostData());
 		}
 
-		$adapter = new \Zend\Http\Client\Adapter\Curl();
+		if ($this->isHttpPost()) {
+			$this->addCurlOption(CURLOPT_POST, true);
+			$this->addCurlOption(CURLOPT_POSTFIELDS, $this->_postData);
+		}
+
+		/** @var Zend\Http\Client\Adapter\Curl */
+		$adapter = new CurlAdapter();
 		$adapter->setOptions(array(
 			'curloptions' => $this->_curlOptions
 		));
 
-		$client = new \Zend\Http\Client();
+		/** @var Zend\Http\Client */
+		$client = new ZendHttpClient();
 		$client->setAdapter($adapter);
 
+		/** @var Zend\Http\Response */
  		$this->_response = $client->dispatch($request);
 
-		if ($this->_response->getStatusCode() != 200)
+		if ($this->_response->getStatusCode() != 200) {
 			throw new Exception\ResponseException('HTTP Error ' . $this->_response->getStatusCode());
+		}
 
 		return $this;
 	}

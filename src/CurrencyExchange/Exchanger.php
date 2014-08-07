@@ -1,10 +1,21 @@
 <?php
 
+/**
+ * CurrencyExchange
+ * 
+ * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * 
+ * @link https://github.com/teknoman/currency-exchange
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+
 namespace CurrencyExchange;
 
 /**
  * Class that make exchanges, you can select your preferred exchange method by using setMethod() method, 
  * otherwise it will use GrandTrunk method by default
+ * 
+ * @package CurrencyExchange
  */
 class Exchanger
 {
@@ -17,7 +28,6 @@ class Exchanger
 	 * Constructor that invokes setMethod
 	 * 
 	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
-	 * @return void
 	 */
 	public function __construct($method = null)
 	{
@@ -42,7 +52,7 @@ class Exchanger
 	 */
 	public function setMethod($method = null)
 	{
-		$this->_method = Methods\Factory::create($method);
+		$this->_method = Service\MethodFactory::factory($method);
 		return $this;
 	}
 
@@ -54,29 +64,37 @@ class Exchanger
 	 */
 	public function setProxy($proxy)
 	{
-		$this->getMethod()->getHttpClient()->setProxy($proxy);
+		$this->_method->getHttpClient()->setProxy($proxy);
 		return $this;
 	}
 
 	/**
-	 * Set currency codes, retrieve the exchange rate, and it multiplies to the $amount parameter.
+	 * Get current exchange rate of selected method
+	 * 
+	 * @param string $fromCode Currency code according to the format of 3 uppercase characters
+	 * @param string $toCode Currency code according to the format of 3 uppercase characters
+	 * @return float
+	 */
+	public function getExchangeRate($fromCode, $toCode)
+	{
+		$this->_method
+			->getUri()
+			->setFromCurrency(new Currency($fromCode))
+			->setToCurrency(new Currency($toCode));
+
+		return $this->_method->getExchangeRate();
+	}
+
+	/**
+	 * Retrieve the exchange rate, and it multiplies to the $amount parameter.
 	 * 
 	 * @param float $amount The amount to exchange
 	 * @param string $fromCode Currency code according to the format of 3 uppercase characters
 	 * @param string $toCode Currency code according to the format of 3 uppercase characters
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
 	 * @return float
 	 */
 	public function exchange($amount, $fromCode, $toCode)
 	{
-		if (!$fromCode || !is_string($fromCode))
-			throw new Exception\InvalidArgumentException('"From code" must be supplied and must be a string');
-
-		if (!$toCode || !is_string($toCode))
-			throw new Exception\InvalidArgumentException('"To code" must be supplied and must be a string');
-
-		$this->getMethod()->getUri()->setFromCurrency($fromCode)->setToCurrency($toCode);
-
-		return (float) $this->getMethod()->getExchangeRate() * (float) $amount;
+		return (float) $this->getExchangeRate($fromCode, $toCode) * (float) $amount;
 	}
 }

@@ -1,23 +1,35 @@
 <?php
 
+/**
+ * CurrencyExchange
+ * 
+ * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * 
+ * @link https://github.com/teknoman/currency-exchange
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+
 namespace CurrencyExchange\Methods;
 
 use CurrencyExchange\Exception;
-use CurrencyExchange\Uri;
+use CurrencyExchange\Uri\AbstractUri;
+use CurrencyExchange\Service\UriFactory;
+use Zend\Json\Json;
 
+/**
+ * @package CurrencyExchange
+ * @subpackage Methods
+ */
 class GoogleExchangeRate extends AbstractMethod
 {
 	public function __construct()
 	{
-		// Instantiates a new GET Uri object
-		$uri = Uri\Factory::create('GET');
+		/** @var CurrencyExchange\Uri\UriGet */
+		$uri = UriFactory::factory(AbstractUri::HTTP_GET);
 		$uri->setTemplateUri('http://rate-exchange.appspot.com/currency?from={%FROMCURRENCY%}&to={%TOCURRENCY%}');
 
-		// Set uri object
-		$this->setUri($uri);
-
-		// Istantiates and initializes HttpClient object
-		parent::__construct();
+		// Istantiates and initializes HttpClient and Uri objects
+		parent::__construct($uri);
 	}
 
 	/**
@@ -28,11 +40,15 @@ class GoogleExchangeRate extends AbstractMethod
 	 */
 	public function getExchangeRate()
 	{
-		$object = \Zend\Json\Json::decode($this->getResponse()->getBody());
+		parent::getExchangeRate();
 
-		if (!isset($object->rate))
+		/** @var object */
+		$response = Json::decode($this->_httpClient->getResponse()->getBody());
+
+		if (!isset($response->rate)) {
 			throw new Exception\ResponseException('Exchange rate not found');
+		}
 
-		return (float) $object->rate;
+		return (float) $response->rate;
 	}
 }

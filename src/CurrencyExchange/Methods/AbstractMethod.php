@@ -1,16 +1,30 @@
 <?php
 
+/**
+ * CurrencyExchange
+ * 
+ * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * 
+ * @link https://github.com/teknoman/currency-exchange
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+
 namespace CurrencyExchange\Methods;
 
+use CurrencyExchange\HttpClient;
+use CurrencyExchange\Uri\AbstractUri;
 use CurrencyExchange\Exception;
 
 /**
  * Base class for each exchange method
+ * 
+ * @package CurrencyExchange
+ * @subpackage Methods
  */
 abstract class AbstractMethod
 {
 	/**
-	 * @var CurrencyExchange\Uri\AbstractUri The Uri object used to set currency codes and template uri for method
+	 * @var CurrencyExchange\Uri\AbstractUri
 	 */
 	protected $_uri = null;
 
@@ -20,19 +34,17 @@ abstract class AbstractMethod
 	protected $_httpClient = null;
 
 	/**
-	 * @var Zend\Http\Response
-	 */
-	protected $_response = null;
-
-	/**
-	 * Constructor set a new CurrencyExchange\HttpClient object and initializes it with http type of uri
+	 * Instantiates a new CurrencyExchange\HttpClient object and initializes it with http type of uri
 	 * 
-	 * @return void
+	 * @param CurrencyExchange\Uri\AbstractUri $uri
 	 */
-	public function __construct()
+	public function __construct(AbstractUri $uri)
 	{
-		$httpClient = new \CurrencyExchange\HttpClient();
-		$httpClient->setHttpMethod($this->getUri()->getType()); // Set http method for this exchange method
+		$this->setUri($uri);
+
+		/** @var CurrencyExchange\HttpClient */
+		$httpClient = new HttpClient();
+		$httpClient->setHttpMethod($this->_uri->getType()); // Set http method for this exchange method
 
 		$this->setHttpClient($httpClient);
 	}
@@ -63,7 +75,7 @@ abstract class AbstractMethod
 	 * @param CurrencyExchange\Uri\AbstractUri $uri A new CurrencyExchange\Uri\AbstractUri object
 	 * @return CurrencyExchange\Methods\AbstractMethod
 	 */
-	public function setUri(\CurrencyExchange\Uri\AbstractUri $uri)
+	public function setUri(AbstractUri $uri)
 	{
 		$this->_uri = $uri;
 		return $this;
@@ -75,30 +87,23 @@ abstract class AbstractMethod
 	 * @param CurrencyExchange\HttpClient $client A new CurrencyExchange\HttpClient object
 	 * @return CurrencyExchange\Methods\AbstractMethod
 	 */
-	public function setHttpClient(\CurrencyExchange\HttpClient $client)
+	public function setHttpClient(HttpClient $client)
 	{
 		$this->_httpClient = $client;
 		return $this;
 	}
 
 	/**
-	 * Set response from CurrencyExchange\HttpClient object and return it
+	 * Makes request to the final uri sets in Uri object
 	 * 
-	 * @return Zend\Http\Response
+	 * @return CurrencyExchange\Methods\AbstractMethod
 	 */
-	public function getResponse()
+	public function getExchangeRate()
 	{
-		if (!$this->_response)
-		{
-			$this->getHttpClient()->setUri($this->getUri()->getFinalUri());
-			$this->_response = $this->getHttpClient()->makeRequest()->getResponse();
-		}
+		$this->_httpClient
+			->setUri($this->_uri->getFinalUri())
+			->makeRequest();
 
-		return $this->_response;
+		return $this;
 	}
-
-	/**
-	 * Each exchange method must implement this method
-	 */
-	abstract public function getExchangeRate();
 }
