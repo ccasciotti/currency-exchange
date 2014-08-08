@@ -12,8 +12,7 @@
 namespace CurrencyExchange;
 
 /**
- * Class that make exchanges, you can select your preferred exchange method by using setMethod() method, 
- * otherwise it will use GrandTrunk method by default
+ * Class that retrieve exchange rates from the current web service set
  * 
  * @package CurrencyExchange
  */
@@ -25,7 +24,7 @@ class Exchanger
 	protected $_method = null;
 
 	/**
-	 * Constructor that invokes setMethod
+	 * Constructor invokes setMethod
 	 * 
 	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
 	 */

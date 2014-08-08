@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange\Service;
 
-use CurrencyExchange\Methods\AbstractMethod;
+use CurrencyExchange\Methods\MethodAbstract;
 use CurrencyExchange\Exception;
 
 /**
@@ -42,15 +42,15 @@ class MethodFactory
 
 		if (is_string($method)) {
 			if (!class_exists($method)) {
-				throw new Exception\InvalidMethodException('Exchange Method not found');
+				throw new Exception\InvalidMethodException('Class ' . $method . ' not found');
 			}
 
 			/** @var object */
 			$method = new $method();
 		}
 
-		if (!is_object($method) || !$method instanceof AbstractMethod) {
-			throw new Exception\InvalidMethodException('Exchange Method must be an instance of CurrencyExchange\Methods\AbstractMethod, ' . 
+		if (!is_object($method) || !$method instanceof MethodAbstract) {
+			throw new Exception\InvalidMethodException('Exchange method must be an instance of CurrencyExchange\Methods\MethodAbstract, ' . 
 				(is_object($method) ? get_class($method) : gettype($method)) . ' given');
 		}
 

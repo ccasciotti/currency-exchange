@@ -19,7 +19,7 @@ use CurrencyExchange\Service\UriFactory;
  * @package CurrencyExchange
  * @subpackage Methods
  */
-class YahooFinance extends AbstractMethod
+class YahooFinance extends MethodAbstract
 {
 	public function __construct()
 	{

@@ -19,7 +19,7 @@ use CurrencyExchange\Exception;
  * @package CurrencyExchange
  * @subpackage Uri
  */
-class UriGet extends AbstractUri
+class UriGet extends UriAbstract
 {
 	/**
 	 * Returns the final uri with currency codes set

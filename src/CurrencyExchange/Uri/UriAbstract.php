@@ -21,7 +21,7 @@ use CurrencyExchange\Exception;
  * @package CurrencyExchange
  * @subpackage Uri
  */
-abstract class AbstractUri
+abstract class UriAbstract
 {
 	/**
 	 * @var string The template uri that must be set with the http uri of web service
