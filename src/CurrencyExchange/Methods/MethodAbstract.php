@@ -24,7 +24,7 @@ use CurrencyExchange\Exception;
 abstract class MethodAbstract
 {
 	/**
-	 * @var CurrencyExchange\Uri\AbstractUri
+	 * @var CurrencyExchange\Uri\UriAbstract
 	 */
 	protected $_uri = null;
 
@@ -36,7 +36,7 @@ abstract class MethodAbstract
 	/**
 	 * Instantiates a new CurrencyExchange\HttpClient object and initializes it with http type of uri
 	 * 
-	 * @param CurrencyExchange\Uri\AbstractUri $uri
+	 * @param CurrencyExchange\Uri\UriAbstract $uri
 	 */
 	public function __construct(UriAbstract $uri)
 	{
@@ -52,7 +52,7 @@ abstract class MethodAbstract
 	/**
 	 * Returns uri object
 	 * 
-	 * @return CurrencyExchange\AbstractUri
+	 * @return CurrencyExchange\UriAbstract
 	 */
 	public function getUri()
 	{
@@ -72,8 +72,8 @@ abstract class MethodAbstract
 	/**
 	 * Set a new uri object to handle exchange method web service
 	 * 
-	 * @param CurrencyExchange\Uri\AbstractUri $uri A new CurrencyExchange\Uri\AbstractUri object
-	 * @return CurrencyExchange\Methods\AbstractMethod
+	 * @param CurrencyExchange\Uri\UriAbstract $uri A new CurrencyExchange\Uri\UriAbstract object
+	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
 	public function setUri(UriAbstract $uri)
 	{
@@ -85,7 +85,7 @@ abstract class MethodAbstract
 	 * Set a new http client object to handle exchange method's request and response
 	 * 
 	 * @param CurrencyExchange\HttpClient $client A new CurrencyExchange\HttpClient object
-	 * @return CurrencyExchange\Methods\AbstractMethod
+	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
 	public function setHttpClient(HttpClient $client)
 	{
@@ -96,7 +96,7 @@ abstract class MethodAbstract
 	/**
 	 * Makes request to the final uri sets in Uri object
 	 * 
-	 * @return CurrencyExchange\Methods\AbstractMethod
+	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
 	public function getExchangeRate()
 	{

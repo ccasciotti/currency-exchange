@@ -69,7 +69,7 @@ abstract class UriAbstract
 	 * Set template uri with currency placeholders (if uri type is GET)
 	 * 
 	 * @param string $templateUri
-	 * @return CurrencyExchange\Uri\AbstractUri
+	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	abstract public function setTemplateUri($templateUri);
 
@@ -102,7 +102,7 @@ abstract class UriAbstract
 	 * 
 	 * @param string $type Uri type, can be GET or POST
 	 * @throws CurrencyExchange\Exception\InvalidArgumentException
-	 * @return CurrencyExchange\Uri\AbstractUri
+	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	public function setType($type)
 	{
@@ -120,7 +120,7 @@ abstract class UriAbstract
 	 * Set "From Currency" object
 	 * 
 	 * @param CurrencyExchange\Currency $currency
-	 * @return CurrencyExchange\Uri\AbstractUri
+	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	public function setFromCurrency(Currency $currency)
 	{
@@ -132,7 +132,7 @@ abstract class UriAbstract
 	 * Set "To Currency" object
 	 * 
 	 * @param CurrencyExchange\Currency $currency
-	 * @return CurrencyExchange\Uri\AbstractUri
+	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	public function setToCurrency(Currency $currency)
 	{

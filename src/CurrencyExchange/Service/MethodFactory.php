@@ -32,7 +32,7 @@ class MethodFactory
 	 * 
 	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
 	 * @throws CurrencyExchange\Exception\InvalidMethodException
-	 * @return CurrencyExchange\Methods\AbstractMethod
+	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
 	public static function factory($method = null)
 	{

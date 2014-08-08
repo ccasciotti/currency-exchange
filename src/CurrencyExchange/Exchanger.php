@@ -19,7 +19,7 @@ namespace CurrencyExchange;
 class Exchanger
 {
 	/**
-	 * @var CurrencyExchange\Methods\AbstractMethod Current exchange method
+	 * @var CurrencyExchange\Methods\MethodAbstract Current exchange method
 	 */
 	protected $_method = null;
 
@@ -36,7 +36,7 @@ class Exchanger
 	/**
 	 * Returns method object
 	 * 
-	 * @return CurrencyExchange\Methods\AbstractMethod
+	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
 	public function getMethod()
 	{

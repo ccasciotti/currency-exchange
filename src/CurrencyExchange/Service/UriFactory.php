@@ -24,11 +24,11 @@ use CurrencyExchange\Exception;
 class UriFactory
 {
 	/**
-	 * Factory method that instantiates a new AbstractUri object
+	 * Factory method that instantiates a new UriAbstract object
 	 * 
 	 * @param string $type The type of Uri, can be GET or POST
 	 * @throws CurrencyExchange\Exception\InvalidArgumentException
-	 * @return CurrencyExchange\Uri\AbstractUri
+	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	public static function factory($type)
 	{
