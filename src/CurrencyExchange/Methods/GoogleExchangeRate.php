@@ -40,7 +40,8 @@ class GoogleExchangeRate extends MethodAbstract
 	 */
 	public function getExchangeRate()
 	{
-		parent::getExchangeRate();
+		// Make request via Http Client
+		$this->makeRequest();
 
 		/** @var object */
 		$response = Json::decode($this->_httpClient->getResponse()->getBody());

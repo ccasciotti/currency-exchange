@@ -39,7 +39,8 @@ class GrandTrunk extends MethodAbstract
 	 */
 	public function getExchangeRate()
 	{
-		parent::getExchangeRate();
+		// Make request via Http Client
+		$this->makeRequest();
 
 		/** @var float */
 		$rate = (float) $this->_httpClient->getResponse()->getBody();

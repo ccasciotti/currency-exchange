@@ -39,8 +39,8 @@ class YahooFinance extends MethodAbstract
 	 */
 	public function getExchangeRate()
 	{
-		// make request
-		parent::getExchangeRate();
+		// Make request via Http Client
+		$this->makeRequest();
 
 		/** @var array */
 		$values = explode(',', $this->_httpClient->getResponse()->getBody());

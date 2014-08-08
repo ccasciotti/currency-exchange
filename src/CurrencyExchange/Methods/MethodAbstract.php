@@ -98,7 +98,7 @@ abstract class MethodAbstract
 	 * 
 	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
-	public function getExchangeRate()
+	public function makeRequest()
 	{
 		$this->_httpClient
 			->setUri($this->_uri->getFinalUri())
@@ -106,4 +106,11 @@ abstract class MethodAbstract
 
 		return $this;
 	}
+
+	/**
+	 * Returns the exchange rate value, all Currency Methods must implement this method 
+	 * 
+	 * @return float
+	 */
+	abstract public function getExchangeRate();
 }
