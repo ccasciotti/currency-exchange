@@ -25,7 +25,7 @@ class MethodFactory
 	/**
 	 * @var string the default exchange method class
 	 */
-	protected static $_defaultMethodClass = 'CurrencyExchange\Methods\YahooFinance';
+	protected static $_defaultMethodClass = 'YahooFinance';
 
 	/**
 	 * Factory method that instantiates a new AbstractMethod object
@@ -41,6 +41,8 @@ class MethodFactory
 		}
 
 		if (is_string($method)) {
+			$method = 'CurrencyExchange\Methods\\' . $method;
+
 			if (!class_exists($method)) {
 				throw new Exception\InvalidMethodException('Class ' . $method . ' not found');
 			}
