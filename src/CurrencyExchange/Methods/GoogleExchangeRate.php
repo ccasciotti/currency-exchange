@@ -20,7 +20,7 @@ use Zend\Json\Json;
  * @package CurrencyExchange
  * @subpackage Methods
  */
-class GoogleExchangeRate extends AbstractMethod
+class GoogleExchangeRate extends MethodAbstract
 {
 	public function __construct()
 	{

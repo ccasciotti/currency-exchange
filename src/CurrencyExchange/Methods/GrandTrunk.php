@@ -19,7 +19,7 @@ use CurrencyExchange\Service\UriFactory;
  * @package CurrencyExchange
  * @subpackage Methods
  */
-class GrandTrunk extends AbstractMethod
+class GrandTrunk extends MethodAbstract
 {
 	public function __construct()
 	{
