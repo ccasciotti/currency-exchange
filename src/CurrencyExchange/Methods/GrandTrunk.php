@@ -34,7 +34,7 @@ class GrandTrunk extends MethodAbstract
 	/**
 	 * Implementation of abstract method getExchangeRate
 	 * 
-	 * @throws CurrencyExchange\Exception\ResponseException
+	 * @throws CurrencyExchange\Exception\ParseException
 	 * @return float
 	 */
 	public function getExchangeRate()
