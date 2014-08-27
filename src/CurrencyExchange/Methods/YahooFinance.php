@@ -46,7 +46,7 @@ class YahooFinance extends MethodAbstract
 		$values = explode(',', $this->_httpClient->getResponse()->getBody());
 
 		if (!is_array($values) || !isset($values[1])) {
-			throw new Exception\ResponseException('Exchange rate not found');
+			throw new Exception\ParseException('Exchange rate not found');
 		}
 
 		return (float) $values[1];

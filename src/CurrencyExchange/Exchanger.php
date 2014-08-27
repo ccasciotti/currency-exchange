@@ -11,6 +11,8 @@
 
 namespace CurrencyExchange;
 
+use CurrencyExchange\Service\MethodFactory;
+
 /**
  * Class that retrieve exchange rates from the current web service set
  * 
@@ -51,7 +53,7 @@ class Exchanger
 	 */
 	public function setMethod($method = null)
 	{
-		$this->_method = Service\MethodFactory::factory($method);
+		$this->_method = MethodFactory::factory($method);
 		return $this;
 	}
 

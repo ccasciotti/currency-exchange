@@ -47,7 +47,7 @@ class GoogleExchangeRate extends MethodAbstract
 		$response = Json::decode($this->_httpClient->getResponse()->getBody());
 
 		if (!isset($response->rate)) {
-			throw new Exception\ResponseException('Exchange rate not found');
+			throw new Exception\ParseException('Exchange rate not found');
 		}
 
 		return (float) $response->rate;

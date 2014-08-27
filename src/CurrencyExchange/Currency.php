@@ -54,8 +54,8 @@ class Currency
 	{
 		$code = (string) $code;
 
-		if (!preg_match('/^[a-z]{3}$/i', (string) $code)) {
-			throw new Exception\InvalidArgumentException('Currency code must have exactly 3 characters');
+		if (!preg_match('/^[a-z]{3}$/i', $code)) {
+			throw new Exception\InvalidArgumentException('Currency code must have exactly 3 characters, according to ISO 4217 standard');
 		}
 
 		$this->_code = strtoupper($code);

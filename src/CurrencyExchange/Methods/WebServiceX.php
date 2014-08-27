@@ -44,12 +44,16 @@ class WebServiceX extends MethodAbstract
 		$this->makeRequest();
 
 		$dom = new DOMDocument();
-		$dom->loadXML($this->_httpClient->getResponse()->getBody());
 
+		if (!$dom->loadXML($this->_httpClient->getResponse()->getBody())) {
+			throw new Exception\ParseException('There was an error processing response');
+		}
+
+		/** @var DOMNodeList */
 		$objects = $dom->getElementsByTagName('double');
 
 		if (!$objects->item(0)) {
-			throw new Exception\ResponseException('Exchange rate not found');
+			throw new Exception\ParseException('Exchange rate not found');
 		}
 
 		return (float) $objects->item(0)->nodeValue;

@@ -57,8 +57,14 @@ class UriGet extends UriAbstract
 	 */
 	public function setTemplateUri($templateUri)
 	{
-		if (strpos($templateUri, '{%FROMCURRENCY%}') === false || strpos($templateUri, '{%TOCURRENCY%}') === false) {
-			throw new Exception\InvalidArgumentException('Cannot find "From Currency" or "To Currency" placeholder(s)!');
+		$templateUri = (string) $templateUri;
+
+		if (strpos($templateUri, '{%FROMCURRENCY%}') === false) {
+			throw new Exception\InvalidArgumentException('Cannot find "From Currency" placeholder');
+		}
+
+		if (strpos($templateUri, '{%TOCURRENCY%}') === false) {
+			throw new Exception\InvalidArgumentException('Cannot find "To Currency" placeholder');
 		}
 
 		$this->_templateUri = $templateUri;

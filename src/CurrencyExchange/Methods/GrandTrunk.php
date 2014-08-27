@@ -46,7 +46,7 @@ class GrandTrunk extends MethodAbstract
 		$rate = (float) $this->_httpClient->getResponse()->getBody();
 
 		if (!$rate) {
-			throw new Exception\ResponseException('Exchange rate not found');
+			throw new Exception\ParseException('Exchange rate not found');
 		}
 
 		return $rate;
