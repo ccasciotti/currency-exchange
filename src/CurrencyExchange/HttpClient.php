@@ -14,6 +14,7 @@ namespace CurrencyExchange;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Client\Adapter\Curl as CurlAdapter;
 use Zend\Http\Client as ZendHttpClient;
+use CurrencyExchange\Options;
 
 /**
  * Makes a request to the current Uri
@@ -43,7 +44,7 @@ class HttpClient
 	protected $_httpMethod = null;
 
 	/**
-	 * @var array An array with options for cURL
+	 * @var CurrencyExchange\Options An object for handling options for cURL
 	 */
 	protected $_curlOptions = null;
 
@@ -67,7 +68,8 @@ class HttpClient
 	 */
 	public function __construct()
 	{
-		$this->setCurlOptions(array(
+		$this->_curlOptions = new Options();
+		$this->_curlOptions->setOptions(array(
 			CURLOPT_HEADER => false,
 			CURLOPT_RETURNTRANSFER => true,
 		));
@@ -151,48 +153,6 @@ class HttpClient
 	}
 
 	/**
-	 * Add cURL option
-	 * 
-	 * @param int $curlOpt
-	 * @param mixed $value
-	 * @param boolean $override if true, the existent value of $curlOpt is overridden
-	 * @return CurrencyExchange\HttpClient
-	 */
-	public function addCurlOption($curlOpt, $value, $override = false)
-	{
-		$override = (bool) $override;
-
-		if ($override || !array_key_exists($curlOpt, $this->_curlOptions)) {
-			$this->_curlOptions[$curlOpt] = $value;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Sets cURL options
-	 * 
-	 * @param array $options
-	 * @return CurrencyExchange\HttpClient
-	 */
-	public function setCurlOptions(array $options)
-	{
-		$this->_curlOptions = $options;
-		return $this;
-	}
-
-	/**
-	 * Resets cURL options
-	 * 
-	 * @return CurrencyExchange\HttpClient
-	 */
-	public function resetCurlOptions()
-	{
-		$this->_curlOptions = array();
-		return $this;
-	}
-
-	/**
 	 * Set proxy for the http client
 	 * 
 	 * @param string $proxy A string that identifies proxy server, in the format 'host:port'
@@ -225,18 +185,18 @@ class HttpClient
 		$request->setMethod($this->_httpMethod);
 
 		if ($this->_proxy) {
-			$this->addCurlOption(CURLOPT_PROXY, $this->_proxy);
+			$this->_curlOptions->addOption(CURLOPT_PROXY, $this->_proxy);
 		}
 
 		if ($this->isHttpPost()) {
-			$this->addCurlOption(CURLOPT_POST, true);
-			$this->addCurlOption(CURLOPT_POSTFIELDS, $this->_postData);
+			$this->_curlOptions->addOption(CURLOPT_POST, true);
+			$this->_curlOptions->addOption(CURLOPT_POSTFIELDS, $this->_postData);
 		}
 
 		/** @var Zend\Http\Client\Adapter\Curl */
 		$adapter = new CurlAdapter();
 		$adapter->setOptions(array(
-			'curloptions' => $this->_curlOptions
+			'curloptions' => $this->_curlOptions->getOptions()
 		));
 
 		/** @var Zend\Http\Client */
