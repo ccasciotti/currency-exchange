@@ -16,7 +16,7 @@ use Zend\Http\Client\Adapter\Curl as CurlAdapter;
 use Zend\Http\Client as ZendHttpClient;
 
 /**
- * Class that makes request to the Uri currently set
+ * Makes a request to the current Uri
  * 
  * @package CurrencyExchange
  */
