@@ -11,33 +11,46 @@
 
 namespace CurrencyExchange;
 
-use CurrencyExchange\Service\MethodFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
  * Class that retrieve exchange rates from the current web service set
  * 
  * @package CurrencyExchange
  */
-class Exchanger
+class Exchanger implements ServiceLocatorAwareInterface
 {
+	/** 
+	 * @var Zend\ServiceManager\ServiceLocatorInterface 
+	 */
+	protected $_serviceLocator = null;
+
 	/**
 	 * @var CurrencyExchange\Methods\MethodAbstract Current exchange method
 	 */
 	protected $_method = null;
 
 	/**
-	 * Constructor invokes setMethod
-	 * 
-	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
+	 * Returns Zend's service manager
+	 * @return Zend\ServiceManager\ServiceLocatorInterface
 	 */
-	public function __construct($method = null)
+	public function getServiceLocator()
 	{
-		$this->setMethod($method);
+		return $this->_serviceLocator;
+	}
+
+	/**
+	 * Sets Zend's service manager
+	 * @param Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+	 */
+	public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+	{
+		$this->_serviceLocator = $serviceLocator;
 	}
 
 	/**
 	 * Returns method object
-	 * 
 	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
 	public function getMethod()
@@ -53,7 +66,7 @@ class Exchanger
 	 */
 	public function setMethod($method = null)
 	{
-		$this->_method = MethodFactory::factory($method);
+		$this->_method = $this->getServiceLocator()->get($method);
 		return $this;
 	}
 

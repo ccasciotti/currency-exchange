@@ -11,6 +11,7 @@
 
 namespace CurrencyExchange\Uri;
 
+use CurrencyExchange\HttpClient;
 use CurrencyExchange\Exception;
 
 /**
@@ -21,6 +22,14 @@ use CurrencyExchange\Exception;
  */
 class UriPost extends UriAbstract
 {
+	/**
+	 * Contructor invokes setType method
+	 */
+	public function __construct()
+	{
+		$this->setType(HttpClient::HTTP_POST);
+	}
+
 	/**
 	 * Returns the final uri with currency codes set
 	 * 

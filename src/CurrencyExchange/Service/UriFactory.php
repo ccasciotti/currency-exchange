@@ -11,9 +11,10 @@
 
 namespace CurrencyExchange\Service;
 
-use CurrencyExchange\HttpClient;
-use CurrencyExchange\Uri;
+use CurrencyExchange\Uri\UriAbstract;
 use CurrencyExchange\Exception;
+use Zend\ServiceManager\AbstractFactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory method class for Uri objects
@@ -21,36 +22,41 @@ use CurrencyExchange\Exception;
  * @package CurrencyExchange
  * @subpackage Service
  */
-class UriFactory
+class UriFactory implements AbstractFactoryInterface
 {
+	const URI_NAMESPACE_PREFIX = 'CurrencyExchange\Uri\\';
+
 	/**
-	 * Factory method that instantiates a new UriAbstract object
-	 * 
-	 * @param string $type The type of Uri, can be GET or POST
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
-	 * @return CurrencyExchange\Uri\UriAbstract
-	 */
-	public static function factory($type)
+     * Determine if we can create a service with name
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return bool
+     */
+	public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
 	{
-		/** @var string */
-		$type = strtoupper((string) $type);
+		return class_exists(static::URI_NAMESPACE_PREFIX . $requestedName);
+	}
 
-		if (!in_array($type, array(HttpClient::HTTP_GET, HttpClient::HTTP_POST))) {
-			throw new Exception\InvalidArgumentException('Unknown Uri type: ' . $type);
-		}
+	/**
+     * Create service with name
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return mixed
+     */
+	public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+	{
+		$class = static::URI_NAMESPACE_PREFIX . $requestedName;
 
-		switch ($type) {
-			case HttpClient::HTTP_GET :
+		/** @var CurrencyExchange\Uri\UriAbstract */
+		$uri = new $class;
 
-				/** @var CurrencyExchange\Uri\UriGet */
-				$uri = new Uri\UriGet($type);
-				break;
-
-			case HttpClient::HTTP_POST : 
-
-				/** @var CurrencyExchange\Uri\UriPost */
-				$uri = new Uri\UriPost($type);
-				break;
+		if (!$uri instanceof UriAbstract) {
+			throw new Exception\InvalidArgumentException('Uri must be an instance of CurrencyExchange\Uri\UriAbstract, ' . 
+				get_class($uri) . ' given');
 		}
 
 		return $uri;

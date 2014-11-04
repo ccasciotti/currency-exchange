@@ -34,7 +34,7 @@ abstract class UriAbstract
 	protected $_uri = null;
 
 	/**
-	 * @var string Http type for this Uri (GET or POST)
+	 * @var string Http type for this Uri
 	 */
 	protected $_type = null;
 
@@ -47,16 +47,6 @@ abstract class UriAbstract
 	 * @var CurrencyExchange\Currency
 	 */
 	protected $_toCurrency = null;
-
-	/**
-	 * Constructor invokes setType method
-	 * 
-	 * @param string $type
-	 */
-	public function __construct($type)
-	{
-		$this->setType($type);
-	}
 
 	/**
 	 * Returns the final uri with currency codes set

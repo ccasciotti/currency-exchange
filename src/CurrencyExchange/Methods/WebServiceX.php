@@ -13,8 +13,7 @@ namespace CurrencyExchange\Methods;
 
 use DOMDocument;
 use CurrencyExchange\Exception;
-use CurrencyExchange\HttpClient;
-use CurrencyExchange\Service\UriFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package CurrencyExchange
@@ -22,10 +21,10 @@ use CurrencyExchange\Service\UriFactory;
  */
 class WebServiceX extends MethodAbstract
 {
-	public function __construct()
+	public function __construct(ServiceLocatorInterface $serviceLocator)
 	{
 		/** @var CurrencyExchange\Uri\UriGet */
-		$uri = UriFactory::factory(HttpClient::HTTP_GET);
+		$uri = $serviceLocator->get('UriGet');
 		$uri->setTemplateUri('http://www.webservicex.net/CurrencyConvertor.asmx/ConversionRate?FromCurrency={%FROMCURRENCY%}&ToCurrency={%TOCURRENCY%}');
 
 		// Istantiates and initializes HttpClient and Uri objects
