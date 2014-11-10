@@ -16,19 +16,6 @@ namespace CurrencyExchange;
  */
 class Module
 {
-	public function getServiceConfig()
-    {
-	    return array(
-	        'abstract_factories' => array(
-	        	'CurrencyExchange\Service\MethodFactory',
-	        	'CurrencyExchange\Service\UriFactory',
-	        ),
-	        'invokables' => array(
-				'CurrencyExchange\Exchanger' => 'CurrencyExchange\Exchanger'
-			)
-	    );
-    }
-
 	public function getAutoloaderConfig()
 	{
     	return array(

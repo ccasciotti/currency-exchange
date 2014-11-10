@@ -24,11 +24,6 @@ use CurrencyExchange\Exception;
 abstract class MethodAbstract
 {
 	/**
-	 * @var Zend\ServiceManager\ServiceLocatorInterface
-	 */
-	protected $_serviceLocator = null;
-
-	/**
 	 * @var CurrencyExchange\Uri\UriAbstract
 	 */
 	protected $_uri = null;
@@ -45,27 +40,13 @@ abstract class MethodAbstract
 	 */
 	public function __construct(UriAbstract $uri)
 	{
-		if (!$uriType = $uri->getType()) {
-			throw new Exception\InvalidArgumentException('Uri type must be set');
-		}
-
 		$this->setUri($uri);
 
 		/** @var CurrencyExchange\HttpClient */
 		$httpClient = new HttpClient();
-		$httpClient->setHttpMethod($uriType); // Set http method for this exchange method
+		$httpClient->setHttpMethod($this->_uri->getType()); // Set http method for this exchange method
 
 		$this->setHttpClient($httpClient);
-	}
-
-	/**
-	 * Returns Zend's service locator
-	 * 
-	 * @return Zend\ServiceManager\ServiceLocatorInterface
-	 */
-	public function getServiceLocator()
-	{
-		return $this->_serviceLocator;
 	}
 
 	/**
@@ -86,16 +67,6 @@ abstract class MethodAbstract
 	public function getHttpClient()
 	{
 		return $this->_httpClient;
-	}
-
-	/**
-	 * Set Zend's service locator
-	 * 
-	 * @param Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-	 */
-	public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-	{
-		$this->_serviceLocator = $serviceLocator;
 	}
 
 	/**

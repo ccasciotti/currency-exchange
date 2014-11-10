@@ -12,7 +12,8 @@
 namespace CurrencyExchange\Methods;
 
 use CurrencyExchange\Exception;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use CurrencyExchange\HttpClient;
+use CurrencyExchange\Service\UriFactory;
 
 /**
  * @package CurrencyExchange
@@ -20,10 +21,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class GrandTrunk extends MethodAbstract
 {
-	public function __construct(ServiceLocatorInterface $serviceLocator)
+	public function __construct()
 	{
 		/** @var CurrencyExchange\Uri\UriGet */
-		$uri = $serviceLocator->get('UriGet');
+		$uri = UriFactory::factory(HttpClient::HTTP_GET);
 		$uri->setTemplateUri('http://currencies.apps.grandtrunk.net/getlatest/{%FROMCURRENCY%}/{%TOCURRENCY%}');
 
 		// Istantiates and initializes HttpClient and Uri objects

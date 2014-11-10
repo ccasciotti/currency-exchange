@@ -12,7 +12,8 @@
 namespace CurrencyExchange\Methods;
 
 use CurrencyExchange\Exception;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use CurrencyExchange\HttpClient;
+use CurrencyExchange\Service\UriFactory;
 use Zend\Json\Json;
 
 /**
@@ -21,10 +22,10 @@ use Zend\Json\Json;
  */
 class GoogleExchangeRate extends MethodAbstract
 {
-	public function __construct(ServiceLocatorInterface $serviceLocator)
+	public function __construct()
 	{
 		/** @var CurrencyExchange\Uri\UriGet */
-		$uri = $serviceLocator->get('UriGet');
+		$uri = UriFactory::factory(HttpClient::HTTP_GET);
 		$uri->setTemplateUri('http://rate-exchange.appspot.com/currency?from={%FROMCURRENCY%}&to={%TOCURRENCY%}');
 
 		// Istantiates and initializes HttpClient and Uri objects

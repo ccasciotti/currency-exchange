@@ -11,10 +11,10 @@
 
 namespace CurrencyExchange;
 
-use CurrencyExchange\Options;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Client\Adapter\Curl as CurlAdapter;
 use Zend\Http\Client as ZendHttpClient;
+use CurrencyExchange\Options;
 
 /**
  * Makes a request to the current Uri

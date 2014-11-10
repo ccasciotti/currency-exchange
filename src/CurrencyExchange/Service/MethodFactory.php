@@ -13,8 +13,6 @@ namespace CurrencyExchange\Service;
 
 use CurrencyExchange\Methods\MethodAbstract;
 use CurrencyExchange\Exception;
-use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory method class for exchange method objects
@@ -22,41 +20,40 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @package CurrencyExchange
  * @subpackage Service
  */
-class MethodFactory implements AbstractFactoryInterface
+class MethodFactory
 {
-	const EXCHANGE_METHOD_NAMESPACE_PREFIX = 'CurrencyExchange\Methods\\';
+	/**
+	 * @var string the default exchange method class
+	 */
+	protected static $_defaultMethodClass = 'YahooFinance';
 
 	/**
-     * Determine if we can create a service with name
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return bool
-     */
-	public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+	 * Factory method that instantiates a new AbstractMethod object
+	 * 
+	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
+	 * @throws CurrencyExchange\Exception\InvalidMethodException
+	 * @return CurrencyExchange\Methods\MethodAbstract
+	 */
+	public static function factory($method = null)
 	{
-		return class_exists(static::EXCHANGE_METHOD_NAMESPACE_PREFIX . $requestedName);
-	}
+		if ($method === null) {
+			$method = static::$_defaultMethodClass;
+		}
 
-	/**
-     * Create service with name
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return mixed
-     */
-	public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
-	{
-		$class = static::EXCHANGE_METHOD_NAMESPACE_PREFIX . $requestedName;
+		if (is_string($method)) {
+			$method = 'CurrencyExchange\Methods\\' . $method;
 
-		/** @var CurrencyExchange\Methods\MethodAbstract */
-		$method = new $class($serviceLocator);
+			if (!class_exists($method)) {
+				throw new Exception\InvalidMethodException('Class ' . $method . ' not found');
+			}
 
-		if (!$method instanceof MethodAbstract) {
+			/** @var object */
+			$method = new $method();
+		}
+
+		if (!is_object($method) || !$method instanceof MethodAbstract) {
 			throw new Exception\InvalidMethodException('Exchange method must be an instance of CurrencyExchange\Methods\MethodAbstract, ' . 
-				get_class($method) . ' given');
+				(is_object($method) ? get_class($method) : gettype($method)) . ' given');
 		}
 
 		return $method;
