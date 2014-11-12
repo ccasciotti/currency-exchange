@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange;
 
-use CurrencyExchange\Exception;
+use InvalidArgumentException;
 
 /**
  * Class for handling general options
@@ -47,13 +47,13 @@ class Options
 	 * Retrieve one option
 	 * 
 	 * @param mixed $option
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return mixed
 	 */
 	public function getOption($option)
 	{
 		if (!is_scalar($option)) {
-			throw new Exception\InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
+			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
 		if (isset($this->_options[$option])) {
@@ -86,13 +86,13 @@ class Options
 	 * Remove option
 	 * 
 	 * @param mixed $option
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Options
 	 */
 	public function removeOption($option)
 	{
 		if (!is_scalar($option)) {
-			throw new Exception\InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
+			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
 		if (array_key_exists($option, $this->_options)) {
@@ -106,14 +106,14 @@ class Options
 	 * Sets array of options
 	 * 
 	 * @param array $options
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Options
 	 */
 	public function setOptions(array $options)
 	{
 		foreach ($options as $option => $optionValue) {
 			if (!is_scalar($option)) {
-				throw new Exception\InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
+				throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 			}
 		}
 

@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange\Methods;
 
-use CurrencyExchange\Exception;
+use CurrencyExchange\Exception\ParseException;
 use CurrencyExchange\HttpClient;
 use CurrencyExchange\Service\UriFactory;
 
@@ -46,7 +46,7 @@ class YahooFinance extends MethodAbstract
 		$values = explode(',', $this->_httpClient->getResponse()->getBody());
 
 		if (!is_array($values) || !isset($values[1])) {
-			throw new Exception\ParseException('Exchange rate not found');
+			throw new ParseException('Exchange rate not found');
 		}
 
 		return (float) $values[1];

@@ -11,9 +11,9 @@
 
 namespace CurrencyExchange\Uri;
 
+use InvalidArgumentException;
 use CurrencyExchange\Currency;
 use CurrencyExchange\HttpClient;
-use CurrencyExchange\Exception;
 
 /**
  * Abstract Uri class, it contains commons methods for each uri type
@@ -101,7 +101,7 @@ abstract class UriAbstract
 	 * Sets the type of this Uri, can be GET or POST
 	 * 
 	 * @param string $type Uri type, can be GET or POST
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	public function setType($type)
@@ -109,7 +109,7 @@ abstract class UriAbstract
 		$type = strtoupper((string) $type);
 
 		if (!in_array($type, array(HttpClient::HTTP_GET, HttpClient::HTTP_POST))) {
-			throw new Exception\InvalidArgumentException('Uri type must be GET or POST, ' . $type . ' given');
+			throw new InvalidArgumentException('Uri type must be GET or POST, ' . $type . ' given');
 		}
 
 		$this->_type = $type;

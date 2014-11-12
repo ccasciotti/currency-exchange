@@ -13,10 +13,9 @@ namespace CurrencyExchange\Methods;
 
 use CurrencyExchange\HttpClient;
 use CurrencyExchange\Uri\UriAbstract;
-use CurrencyExchange\Exception;
 
 /**
- * Base class for each exchange method
+ * Abstract class for each exchange method
  * 
  * @package CurrencyExchange
  * @subpackage Methods

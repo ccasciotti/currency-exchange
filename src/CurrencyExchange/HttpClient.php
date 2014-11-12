@@ -11,10 +11,12 @@
 
 namespace CurrencyExchange;
 
+use InvalidArgumentException;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Client\Adapter\Curl as CurlAdapter;
-use Zend\Http\Client as ZendHttpClient;
+use Zend\Http\Client as ZfHttpClient;
 use CurrencyExchange\Options;
+use CurrencyExchange\Exception\ResponseException;
 
 /**
  * Makes a request to the current Uri
@@ -125,7 +127,7 @@ class HttpClient
 	 * Sets the Http method, only GET or POST are actually supported
 	 * 
 	 * @param string $httpMethod Can be GET or POST
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function setHttpMethod($httpMethod)
@@ -133,7 +135,7 @@ class HttpClient
 		$httpMethod = strtoupper((string) $httpMethod);
 
 		if (!in_array($httpMethod, array(static::HTTP_GET, static::HTTP_POST))) {
-			throw new Exception\InvalidArgumentException('Http method can be GET or POST, ' . $httpMethod . ' given');
+			throw new InvalidArgumentException('Http method can be GET or POST, ' . $httpMethod . ' given');
 		}
 
 		$this->_httpMethod = $httpMethod;
@@ -156,7 +158,7 @@ class HttpClient
 	 * Set proxy for the http client
 	 * 
 	 * @param string $proxy A string that identifies proxy server, in the format 'host:port'
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function setProxy($proxy)
@@ -164,7 +166,7 @@ class HttpClient
 		$proxy = (string) $proxy;
 
 		if (!preg_match('/^[a-z0-9\.]+:[0-9]+$/iu', $proxy)) {
-			throw new Exception\InvalidArgumentException('Proxy must be a string according to format host:port');
+			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
 		}
 
 		$this->_proxy = $proxy;
@@ -200,14 +202,14 @@ class HttpClient
 		));
 
 		/** @var Zend\Http\Client */
-		$client = new ZendHttpClient();
+		$client = new ZfHttpClient();
 		$client->setAdapter($adapter);
 
 		/** @var Zend\Http\Response */
  		$this->_response = $client->dispatch($request);
 
 		if ($this->_response->getStatusCode() != 200) {
-			throw new Exception\ResponseException('HTTP Error ' . $this->_response->getStatusCode());
+			throw new ResponseException('HTTP Error ' . $this->_response->getStatusCode());
 		}
 
 		return $this;

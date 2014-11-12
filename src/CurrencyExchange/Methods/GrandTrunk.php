@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange\Methods;
 
-use CurrencyExchange\Exception;
+use CurrencyExchange\Exception\ParseException;
 use CurrencyExchange\HttpClient;
 use CurrencyExchange\Service\UriFactory;
 
@@ -46,7 +46,7 @@ class GrandTrunk extends MethodAbstract
 		$rate = (float) $this->_httpClient->getResponse()->getBody();
 
 		if (!$rate) {
-			throw new Exception\ParseException('Exchange rate not found');
+			throw new ParseException('Exchange rate not found');
 		}
 
 		return $rate;

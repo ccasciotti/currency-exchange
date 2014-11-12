@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange\Methods;
 
-use CurrencyExchange\Exception;
+use CurrencyExchange\Exception\ParseException;
 use CurrencyExchange\HttpClient;
 use CurrencyExchange\Service\UriFactory;
 use Zend\Json\Json;
@@ -47,7 +47,7 @@ class GoogleExchangeRate extends MethodAbstract
 		$response = Json::decode($this->_httpClient->getResponse()->getBody());
 
 		if (!isset($response->rate)) {
-			throw new Exception\ParseException('Exchange rate not found');
+			throw new ParseException('Exchange rate not found');
 		}
 
 		return (float) $response->rate;

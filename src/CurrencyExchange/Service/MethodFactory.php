@@ -11,8 +11,8 @@
 
 namespace CurrencyExchange\Service;
 
+use RuntimeException;
 use CurrencyExchange\Methods\MethodAbstract;
-use CurrencyExchange\Exception;
 
 /**
  * Factory method class for exchange method objects
@@ -31,7 +31,7 @@ class MethodFactory
 	 * Factory method that instantiates a new AbstractMethod object
 	 * 
 	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
-	 * @throws CurrencyExchange\Exception\InvalidMethodException
+	 * @throws RuntimeException
 	 * @return CurrencyExchange\Methods\MethodAbstract
 	 */
 	public static function factory($method = null)
@@ -44,7 +44,7 @@ class MethodFactory
 			$method = 'CurrencyExchange\Methods\\' . $method;
 
 			if (!class_exists($method)) {
-				throw new Exception\InvalidMethodException('Class ' . $method . ' not found');
+				throw new RuntimeException('Class ' . $method . ' not found');
 			}
 
 			/** @var object */
@@ -52,7 +52,7 @@ class MethodFactory
 		}
 
 		if (!is_object($method) || !$method instanceof MethodAbstract) {
-			throw new Exception\InvalidMethodException('Exchange method must be an instance of CurrencyExchange\Methods\MethodAbstract, ' . 
+			throw new RuntimeException('Exchange method must be an instance of CurrencyExchange\Methods\MethodAbstract, ' . 
 				(is_object($method) ? get_class($method) : gettype($method)) . ' given');
 		}
 

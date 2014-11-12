@@ -12,7 +12,7 @@
 namespace CurrencyExchange\Methods;
 
 use DOMDocument;
-use CurrencyExchange\Exception;
+use CurrencyExchange\Exception\ParseException;
 use CurrencyExchange\HttpClient;
 use CurrencyExchange\Service\UriFactory;
 
@@ -46,14 +46,14 @@ class WebServiceX extends MethodAbstract
 		$dom = new DOMDocument();
 
 		if (!$dom->loadXML($this->_httpClient->getResponse()->getBody())) {
-			throw new Exception\ParseException('There was an error processing response');
+			throw new ParseException('There was an error processing response');
 		}
 
 		/** @var DOMNodeList */
 		$objects = $dom->getElementsByTagName('double');
 
 		if (!$objects->item(0)) {
-			throw new Exception\ParseException('Exchange rate not found');
+			throw new ParseException('Exchange rate not found');
 		}
 
 		return (float) $objects->item(0)->nodeValue;

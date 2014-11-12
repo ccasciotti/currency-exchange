@@ -11,11 +11,13 @@
 
 namespace CurrencyExchange\Exception;
 
+use Exception;
+
 /**
  * @package CurrencyExchange
  * @subpackage Exception
  */
-class ResponseException extends \Exception
+class ResponseException extends Exception
 {
 
 }

@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange\Uri;
 
-use CurrencyExchange\Exception;
+use InvalidArgumentException;
 
 /**
  * Class used to handle uri of each exchange method that uses uri with Http POST mode
@@ -24,21 +24,21 @@ class UriPost extends UriAbstract
 	/**
 	 * Returns the final uri with currency codes set
 	 * 
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return string
 	 */
 	public function getFinalUri()
 	{
 		if (!$this->_templateUri) {
-			throw new Exception\InvalidArgumentException('Template Uri not set');
+			throw new InvalidArgumentException('Template Uri not set');
 		}
 
 		if (!$this->_fromCurrency) {
-			throw new Exception\InvalidArgumentException('"From Currency" not set');
+			throw new InvalidArgumentException('"From Currency" not set');
 		}
 
 		if (!$this->_toCurrency) {
-			throw new Exception\InvalidArgumentException('"To Currency" not set');
+			throw new InvalidArgumentException('"To Currency" not set');
 		}
 
 		$this->_uri = $this->_templateUri;

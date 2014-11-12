@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange\Uri;
 
-use CurrencyExchange\Exception;
+use InvalidArgumentException;
 
 /**
  * Class used to handle uri of each exchange method that uses uri with Http GET mode
@@ -24,21 +24,21 @@ class UriGet extends UriAbstract
 	/**
 	 * Returns the final uri with currency codes set
 	 * 
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return string
 	 */
 	public function getFinalUri()
 	{
 		if (!$this->_templateUri) {
-			throw new Exception\InvalidArgumentException('Template Uri not set');
+			throw new InvalidArgumentException('Template Uri not set');
 		}
 
 		if (!$this->_fromCurrency) {
-			throw new Exception\InvalidArgumentException('"From Currency" not set');
+			throw new InvalidArgumentException('"From Currency" not set');
 		}
 
 		if (!$this->_toCurrency) {
-			throw new Exception\InvalidArgumentException('"To Currency" not set');
+			throw new InvalidArgumentException('"To Currency" not set');
 		}
 
 		$search = array('{%FROMCURRENCY%}', '{%TOCURRENCY%}');
@@ -52,7 +52,7 @@ class UriGet extends UriAbstract
 	 * Set template uri with currency placeholders
 	 * 
 	 * @param string $templateUri
-	 * @throws CurrencyExchange\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Uri\UriGet
 	 */
 	public function setTemplateUri($templateUri)
@@ -60,11 +60,11 @@ class UriGet extends UriAbstract
 		$templateUri = (string) $templateUri;
 
 		if (strpos($templateUri, '{%FROMCURRENCY%}') === false) {
-			throw new Exception\InvalidArgumentException('Cannot find "From Currency" placeholder');
+			throw new InvalidArgumentException('Cannot find "From Currency" placeholder');
 		}
 
 		if (strpos($templateUri, '{%TOCURRENCY%}') === false) {
-			throw new Exception\InvalidArgumentException('Cannot find "To Currency" placeholder');
+			throw new InvalidArgumentException('Cannot find "To Currency" placeholder');
 		}
 
 		$this->_templateUri = $templateUri;
