@@ -3,7 +3,7 @@
 /**
  * CurrencyExchange
  * 
- * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * A library to retrieve currency exchanges using several web services
  * 
  * @link https://github.com/teknoman/currency-exchange
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
@@ -14,8 +14,9 @@ namespace CurrencyExchange\Exception;
 use Exception;
 
 /**
+ * Thrown parsing response from http call
+ * 
  * @package CurrencyExchange
- * @subpackage Exception
  */
 class ParseException extends Exception
 {

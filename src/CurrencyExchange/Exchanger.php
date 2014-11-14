@@ -3,7 +3,7 @@
 /**
  * CurrencyExchange
  * 
- * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * A library to retrieve currency exchanges using several web services
  * 
  * @link https://github.com/teknoman/currency-exchange
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange;
 
-use CurrencyExchange\Service\MethodFactory;
+use CurrencyExchange\Factory\ServiceFactory;
 
 /**
  * Class that retrieve exchange rates from the current web service set
@@ -21,39 +21,39 @@ use CurrencyExchange\Service\MethodFactory;
 class Exchanger
 {
 	/**
-	 * @var CurrencyExchange\Methods\MethodAbstract Current exchange method
+	 * @var CurrencyExchange\Service\ServiceAbstract Current exchange service
 	 */
-	protected $_method = null;
+	protected $_service = null;
 
 	/**
-	 * Constructor invokes setMethod
+	 * Constructor invokes setService
 	 * 
-	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
+	 * @param object|string|null $method The exchange service used for getting exchange rate
 	 */
-	public function __construct($method = null)
+	public function __construct($service = null)
 	{
-		$this->setMethod($method);
+		$this->setService($service);
 	}
 
 	/**
-	 * Returns method object
+	 * Returns service object
 	 * 
-	 * @return CurrencyExchange\Methods\MethodAbstract
+	 * @return CurrencyExchange\Service\ServiceAbstract
 	 */
-	public function getMethod()
+	public function getService()
 	{
-		return $this->_method;
+		return $this->_service;
 	}
 
 	/**
-	 * Invokes factory method to instantiates a new Exchange Method object
+	 * Invokes factory method to instantiates a new Exchange Service
 	 * 
-	 * @param object|string|null $method The exchange method used for getting exchange rate. If null, it will be used the default exchange method class
+	 * @param object|string|null $service The exchange service used for getting exchange rate
 	 * @return CurrencyExchange\Exchanger
 	 */
-	public function setMethod($method = null)
+	public function setService($service = null)
 	{
-		$this->_method = MethodFactory::factory($method);
+		$this->_service = ServiceFactory::factory($service);
 		return $this;
 	}
 
@@ -65,7 +65,7 @@ class Exchanger
 	 */
 	public function setProxy($proxy)
 	{
-		$this->_method->getHttpClient()->setProxy($proxy);
+		$this->_service->getHttpClient()->setProxy($proxy);
 		return $this;
 	}
 
@@ -78,12 +78,12 @@ class Exchanger
 	 */
 	public function getExchangeRate($fromCode, $toCode)
 	{
-		$this->_method
+		$this->_service
 			->getUri()
 			->setFromCurrency(new Currency($fromCode))
 			->setToCurrency(new Currency($toCode));
 
-		return $this->_method->getExchangeRate();
+		return $this->_service->getExchangeRate();
 	}
 
 	/**

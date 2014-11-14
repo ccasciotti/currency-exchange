@@ -3,7 +3,7 @@
 /**
  * CurrencyExchange
  * 
- * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * A library to retrieve currency exchanges using several web services
  * 
  * @link https://github.com/teknoman/currency-exchange
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
@@ -17,7 +17,6 @@ use InvalidArgumentException;
  * Class used to handle uri of each exchange method that uses uri with Http POST mode
  * 
  * @package CurrencyExchange
- * @subpackage Uri
  */
 class UriPost extends UriAbstract
 {

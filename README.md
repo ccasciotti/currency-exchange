@@ -1,7 +1,7 @@
 CurrencyExchange
 =================
 
-A Zend Framework 2 module to make currency exchanges using several web services.
+A library to retrieve currency exchanges using several web services.
 
 A simple usage:
 ```php

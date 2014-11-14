@@ -3,7 +3,7 @@
 /**
  * CurrencyExchange
  * 
- * A Module for Zend Framework 2 to retrieve current value exchanges using several web services
+ * A library to retrieve currency exchanges using several web services
  * 
  * @link https://github.com/teknoman/currency-exchange
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
@@ -19,7 +19,6 @@ use CurrencyExchange\HttpClient;
  * Abstract Uri class, it contains commons methods for each uri type
  * 
  * @package CurrencyExchange
- * @subpackage Uri
  */
 abstract class UriAbstract
 {
