@@ -12,7 +12,7 @@
 namespace CurrencyExchange\Uri;
 
 use InvalidArgumentException;
-use CurrencyExchange\Currency;
+use CurrencyExchange\Currency\Currency;
 use CurrencyExchange\HttpClient;
 
 /**

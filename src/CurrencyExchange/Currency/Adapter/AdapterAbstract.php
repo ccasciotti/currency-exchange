@@ -1,44 +1,49 @@
 <?php
 
+/**
+ * CurrencyExchange
+ * 
+ * A library to retrieve currency exchanges using several web services
+ * 
+ * @link https://github.com/teknoman/currency-exchange
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+
 namespace CurrencyExchange\Currency\Adapter;
 
 use CurrencyExchange\Currency\Downloader;
-use Zend\Json\Json;
 
+/**
+ * Abstract class for every adapter, has only getter and setter for CurrencyExchange\Currency\Downloader instance
+ * 
+ * @package CurrencyExchange
+ */
 abstract class AdapterAbstract implements AdapterInterface
 {
+	/**
+	 * @var CurrencyExchange\Currency\Downloader
+	 */
 	protected $_downloader = null;
-	protected $_forceDownload = null;
 
-	public function __construct()
-	{
-		$this->_downloader = new Downloader();
-	}
-	
+	/**
+	 * Returns CurrencyExchange\Currency\Downloader instance
+	 * 
+	 * @return CurrencyExchange\Currency\Downloader
+	 */
 	public function getDownloader()
 	{
 		return $this->_downloader;
 	}
-	
-	public function getForceDownload()
-	{
-		return $this->_forceDownload;
-	}
 
-	public function setForceDownload($forceDownload = true)
+	/**
+	 * Sets CurrencyExchange\Currency\Downloader instance
+	 * 
+	 * @param CurrencyExchange\Currency\Downloader $downloader
+	 * @return CurrencyExchange\Currency\Adapter\AdapterAbstract
+	 */
+	public function setDownloader(Downloader $downloader)
 	{
-		$this->_forceDownload = (bool) $forceDownload;
+		$this->_downloader = $downloader;
 		return $this;
-	}
-	
-	public function prepareData()
-	{
-		$data = Json::decode($this->_downloader->getData());
-
-		$preparedData = array_filter($data, function($element) {
-			return !isset($element->WithdrawalDate);
-		});
-
-		return Json::encode($preparedData);
 	}
 }

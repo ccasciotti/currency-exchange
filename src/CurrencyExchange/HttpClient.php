@@ -56,11 +56,6 @@ class HttpClient
 	protected $_postData = array();
 
 	/**
-	 * @var string Proxy string according to the format host:port (Eg. proxy.example.host:8080)
-	 */
-	protected $_proxy = null;
-
-	/**
 	 * @var Zend\Http\Response
 	 */
 	protected $_response = null;
@@ -169,12 +164,12 @@ class HttpClient
 			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
 		}
 
-		$this->_proxy = $proxy;
+		$this->_curlOptions->addOption(CURLOPT_PROXY, $proxy);
 		return $this;
 	}
 
 	/**
-	 * Makes request to download exchange rate
+	 * Makes request to the uri currently set
 	 * 
 	 * @throws CurrencyExchange\Exception\ResponseException
 	 * @return CurrencyExchange\HttpClient
@@ -185,10 +180,6 @@ class HttpClient
 		$request = new HttpRequest();
 		$request->setUri($this->_uri);
 		$request->setMethod($this->_httpMethod);
-
-		if ($this->_proxy) {
-			$this->_curlOptions->addOption(CURLOPT_PROXY, $this->_proxy);
-		}
 
 		if ($this->isHttpPost()) {
 			$this->_curlOptions->addOption(CURLOPT_POST, true);

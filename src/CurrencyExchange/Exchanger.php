@@ -12,10 +12,11 @@
 namespace CurrencyExchange;
 
 use CurrencyExchange\Factory\ServiceFactory;
-use CurrencyExchange\Currency\Currency;
+use CurrencyExchange\Currency;
+use InvalidArgumentException;
 
 /**
- * Class that retrieve exchange rates from the current web service set
+ * Main class that retrieve exchange rates from the current web service set
  * 
  * @package CurrencyExchange
  */
@@ -27,12 +28,19 @@ class Exchanger
 	protected $_service = null;
 
 	/**
+	 * @var CurrencyExchange\Currency\CurrencyData Currency's data handler
+	 */
+	protected $_currencyData = null;
+
+	/**
 	 * Constructor invokes setService
 	 * 
 	 * @param object|string|null $method The exchange service used for getting exchange rate
 	 */
-	public function __construct($service = null)
+	public function __construct($service = null, $currencyDataAdapter = null)
 	{
+		$this->_currencyData = new Currency\CurrencyData();
+		$this->_currencyData->setAdapter($currencyDataAdapter);
 		$this->setService($service);
 	}
 
@@ -75,14 +83,23 @@ class Exchanger
 	 * 
 	 * @param string $fromCode Currency code according to the format of 3 uppercase characters
 	 * @param string $toCode Currency code according to the format of 3 uppercase characters
+	 * @throws InvalidArgumentException
 	 * @return float
 	 */
 	public function getExchangeRate($fromCode, $toCode)
 	{
+		if (!$this->_currencyData->isValid($fromCode)) {
+			throw new InvalidArgumentException('Currency ' . $fromCode . ' is not a valid currency');
+		}
+
+		if (!$this->_currencyData->isValid($toCode)) {
+			throw new InvalidArgumentException('Currency ' . $toCode . ' is not a valid currency');
+		}
+
 		$this->_service
 			->getUri()
-			->setFromCurrency(new Currency($fromCode))
-			->setToCurrency(new Currency($toCode));
+			->setFromCurrency(new Currency\Currency($fromCode))
+			->setToCurrency(new Currency\Currency($toCode));
 
 		return $this->_service->getExchangeRate();
 	}
