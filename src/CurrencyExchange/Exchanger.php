@@ -12,6 +12,7 @@
 namespace CurrencyExchange;
 
 use CurrencyExchange\Factory\ServiceFactory;
+use CurrencyExchange\Currency\Currency;
 
 /**
  * Class that retrieve exchange rates from the current web service set
