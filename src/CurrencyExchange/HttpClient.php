@@ -209,7 +209,7 @@ class HttpClient
  		$this->_response = $client->dispatch($request);
 
 		if ($this->_response->getStatusCode() != 200) {
-			throw new ResponseException('HTTP Error ' . $this->_response->getStatusCode());
+			throw new ResponseException('HTTP Error ' . $this->_response->getStatusCode() . ' on ' . $this->_uri);
 		}
 
 		return $this;

@@ -48,7 +48,7 @@ class Currency
 	 * 
 	 * @param string $code
 	 * @throws InvalidArgumentException
-	 * @return CurrencyExchange\Currency
+	 * @return CurrencyExchange\Currency\Currency
 	 */
 	public function setCode($code)
 	{

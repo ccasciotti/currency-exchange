@@ -3,7 +3,6 @@
 namespace CurrencyExchange\Currency;
 
 use CurrencyExchange\HttpClient;
-use Zend\Json\Json;
 
 class Downloader
 {
@@ -17,17 +16,6 @@ class Downloader
 	public function getHttpClient()
 	{
 		return $this->_httpClient;
-	}
-
-	public function getForceDownload()
-	{
-		return $this->_forceDownload;
-	}
-
-	public function setForceDownload($forceDownload = false)
-	{
-		$this->_forceDownload = (bool) $forceDownload;
-		return $this;
 	}
 
 	public function syncData()

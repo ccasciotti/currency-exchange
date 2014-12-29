@@ -1,11 +1,12 @@
 <?php
 
 namespace CurrencyExchange\Currency\Adapter;
+
 use Zend\Json\Json;
 
 class File extends AdapterAbstract
 {
-	const DATA_FILENAME = 'codes.json';
+	const DATA_FILENAME = 'currency_codes.json';
 
 	public function getDirectory()
 	{
