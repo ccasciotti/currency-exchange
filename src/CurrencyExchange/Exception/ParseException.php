@@ -14,7 +14,7 @@ namespace CurrencyExchange\Exception;
 use Exception;
 
 /**
- * Thrown parsing response from http call
+ * Thrown when parsing response from http call
  * 
  * @package CurrencyExchange
  */

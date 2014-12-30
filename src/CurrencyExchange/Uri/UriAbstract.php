@@ -38,12 +38,12 @@ abstract class UriAbstract
 	protected $_type = null;
 
 	/**
-	 * @var CurrencyExchange\Currency
+	 * @var CurrencyExchange\Currency\Currency
 	 */
 	protected $_fromCurrency = null;
 
 	/**
-	 * @var CurrencyExchange\Currency
+	 * @var CurrencyExchange\Currency\Currency
 	 */
 	protected $_toCurrency = null;
 
@@ -118,7 +118,7 @@ abstract class UriAbstract
 	/**
 	 * Set "From Currency" object
 	 * 
-	 * @param CurrencyExchange\Currency $currency
+	 * @param CurrencyExchange\Currency\Currency $currency
 	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	public function setFromCurrency(Currency $currency)
@@ -130,7 +130,7 @@ abstract class UriAbstract
 	/**
 	 * Set "To Currency" object
 	 * 
-	 * @param CurrencyExchange\Currency $currency
+	 * @param CurrencyExchange\Currency\Currency $currency
 	 * @return CurrencyExchange\Uri\UriAbstract
 	 */
 	public function setToCurrency(Currency $currency)
