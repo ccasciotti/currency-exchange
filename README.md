@@ -33,3 +33,4 @@ If you need to use a proxy, you can set it by invoking *setProxy()* method on $e
 ```php
 $exchanger->setProxy('example.host.com:8080'); // In the format 'host:port'
 ```
+In this major release there is a currencies database (for now, in the form of a JSON file) that is queried each time we set a currency, to check the validity of the currency.
