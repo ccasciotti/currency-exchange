@@ -32,6 +32,11 @@ class Downloader
 	 */
 	protected $_filterData = null;
 
+	/** 
+	 * @var string The default currency database uri
+	 */
+	protected $_currencyDatabaseUri = 'http://data.okfn.org/data/core/currency-codes/r/codes-all.json';
+
 	/**
 	 * Constructor instantiates CurrencyExchange\HttpClient object and sets filterData flag
 	 * 
@@ -76,6 +81,35 @@ class Downloader
 	}
 
 	/**
+	 * Returns Currency Database Uri
+	 * 
+	 * @return string
+	 */
+	public function getCurrencyDatabaseUri()
+	{
+		return $this->_currencyDatabaseUri;
+	}
+
+	/**
+	 * Sets new Currency Database Uri
+	 * 
+	 * @param string $uri
+	 * @throws RuntimeException
+	 * @return CurrencyExchange\Currency\Downloader
+	 */
+	public function setCurrencyDatabaseUri($uri)
+	{
+		$uri = (string) $uri;
+
+		if (filter_var($uri, FILTER_VALIDATE_URL) === false) {
+			throw new RuntimeException('Supplied Currency Database Uri is not a valid Uri.');
+		}
+
+		$this->_currencyDatabaseUri = $uri;
+		return $this;
+	}
+
+	/**
 	 * Make the request and returns its response content
 	 * 
 	 * @return string
@@ -83,7 +117,7 @@ class Downloader
 	public function makeRequest()
 	{
 		$this->_httpClient->setHttpMethod(HttpClient::HTTP_GET);
-		$this->_httpClient->setUri('http://data.okfn.org/data/core/currency-codes/r/codes-all.json');
+		$this->_httpClient->setUri($this->getCurrencyDatabaseUri());
 		$this->_httpClient->makeRequest();
 
 		$data = $this->_httpClient->getResponse()->getBody();

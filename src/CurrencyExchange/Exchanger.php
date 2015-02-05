@@ -67,6 +67,16 @@ class Exchanger
 	}
 
 	/**
+	 * Retrive current currency data handler object
+	 * 
+	 * @return CurrencyExchange\Currency\CurrencyData
+	 */
+	public function getCurrencyData()
+	{
+		return $this->_currencyData;
+	}
+
+	/**
 	 * Set proxy to HttpClient object
 	 * 
 	 * @param string $proxy The proxy string in form host:port
