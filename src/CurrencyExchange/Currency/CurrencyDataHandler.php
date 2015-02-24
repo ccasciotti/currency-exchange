@@ -19,7 +19,7 @@ use InvalidArgumentException;
  * 
  * @package CurrencyExchange
  */
-class CurrencyData
+class CurrencyDataHandler
 {
 	/**
 	 * @var CurrencyExchange\Currency\Adapter\AdapterInterface
@@ -38,6 +38,10 @@ class CurrencyData
 	 */
 	public function getAdapter()
 	{
+		if (!$this->_adapter) {
+			$this->setAdapter();
+		}
+
 		return $this->_adapter;
 	}
 

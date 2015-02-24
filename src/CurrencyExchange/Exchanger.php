@@ -12,7 +12,8 @@
 namespace CurrencyExchange;
 
 use CurrencyExchange\Factory\ServiceFactory;
-use CurrencyExchange\Currency;
+use CurrencyExchange\Currency\Currency;
+use CurrencyExchange\Currency\CurrencyDataHandler;
 use InvalidArgumentException;
 
 /**
@@ -30,18 +31,22 @@ class Exchanger
 	/**
 	 * @var CurrencyExchange\Currency\CurrencyData Currency's data handler
 	 */
-	protected $_currencyData = null;
+	protected $_currencyDataHandler = null;
+
+	/**
+	 * @var boolean If we need to skip data check or not
+	 */
+	protected $_skipCurrencyDataCheck = false;
 
 	/**
 	 * Constructor invokes setService
 	 * 
 	 * @param object|string|null $method The exchange service used for getting exchange rate
 	 */
-	public function __construct($service = null, $currencyDataAdapter = null)
+	public function __construct($service = null, $skipCurrencyDataCheck = false)
 	{
-		$this->_currencyData = new Currency\CurrencyData();
-		$this->_currencyData->setAdapter($currencyDataAdapter);
 		$this->setService($service);
+		$this->setSkipCurrencyDataCheck($skipCurrencyDataCheck);
 	}
 
 	/**
@@ -67,13 +72,39 @@ class Exchanger
 	}
 
 	/**
-	 * Retrive current currency data handler object
+	 * Retrive currency's data handler object
 	 * 
-	 * @return CurrencyExchange\Currency\CurrencyData
+	 * @return CurrencyExchange\Currency\CurrencyDataHandler
 	 */
-	public function getCurrencyData()
+	public function getCurrencyDataHandler()
 	{
-		return $this->_currencyData;
+		if (!$this->_currencyDataHandler) {
+			$this->_currencyDataHandler = new CurrencyDataHandler();
+		}
+
+		return $this->_currencyDataHandler;
+	}
+
+	/**
+	 * Get skip currency data check flag
+	 * 
+	 * @return boolean
+	 */
+	public function getSkipCurrencyDataCheck()
+	{
+		return $this->_skipCurrencyDataCheck;
+	}
+
+	/**
+	 * Set skip currency data check
+	 * 
+	 * @param boolean $skipCurrencyDataCheck
+	 * @return CurrencyExchange\Exchanger
+	 */
+	public function setSkipCurrencyDataCheck($skipCurrencyDataCheck)
+	{
+		$this->_skipCurrencyDataCheck = (bool) $skipCurrencyDataCheck;
+		return $this;
 	}
 
 	/**
@@ -84,7 +115,7 @@ class Exchanger
 	 */
 	public function setProxy($proxy)
 	{
-		$this->_service->getHttpClient()->setProxy($proxy);
+		$this->getService()->getHttpClient()->setProxy($proxy);
 		return $this;
 	}
 
@@ -98,20 +129,22 @@ class Exchanger
 	 */
 	public function getExchangeRate($fromCode, $toCode)
 	{
-		if (!$this->_currencyData->isValid($fromCode)) {
-			throw new InvalidArgumentException('Currency ' . $fromCode . ' is not a valid currency');
+		if (!$this->getSkipCurrencyDataCheck()) {
+			if (!$this->getCurrencyDataHandler()->isValid($fromCode)) {
+				throw new InvalidArgumentException('Currency ' . $fromCode . ' is not a valid currency');
+			}
+
+			if (!$this->getCurrencyDataHandler()->isValid($toCode)) {
+				throw new InvalidArgumentException('Currency ' . $toCode . ' is not a valid currency');
+			}
 		}
 
-		if (!$this->_currencyData->isValid($toCode)) {
-			throw new InvalidArgumentException('Currency ' . $toCode . ' is not a valid currency');
-		}
-
-		$this->_service
+		$this->getService()
 			->getUri()
-			->setFromCurrency(new Currency\Currency($fromCode))
-			->setToCurrency(new Currency\Currency($toCode));
+			->setFromCurrency(new Currency($fromCode))
+			->setToCurrency(new Currency($toCode));
 
-		return $this->_service->getExchangeRate();
+		return $this->getService()->getExchangeRate();
 	}
 
 	/**
