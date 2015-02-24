@@ -72,17 +72,29 @@ class Exchanger
 	}
 
 	/**
-	 * Retrive currency's data handler object
+	 * Retrieve currency's data handler object
 	 * 
 	 * @return CurrencyExchange\Currency\CurrencyDataHandler
 	 */
 	public function getCurrencyDataHandler()
 	{
 		if (!$this->_currencyDataHandler) {
-			$this->_currencyDataHandler = new CurrencyDataHandler();
+			$this->setCurrencyDataHandler(new CurrencyDataHandler());
 		}
 
 		return $this->_currencyDataHandler;
+	}
+
+	/**
+	 * Retrieve currency's data handler object
+	 * 
+	 * @param CurrencyExchange\Currency\CurrencyDataHandler $currencyDataHandler
+	 * @return CurrencyExchange\Currency\CurrencyDataHandler
+	 */
+	public function setCurrencyDataHandler(CurrencyDataHandler $currencyDataHandler)
+	{
+		$this->_currencyDataHandler = $currencyDataHandler;
+		return $this;
 	}
 
 	/**
