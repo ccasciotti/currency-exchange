@@ -1,5 +1,6 @@
 CurrencyExchange
 =================
+[![Build Status](https://travis-ci.org/teknoman/currency-exchange.svg?branch=dev)](https://travis-ci.org/teknoman/currency-exchange)
 
 A library to retrieve currency exchanges using several web services.
 
