@@ -15,6 +15,7 @@ use InvalidArgumentException;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Client\Adapter\Curl as CurlAdapter;
 use Zend\Http\Client as ZfHttpClient;
+use Zend\Http\Response as ZfHttpResponse;
 use CurrencyExchange\Options;
 use CurrencyExchange\Exception\ResponseException;
 
@@ -78,6 +79,26 @@ class HttpClient
 	public function getResponse()
 	{
 		return $this->_response;
+	}
+
+	/**
+	 * Set Http response
+	 * 
+	 * @param Zend\Http\Response $response
+	 * @return CurrencyExchange\HttpClient
+	 */
+	public function setResponse(ZfHttpResponse $response)
+	{
+		$this->_response = $response;
+		return $this;
+	}
+
+	/**
+	 * @return CurrencyExchange\Options
+	 */
+	public function getCurlOptions()
+	{
+		return $this->_curlOptions;
 	}
 
 	/**
@@ -164,7 +185,7 @@ class HttpClient
 			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
 		}
 
-		$this->_curlOptions->addOption(CURLOPT_PROXY, $proxy);
+		$this->getCurlOptions()->addOption(CURLOPT_PROXY, $proxy);
 		return $this;
 	}
 
@@ -182,25 +203,25 @@ class HttpClient
 		$request->setMethod($this->_httpMethod);
 
 		if ($this->isHttpPost()) {
-			$this->_curlOptions->addOption(CURLOPT_POST, true);
-			$this->_curlOptions->addOption(CURLOPT_POSTFIELDS, $this->_postData);
+			$this->getCurlOptions()->addOption(CURLOPT_POST, true);
+			$this->getCurlOptions()->addOption(CURLOPT_POSTFIELDS, $this->getPostData());
 		}
 
 		/** @var Zend\Http\Client\Adapter\Curl */
 		$adapter = new CurlAdapter();
 		$adapter->setOptions(array(
-			'curloptions' => $this->_curlOptions->getOptions()
+			'curloptions' => $this->getCurlOptions()->getOptions()
 		));
 
 		/** @var Zend\Http\Client */
 		$client = new ZfHttpClient();
 		$client->setAdapter($adapter);
 
-		/** @var Zend\Http\Response */
- 		$this->_response = $client->dispatch($request);
+		// setting response
+		$this->setResponse($client->dispatch($request));
 
-		if ($this->_response->getStatusCode() != 200) {
-			throw new ResponseException('HTTP Error ' . $this->_response->getStatusCode() . ' on ' . $this->_uri);
+		if (!$this->getResponse()->isSuccess()) {
+			throw new ResponseException('HTTP Error ' . $this->getResponse()->getStatusCode() . ' on ' . $this->_uri);
 		}
 
 		return $this;
