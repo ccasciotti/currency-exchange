@@ -73,7 +73,11 @@ class Options
 	 */
 	public function addOption($option, $value, $replace = false)
 	{
-		$replace = (bool) $replace;
+        if (!is_scalar($option)) {
+			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
+		}
+
+        $replace = (bool) $replace;
 
 		if (!array_key_exists($option, $this->_options) || $replace) {
 			$this->_options[$option] = $value;
@@ -106,17 +110,10 @@ class Options
 	 * Sets array of options
 	 * 
 	 * @param array $options
-	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Options
 	 */
 	public function setOptions(array $options)
 	{
-		foreach ($options as $option => $optionValue) {
-			if (!is_scalar($option)) {
-				throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
-			}
-		}
-
 		$this->_options = $options;
 		return $this;
 	}

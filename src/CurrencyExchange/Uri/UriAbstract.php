@@ -80,8 +80,16 @@ abstract class UriAbstract
 		return $this->_type;
 	}
 
-	/**
-	 * @return string
+    /**
+     * @return string;
+     */
+    public function getTemplateUri()
+    {
+        return $this->_templateUri;
+    }
+
+    /**
+	 * @return CurrencyExchange\Currency\Currency
 	 */
 	public function getFromCurrency()
 	{
@@ -89,7 +97,7 @@ abstract class UriAbstract
 	}
 
 	/**
-	 * @return string
+	 * @return CurrencyExchange\Currency\Currency
 	 */
 	public function getToCurrency()
 	{

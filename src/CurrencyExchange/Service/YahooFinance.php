@@ -42,7 +42,7 @@ class YahooFinance extends ServiceAbstract
 		$this->makeRequest();
 
 		/** @var array */
-		$values = explode(',', $this->_httpClient->getResponse()->getBody());
+		$values = explode(',', $this->getHttpClient()->getResponse()->getBody());
 
 		if (!is_array($values) || !isset($values[1]) || !($rate = (float) $values[1])) {
 			throw new ParseException('Exchange rate not found');

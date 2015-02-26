@@ -28,22 +28,22 @@ class UriGet extends UriAbstract
 	 */
 	public function getFinalUri()
 	{
-		if (!$this->_templateUri) {
+		if (!$this->getTemplateUri()) {
 			throw new InvalidArgumentException('Template Uri not set');
 		}
 
-		if (!$this->_fromCurrency) {
+		if (!$this->getFromCurrency()) {
 			throw new InvalidArgumentException('"From Currency" not set');
 		}
 
-		if (!$this->_toCurrency) {
+		if (!$this->getToCurrency()) {
 			throw new InvalidArgumentException('"To Currency" not set');
 		}
 
 		$search = array('{%FROMCURRENCY%}', '{%TOCURRENCY%}');
-		$replace = array($this->_fromCurrency->getCode(), $this->_toCurrency->getCode());
+		$replace = array($this->getFromCurrency()->getCode(), $this->getToCurrency()->getCode());
 
-		$this->_uri = str_replace($search, $replace, $this->_templateUri);
+		$this->_uri = str_replace($search, $replace, $this->getTemplateUri());
 		return $this->_uri;
 	}
 
