@@ -32,7 +32,12 @@ class Downloader
 	 */
 	protected $_filterData = null;
 
-	/** 
+    /**
+     * @var string 
+     */
+    protected $_currencyData = null;
+
+    /** 
 	 * @var string The default currency database uri
 	 */
 	protected $_currencyDatabaseUri = 'http://data.okfn.org/data/core/currency-codes/r/codes-all.json';
@@ -69,7 +74,7 @@ class Downloader
 	}
 
 	/**
-	 * Sets filterData flag
+	 * Set to filter data or not
 	 * 
 	 * @param boolean $filterData
 	 * @return CurrencyExchange\Currency\Downloader
@@ -79,6 +84,33 @@ class Downloader
 		$this->_filterData = (bool) $filterData;
 		return $this;
 	}
+
+    /**
+     * Return currency data
+     * 
+     * @return mixed
+     */
+    public function getCurrencyData()
+    {
+        return $this->_currencyData;
+    }
+
+    /**
+     * Set currency data
+     * 
+     * @param mixed $data
+     * @return \CurrencyExchange\Currency\Downloader
+     */
+    public function setCurrencyData($data)
+    {
+        if ($this->getFilterData()) {
+			/** @var string */
+			$data = $this->_filterData($data);
+		}
+
+        $this->_currencyData = $data;
+        return $this;
+    }
 
 	/**
 	 * Returns Currency Database Uri
@@ -110,23 +142,21 @@ class Downloader
 	}
 
 	/**
-	 * Make the request and returns its response content
+	 * Make the request and save the content
 	 * 
-	 * @return string
+	 * @return CurrencyExchange\Currency\Downloader
 	 */
 	public function makeRequest()
 	{
-		$this->_httpClient->setHttpMethod(HttpClient::HTTP_GET);
-		$this->_httpClient->setUri($this->getCurrencyDatabaseUri());
-		$this->_httpClient->makeRequest();
+        $data = $this->getHttpClient()
+                     ->setHttpMethod(HttpClient::HTTP_GET)
+                     ->setUri($this->getCurrencyDatabaseUri())
+                     ->makeRequest()
+                     ->getResponse()
+                     ->getBody();
 
-		$data = $this->_httpClient->getResponse()->getBody();
-		if ($this->_filterData === true) {
-			/** @var string */
-			$data = $this->filterData($data);
-		}
-
-		return $data;
+        $this->setCurrencyData($data);
+        return $this;
 	}
 
 	/**
@@ -135,15 +165,16 @@ class Downloader
 	 * @param string $data
 	 * @return string
 	 */
-	public function filterData($data)
+	protected function _filterData($data)
 	{
-		/** @var array */
-		$data = Json::decode($data);
+        /** @var array */
+        $data = Json::decode($data);
 
 		$filteredData = array_filter($data, function($element) {
 			return !isset($element->WithdrawalDate);
 		});
 
-		return Json::encode($filteredData);
+        // Note: use array_values to avoid malformed encoding if first element is missing
+		return Json::encode(array_values($filteredData));
 	}
 }

@@ -39,13 +39,10 @@ class GoogleExchangeRate extends ServiceAbstract
 	 */
 	public function getExchangeRate()
 	{
-		// Make request via Http Client
-		$this->makeRequest();
-
 		/** @var object */
-		$response = Json::decode($this->_httpClient->getResponse()->getBody());
+		$response = Json::decode($this->getResponseContent());
 
-		if (!isset($response->rate)) {
+		if (!isset($response->rate) || !$response->rate) {
 			throw new ParseException('Exchange rate not found');
 		}
 

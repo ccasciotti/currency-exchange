@@ -26,7 +26,7 @@ abstract class AdapterAbstract implements AdapterInterface
 	protected $_downloader = null;
 
 	/**
-	 * Returns CurrencyExchange\Currency\Downloader instance
+	 * Returns downloader instance
 	 * 
 	 * @return CurrencyExchange\Currency\Downloader
 	 */
@@ -36,7 +36,7 @@ abstract class AdapterAbstract implements AdapterInterface
 	}
 
 	/**
-	 * Sets CurrencyExchange\Currency\Downloader instance
+	 * Set downloader instance
 	 * 
 	 * @param CurrencyExchange\Currency\Downloader $downloader
 	 * @return CurrencyExchange\Currency\Adapter\AdapterAbstract

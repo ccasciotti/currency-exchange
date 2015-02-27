@@ -82,18 +82,23 @@ class HttpClient
 	}
 
 	/**
-	 * Set Http response
+	 * Set Http response in case of successful request
 	 * 
 	 * @param Zend\Http\Response $response
+     * @throws CurrencyExchange\Exception\ResponseException
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function setResponse(ZfHttpResponse $response)
 	{
-		$this->_response = $response;
+        if (!$response->isSuccess()) {
+			throw new ResponseException('HTTP Error ' . $response->getStatusCode() . ' on ' . $this->getUri());
+		}
+
+        $this->_response = $response;
 		return $this;
 	}
 
-	/**
+    /**
 	 * @return CurrencyExchange\Options
 	 */
 	public function getCurlOptions()
@@ -129,7 +134,17 @@ class HttpClient
 		return $this->_httpMethod === static::HTTP_POST;
 	}
 
-	/**
+    /**
+     * Return current uri
+     * 
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->_uri;
+    }
+
+    /**
 	 * @param string $uri
 	 * @return CurrencyExchange\HttpClient
 	 */
@@ -139,7 +154,17 @@ class HttpClient
 		return $this;
 	}
 
-	/**
+    /**
+     * Return current http method
+     * 
+     * @return string
+     */
+    public function getHttpMethod()
+    {
+        return $this->_httpMethod;
+    }
+
+    /**
 	 * Sets the Http method, only GET or POST are actually supported
 	 * 
 	 * @param string $httpMethod Can be GET or POST
@@ -192,15 +217,14 @@ class HttpClient
 	/**
 	 * Makes request to the uri currently set
 	 * 
-	 * @throws CurrencyExchange\Exception\ResponseException
 	 * @return CurrencyExchange\HttpClient
 	 */
 	public function makeRequest()
 	{
 		/** @var Zend\Http\Request */
 		$request = new HttpRequest();
-		$request->setUri($this->_uri);
-		$request->setMethod($this->_httpMethod);
+		$request->setUri($this->getUri());
+		$request->setMethod($this->getHttpMethod());
 
 		if ($this->isHttpPost()) {
 			$this->getCurlOptions()->addOption(CURLOPT_POST, true);
@@ -219,10 +243,6 @@ class HttpClient
 
 		// setting response
 		$this->setResponse($client->dispatch($request));
-
-		if (!$this->getResponse()->isSuccess()) {
-			throw new ResponseException('HTTP Error ' . $this->getResponse()->getStatusCode() . ' on ' . $this->_uri);
-		}
 
 		return $this;
 	}

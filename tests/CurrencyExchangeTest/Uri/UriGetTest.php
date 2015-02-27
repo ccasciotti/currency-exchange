@@ -42,7 +42,6 @@ class UriGetTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $templateUri = 'http://my.template.uri/{%FROMCURRENCY%}/{%TOCURRENCY%}';
         $uriGet = new UriGet(HttpClient::HTTP_GET);
         $uriGet->setFromCurrency(new Currency('EUR'));
         $uriGet->setToCurrency(new Currency('USD'));
