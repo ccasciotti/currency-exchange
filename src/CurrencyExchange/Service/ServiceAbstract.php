@@ -42,7 +42,7 @@ abstract class ServiceAbstract
 
 		/** @var CurrencyExchange\HttpClient */
 		$httpClient = new HttpClient();
-		$httpClient->setHttpMethod($this->_uri->getType()); // Set http method for this exchange method
+		$httpClient->setHttpMethod($this->getUri()->getType()); // Set http method for this exchange method
 
 		$this->setHttpClient($httpClient);
 	}
@@ -91,20 +91,20 @@ abstract class ServiceAbstract
 		return $this;
 	}
 
-	/**
-	 * Makes request to the final uri sets in Uri object
-	 * 
-	 * @return CurrencyExchange\Service\ServiceAbstract
-	 */
-	public function makeRequest()
-	{
-		$this->_httpClient
-			->setUri($this->_uri->getFinalUri())
-			->makeRequest();
-
-		return $this;
-	}
-
+    /**
+     * Make request via HttpClient object and returns response
+     * 
+     * @return mixed
+     */
+    public function getResponseContent()
+    {
+        return $this->getHttpClient()
+                    ->setUri($this->getUri()->getFinalUri())
+                    ->makeRequest()
+                    ->getResponse()
+                    ->getBody();
+    }
+    
 	/**
 	 * Returns the exchange rate value 
 	 * 

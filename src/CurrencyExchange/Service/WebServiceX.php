@@ -39,12 +39,9 @@ class WebServiceX extends ServiceAbstract
 	 */
 	public function getExchangeRate()
 	{
-		// Make request via Http Client
-		$this->makeRequest();
-
 		$dom = new DOMDocument();
 
-		if (!$dom->loadXML($this->_httpClient->getResponse()->getBody())) {
+		if (!$dom->loadXML($this->getResponseContent())) {
 			throw new ParseException('There was an error processing response');
 		}
 

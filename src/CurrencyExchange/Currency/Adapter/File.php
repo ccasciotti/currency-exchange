@@ -26,12 +26,22 @@ class File extends AdapterAbstract
 	 */
 	const DATA_FILENAME = 'currency_codes.json';
 
-	/**
-	 * Returns the directory in which data file resides
+    /**
+     * @var string Alternative filename for currency data
+     */
+    protected $_dataFilename = null;
+
+    /**
+     * @var string Alternative directory in which save currency data file
+     */
+    protected $_dataDirectory = null;
+
+    /**
+	 * Returns default directory in which data file reside
 	 * 
 	 * @return string
 	 */
-	protected function _getDirectory()
+	protected function _getDefaultDataDirectory()
 	{
 		$directory = explode(DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, __DIR__);
 		$directory = $directory[0] . DIRECTORY_SEPARATOR . 'data';
@@ -39,14 +49,70 @@ class File extends AdapterAbstract
 		return $directory;
 	}
 
-	/**
-	 * Returns the full path of data file
+    /**
+     * Return data directory
+     * 
+     * @return string
+     */
+    public function getDataDirectory()
+    {
+        return $this->_dataDirectory;
+    }
+
+    /**
+     * Set data directory
+     * 
+     * @param string $directory
+     * @return \CurrencyExchange\Currency\Adapter\File
+     */
+    public function setDataDirectory($directory)
+    {
+        $this->_dataDirectory = (string) $directory;
+        return $this;
+    }
+
+    /**
+     * Return data filename
+     * 
+     * @return string
+     */
+    public function getDataFilename()
+    {
+        return $this->_dataFilename;
+    }
+
+    /**
+     * Set data filename
+     * 
+     * @param string $filename
+     * @return \CurrencyExchange\Currency\Adapter\File
+     */
+    public function setDataFilename($filename)
+    {
+        $this->_dataFilename = (string) $filename;
+        return $this;
+    }
+
+    /**
+	 * Returns the full path of currecy data file
 	 * 
 	 * @return string
 	 */
-	protected function _getDataFilename()
+	public function getFullPath()
 	{
-		return $this->_getDirectory() . DIRECTORY_SEPARATOR . static::DATA_FILENAME;
+        if ($this->getDataDirectory()) {
+            $directory = $this->getDataDirectory();
+        } else {
+            $directory = $this->_getDefaultDataDirectory();
+        }
+
+        if ($this->getDataFilename()) {
+            $filename = $this->getDataFilename();
+        } else {
+            $filename = static::DATA_FILENAME;
+        }
+
+        return $directory . DIRECTORY_SEPARATOR . $filename;
 	}
 
 	/**
@@ -57,15 +123,13 @@ class File extends AdapterAbstract
 	 */
 	public function getData()
 	{
-		$filename = $this->_getDataFilename();
-		if (!is_readable($filename)) {
-			throw new RuntimeException("Cannot get data, file $filename is not readable or doesn't exists");
+		$fullPath = $this->getFullPath();
+		if (!is_readable($fullPath)) {
+			throw new RuntimeException("Cannot get data, file $fullPath is not readable or doesn't exists");
 		}
 
-		$content = file_get_contents($filename);
-		$data = Json::decode($content);
-
-		return $data;
+		$content = file_get_contents($fullPath);
+		return Json::decode($content);
 	}
 
 	/**
@@ -76,18 +140,23 @@ class File extends AdapterAbstract
 	 */
 	public function saveData()
 	{
-		$directory = $this->_getDirectory();
-		if (!is_writable($directory)) {
+		if ($this->getDataDirectory()) {
+            $directory = $this->getDataDirectory();
+        } else {
+            $directory = $this->_getDefaultDataDirectory();
+        }
+
+        if (!is_writable($directory)) {
 			throw new RuntimeException('Cannot save data, directory ' . $directory . ' is not writable');
 		}
 
-		if ($this->_downloader === null) {
+		if ($this->getDownloader() === null) {
 			throw new RuntimeException('Cannot save data, downloader not set');
 		}
 
-		$data = $this->_downloader->makeRequest();
+		$data = $this->getDownloader()->makeRequest()->getCurrencyData();
 
-		$bytes = file_put_contents($this->_getDataFilename(), $data);
+		$bytes = file_put_contents($this->getFullPath(), $data);
 		if ($bytes === false) {
 			throw new RuntimeException('Cannot save data, 0 bytes written');
 		}

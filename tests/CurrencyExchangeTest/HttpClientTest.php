@@ -3,20 +3,23 @@
 namespace CurrencyExchangeTest;
 
 use CurrencyExchange\HttpClient;
+use Zend\Http\Response as ZfResponse;
 
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
 	public function testSetProxyThrowsInvalidArgumentExceptionWhenPassingMalformedString()
 	{
 		$this->setExpectedException('\InvalidArgumentException');
-		$httpClient = new HttpClient();
+
+        $httpClient = new HttpClient();
 		$httpClient->setProxy('malformed-proxy-string');
 	}
 
 	public function testSetHttpMethodThrowsInvalidArgumentExceptionWhenPassingUnknownMethod()
 	{
 		$this->setExpectedException('\InvalidArgumentException');
-		$httpClient = new HttpClient();
+
+        $httpClient = new HttpClient();
 		$httpClient->setHttpMethod('unknown-method');
 	}
 
@@ -51,4 +54,28 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertFalse($httpClient->isHttpPost());
 	}
+
+    /**
+     * @dataProvider providerTestSetResponseThrowsResponseExceptionWhenRequestIsNotSuccess
+     */
+    public function testSetResponseThrowsResponseExceptionWhenRequestIsNotSuccess($statusCode)
+    {
+        $this->setExpectedException('\CurrencyExchange\Exception\ResponseException');
+
+        $fakeResponse = new ZfResponse();
+        $fakeResponse->setStatusCode($statusCode);
+
+        $stubHttpClient = new HttpClient();
+        $stubHttpClient->setResponse($fakeResponse);
+    }
+
+    public function providerTestSetResponseThrowsResponseExceptionWhenRequestIsNotSuccess()
+    {
+        return array(
+            array(100),
+            array(300),
+            array(400),
+            array(500),
+        );
+    }
 }

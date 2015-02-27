@@ -18,7 +18,7 @@ class UriAbstractTest extends \PHPUnit_Framework_TestCase
         $stub1 = $this->getMockForAbstractClass('\CurrencyExchange\Uri\UriAbstract', array(HttpClient::HTTP_GET));
         $stub2 = $this->getMockForAbstractClass('\CurrencyExchange\Uri\UriAbstract', array(HttpClient::HTTP_POST));
         
-        $this->assertRegExp('/[A-Z]/i', $stub1->getType());
-        $this->assertRegExp('/[A-Z]/i', $stub2->getType());
+        $this->assertRegExp('/[A-Z]/', $stub1->getType());
+        $this->assertRegExp('/[A-Z]/', $stub2->getType());
     }
 }

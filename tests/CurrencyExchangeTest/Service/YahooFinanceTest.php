@@ -4,31 +4,52 @@ namespace CurrencyExchangeTest\Service;
 
 class YahooFinanceTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var CurrencyExchange\Service\YahooFinance */
-	protected $_service = null;
+    public function testGetExchangeRateReturnCorrectRate()
+    {
+        $response = 'firstcolumn,1.23,thirdcolumn';
 
-	/** @var float */
-	protected $_rate = null;
+        $stubService = $this->getMockBuilder('\CurrencyExchange\Service\YahooFinance')
+                            ->setMethods(array('getResponseContent'))
+                            ->getMock();
 
-	public function setUp()
-	{
-		$service = new \CurrencyExchange\Service\YahooFinance();
-		$service->getUri()->setFromCurrency(new \CurrencyExchange\Currency\Currency('EUR'));
-		$service->getUri()->setToCurrency(new \CurrencyExchange\Currency\Currency('USD'));
-		$this->_rate = $service->getExchangeRate();
-		$this->_service = $service;
-	}
+        $stubService->expects($this->once())
+                    ->method('getResponseContent')
+                    ->willReturn($response);
+        
+        $this->assertGreaterThan(0, $stubService->getExchangeRate());
+    }
 
-	/**
-	 * Tests if YahooFinance url is achievable
-	 */
-	public function testYahooFinanceUrlIsAchievable()
-	{
-		$this->assertEquals(200, $this->_service->getHttpClient()->getResponse()->getStatusCode());
-	}
+    public function testGetExchangeRateThrowsParseExceptionWhenRateIsNotFound()
+    {
+        $this->setExpectedException('\CurrencyExchange\Exception\ParseException');
 
-	public function testResponseIsValid()
-	{
-		$this->assertGreaterThan(0.0, $this->_rate);
-	}
+        $response = 'firstcolumn';
+
+        $stubService = $this->getMockBuilder('\CurrencyExchange\Service\YahooFinance')
+                            ->setMethods(array('getResponseContent'))
+                            ->getMock();
+
+        $stubService->expects($this->once())
+                    ->method('getResponseContent')
+                    ->willReturn($response);
+
+        $stubService->getExchangeRate();
+    }
+
+    public function testGetExchangeRateThrowsParseExceptionWhenRateIsZero()
+    {
+        $this->setExpectedException('\CurrencyExchange\Exception\ParseException');
+
+        $response = 'firstcolumn,0,thirdcolumn';
+
+        $stubService = $this->getMockBuilder('\CurrencyExchange\Service\YahooFinance')
+                            ->setMethods(array('getResponseContent'))
+                            ->getMock();
+
+        $stubService->expects($this->once())
+                    ->method('getResponseContent')
+                    ->willReturn($response);
+
+        $stubService->getExchangeRate();
+    }
 }
