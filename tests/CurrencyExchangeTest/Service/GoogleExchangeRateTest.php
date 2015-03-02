@@ -18,8 +18,8 @@ class GoogleExchangeRateTest extends \PHPUnit_Framework_TestCase
         $stubService->expects($this->once())
                     ->method('getResponseContent')
                     ->willReturn(Json::encode($response));
-        
-        $this->assertGreaterThan(0, $stubService->getExchangeRate());
+
+        $this->assertEquals(1.23, $stubService->getExchangeRate());
     }
 
     public function testGetExchangeRateThrowsParseExceptionWhenRateIsNotFound()

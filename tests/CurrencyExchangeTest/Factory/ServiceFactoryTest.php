@@ -15,10 +15,24 @@ class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 		return $this->assertInstanceOf('\CurrencyExchange\Service\ServiceAbstract', $instance);
 	}
 
-	public function testServiceFactoryThrowsRuntimeException()
+	public function testServiceFactoryThrowsRuntimeExceptionWhenPassingUnknownMethodAsString()
 	{
 		$this->setExpectedException('RuntimeException');
-		$instance = ServiceFactory::factory('UnknownService');
+		ServiceFactory::factory('UnknownService');
+	}
+
+    public function testServiceFactoryThrowsRuntimeExceptionWhenPassingUnknownMethodAsNotObject()
+	{
+		$this->setExpectedException('RuntimeException');
+
+        $service = true;
+		ServiceFactory::factory($service);
+	}
+
+    public function testServiceFactoryThrowsRuntimeExceptionWhenPassingUnknownMethodAsObject()
+	{
+		$this->setExpectedException('RuntimeException');
+		ServiceFactory::factory(new \stdClass());
 	}
 
 	public function testServiceFactoryInstantiatesYahooFinanceServiceAsDefault()

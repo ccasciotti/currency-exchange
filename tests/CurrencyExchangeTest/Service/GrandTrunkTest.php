@@ -16,7 +16,7 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
                     ->method('getResponseContent')
                     ->willReturn($response);
 
-        $this->assertGreaterThan(0, $stubService->getExchangeRate());
+        $this->assertEquals(1.23, $stubService->getExchangeRate());
     }
 
     public function testGetExchangeRateThrowsParseExceptionWhenRateIsNotFound()
