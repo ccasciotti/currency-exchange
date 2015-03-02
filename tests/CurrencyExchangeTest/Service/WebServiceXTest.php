@@ -7,7 +7,7 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
     public function testGetExchangeRateReturnCorrectRate()
     {
         $response = '<?xml version="1.0" encoding="utf-8"?>'
-                . '<double xmlns="http://www.webserviceX.NET/">1.1229</double>';
+                . '<double xmlns="http://www.webserviceX.NET/">1.23</double>';
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\WebServiceX')
                             ->setMethods(array('getResponseContent'))
@@ -17,7 +17,7 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
                     ->method('getResponseContent')
                     ->willReturn($response);
 
-        $this->assertGreaterThan(0, $stubService->getExchangeRate());
+        $this->assertEquals(1.23, $stubService->getExchangeRate());
     }
 
     public function testGetExchangeRateThrowsParseExceptionWhenRateIsNotFound()
