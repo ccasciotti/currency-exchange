@@ -34,7 +34,15 @@ If you need to use a proxy, you can set it by invoking `setProxy()` method on `$
 ```php
 $exchanger->setProxy('example.host.com:8080'); // In the format 'host:port'
 ```
-In release 2.* there is a currencies database (for now, in the form of a JSON file) that is queried each time we set a currency to check the validity of the currency, it's in `data` folder. If you need to skip this check, you can do this by invoking `setSkipCurrencyDataCheck` method with `true`:
+In release 2.* there is a currency database (for now in the form of a JSON file, the goal is to add db adapters) that is queried each time a currency is set to check its validity, it's in `data` folder. You can skip this check by setting `true` on `setSkipCurrencyDataCheck` method:
 ```php
+$exchanger = new \CurrencyExchange\Exchanger();
 $exchanger->setSkipCurrencyDataCheck(true);
+$result = $exchanger->getExchangeRate('EUR', 'USD');
+```
+You can update the currency database with the code below:
+```php
+$currencyAdapter = new \CurrencyExchange\Currency\Adapter\File();
+$currencyAdapter->setDownloader(new \CurrencyExchange\Currency\Downloader());
+$currencyAdapter->saveData();
 ```

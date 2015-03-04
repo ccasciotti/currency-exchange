@@ -14,7 +14,7 @@ class ExchangerTest extends \PHPUnit_Framework_TestCase
 			->method('getExchangeRate')
 			->willReturn(1.35);
 
-		return $this->assertGreaterThan(0, $exchanger->exchange(2, 'EUR', 'GBP'));
+		return $this->assertEquals(2.7, $exchanger->exchange(2, 'EUR', 'GBP'));
 	}
 
 	public function testExchangeRateThrowsInvalidArgumentExceptionPassingInvalidCurrencyCode()

@@ -11,6 +11,8 @@
 
 namespace CurrencyExchange\Currency;
 
+use InvalidArgumentException;
+
 /**
  * Currency class which handles ISO 4217 Currency Code
  * 
@@ -45,11 +47,29 @@ class Currency
 	 * Sets code
 	 * 
 	 * @param string $code
+     * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Currency\Currency
 	 */
 	public function setCode($code)
 	{
-		$this->_code = strtoupper((string) $code);
+        $code = strtoupper((string) $code);
+
+        if (!$this->isFormatValid($code)) {
+			throw new InvalidArgumentException('Currency code must have exactly 3 characters, according to ISO 4217 standard');
+		}
+
+        $this->_code = $code;
 		return $this;
 	}
+
+    /**
+     * Check if currency code supplied is valid, having exactly 3 uppercase characters
+     * 
+     * @param string $code
+     * @return bool
+     */
+    public function isFormatValid($code)
+    {
+        return preg_match('/^[A-Z]{3}$/', $code);
+    }
 }
