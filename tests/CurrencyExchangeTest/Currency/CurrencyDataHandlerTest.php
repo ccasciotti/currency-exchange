@@ -2,17 +2,8 @@
 
 namespace CurrencyExchangeTest\Currency;
 
-use Zend\Json\Json;
-
 class CurrencyDataHandlerTest extends \PHPUnit_Framework_TestCase
 {
-	public function testInvalidCurrencyThrowsInvalidArgumentException()
-	{
-		$this->setExpectedException('InvalidArgumentException');
-		$currencyDataHandler = $this->getObject();
-		$currencyDataHandler->isValid('AB');
-	}
-
 	public function testDefaultAdapterIsInstanceOfAdapterFile()
 	{
 		$currencyDataHandler = $this->getObject();

@@ -12,7 +12,7 @@
 namespace CurrencyExchange\Currency;
 
 use CurrencyExchange\Currency\Adapter;
-use InvalidArgumentException;
+use CurrencyExchange\Currency\Currency;
 
 /**
  * Class used to handle currency's data adapter
@@ -65,16 +65,11 @@ class CurrencyDataHandler
 	 * Checks if the supplied currency code is ISO 4217 compliant
 	 * 
 	 * @param string $code
-	 * @throws InvalidArgumentException
 	 * @return boolean
 	 */
 	public function isValid($code)
 	{
-		$code = strtoupper((string) $code);
-
-		if (!preg_match('/^[a-z]{3}$/i', $code)) {
-			throw new InvalidArgumentException('Currency code must have exactly 3 characters, according to ISO 4217 standard');
-		}
+		$currency = new Currency($code);
 
 		if ($this->_data === null) {
 			$this->_data = $this->getAdapter()->getData();
@@ -84,6 +79,6 @@ class CurrencyDataHandler
 			return $element->AlphabeticCode;
 		}, $this->_data);
 
-		return in_array($code, $codes);
+		return in_array($currency->getCode(), $codes);
 	}
 }

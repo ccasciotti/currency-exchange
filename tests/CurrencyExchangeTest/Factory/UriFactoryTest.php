@@ -18,7 +18,7 @@ class UriFactoryTest extends \PHPUnit_Framework_TestCase
 	public function testServiceFactoryThrowsInvalidArgumentException()
 	{
 		$this->setExpectedException('InvalidArgumentException');
-		$instance = UriFactory::factory('other-method');
+		UriFactory::factory('other-method');
 	}
 
 	public function providerTestUriFactoryReturnsInstanceOfUriAbstract()
