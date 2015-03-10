@@ -20,7 +20,7 @@ use CurrencyExchange\Currency\Downloader;
  */
 abstract class AdapterAbstract implements AdapterInterface
 {
-	/**
+    /**
 	 * @var CurrencyExchange\Currency\Downloader
 	 */
 	protected $_downloader = null;
@@ -32,7 +32,11 @@ abstract class AdapterAbstract implements AdapterInterface
 	 */
 	public function getDownloader()
 	{
-		return $this->_downloader;
+        if (!$this->_downloader) {
+            $this->_downloader = new Downloader();
+        }
+
+        return $this->_downloader;
 	}
 
 	/**
@@ -45,5 +49,18 @@ abstract class AdapterAbstract implements AdapterInterface
 	{
 		$this->_downloader = $downloader;
 		return $this;
+	}
+
+    /**
+	 * Returns default directory in which data file reside
+	 * 
+	 * @return string
+	 */
+	protected function _getDefaultDataDirectory()
+	{
+		$directory = explode(DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, __DIR__);
+		$directory = $directory[0] . DIRECTORY_SEPARATOR . 'data';
+
+		return $directory;
 	}
 }

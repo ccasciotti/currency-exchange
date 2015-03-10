@@ -11,6 +11,7 @@
 
 namespace CurrencyExchange\Currency\Adapter;
 
+use CurrencyExchange\Currency\Adapter\Entity\Currency as CurrencyEntity;
 use Zend\Json\Json;
 use RuntimeException;
 
@@ -35,19 +36,6 @@ class File extends AdapterAbstract
      * @var string Alternative directory in which save currency data file
      */
     protected $_dataDirectory = null;
-
-    /**
-	 * Returns default directory in which data file reside
-	 * 
-	 * @return string
-	 */
-	protected function _getDefaultDataDirectory()
-	{
-		$directory = explode(DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, __DIR__);
-		$directory = $directory[0] . DIRECTORY_SEPARATOR . 'data';
-
-		return $directory;
-	}
 
     /**
      * Return data directory
@@ -115,7 +103,26 @@ class File extends AdapterAbstract
         return $directory . DIRECTORY_SEPARATOR . $filename;
 	}
 
-	/**
+    /**
+     * Transform an array of stdClass objects in an array of CurrencyEntity object
+     * 
+     * @param array $content
+     * @return array
+     */
+    protected function _hydrateCurrencyEntity(array $content)
+    {
+        $container = array();
+
+        foreach ($content as $element) {
+            $currencyEntity = new CurrencyEntity();
+            $currencyEntity->hydrate($element);
+            $container[] = $currencyEntity;
+        }
+
+        return $container;
+    }
+
+    /**
 	 * Implementation of CurrencyExchange\Currency\Adapter\AdapterInterface::getData
 	 * 
 	 * @throws RuntimeException
@@ -129,7 +136,7 @@ class File extends AdapterAbstract
 		}
 
 		$content = file_get_contents($fullPath);
-		return Json::decode($content);
+		return $this->_hydrateCurrencyEntity(Json::decode($content));
 	}
 
 	/**
