@@ -157,10 +157,6 @@ class File extends AdapterAbstract
 			throw new RuntimeException('Cannot save data, directory ' . $directory . ' is not writable');
 		}
 
-		if ($this->getDownloader() === null) {
-			throw new RuntimeException('Cannot save data, downloader not set');
-		}
-
 		$data = $this->getDownloader()->makeRequest()->getCurrencyData();
 
 		$bytes = file_put_contents($this->getFullPath(), $data);

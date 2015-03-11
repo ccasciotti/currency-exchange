@@ -43,11 +43,25 @@ class Database extends AdapterAbstract
     }
 
     /**
+     * Return Connection object
+     * 
      * @return CurrencyExchange\Currency\Adapter\Database\Connection
      */
     public function getConnection()
     {
         return $this->_connection;
+    }
+
+    /**
+     * Set a new Connection object
+     * 
+     * @param \CurrencyExchange\Currency\Adapter\CurrencyExchange\Currency\Adapter\Database\Connection $connection
+     * @return \CurrencyExchange\Currency\Adapter\Database
+     */
+    public function setConnection(Connection $connection)
+    {
+        $this->_connection = $connection;
+        return $this;
     }
 
     /**
@@ -68,7 +82,7 @@ class Database extends AdapterAbstract
     }
 
     /**
-     * Set an EntityManager
+     * Set a Doctrine EntityManager
      * 
      * @param Doctrine\ORM\EntityManager $entityManager
      * @return \CurrencyExchange\Currency\Adapter\Database
@@ -86,6 +100,7 @@ class Database extends AdapterAbstract
      */
     public function emptyTable()
     {
+        // empty table using Doctrine DQL
         $query = $this->getEntityManager()->createQuery('DELETE \CurrencyExchange\Currency\Adapter\Entity\Currency');
         return $query->execute();
     }
@@ -110,10 +125,6 @@ class Database extends AdapterAbstract
 	 */
 	public function saveData()
 	{
-		if ($this->getDownloader() === null) {
-			throw new RuntimeException('Cannot save data, downloader not set');
-		}
-
         if (!$this->emptyTable()) {
             throw new RuntimeException('Cannot empty table, an error has occurred');
         }
@@ -124,9 +135,12 @@ class Database extends AdapterAbstract
         foreach ($currencies as $currency) {
             $currencyEntity = new CurrencyEntity();
             $currencyEntity->hydrate($currency);
+
+            // inform doctrine that has to handle this entity
             $this->getEntityManager()->persist($currencyEntity);
         }
-        
+
+        // commit to database
         $this->getEntityManager()->flush();
 		return $this;
 	}

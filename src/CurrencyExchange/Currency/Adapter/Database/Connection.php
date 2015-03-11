@@ -15,7 +15,7 @@ use CurrencyExchange\Options;
 use InvalidArgumentException;
 
 /**
- * Class that handle doctrine's connection configuration based on db type
+ * Class that handle doctrine's connection configuration based on db platform
  * 
  * @package CurrencyExchange
  */
@@ -60,6 +60,18 @@ class Connection
     }
 
     /**
+     * Set a new Options object
+     * 
+     * @param Options $options
+     * @return \CurrencyExchange\Currency\Adapter\Database\Connection
+     */
+    public function setOptions(Options $options)
+    {
+        $this->_options = $options;
+        return $this;
+    }
+
+    /**
      * Return type of database connection
      * 
      * @return string
@@ -90,7 +102,6 @@ class Connection
     {
         return in_array($this->getConnectionType(), array(
             static::DB_CONNECTION_SQLITE,
-            //static::DB_CONNECTION_MYSQL,
         ));
     }
 
@@ -110,7 +121,7 @@ class Connection
             case static::DB_CONNECTION_SQLITE:
 
                 if (!$path = $this->getOptions()->getOption('path')) {
-                    throw new InvalidArgumentException('Sqlite db path not supplied');
+                    throw new InvalidArgumentException('Sqlite database path not supplied');
                 }
 
                 $config = array(

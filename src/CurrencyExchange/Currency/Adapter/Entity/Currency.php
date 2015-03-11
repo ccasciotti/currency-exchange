@@ -11,27 +11,48 @@
 
 namespace CurrencyExchange\Currency\Adapter\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity @Table(name="currency")
+ * Class that represent a currency object downloaded
+ * 
+ * @ORM\Entity 
+ * @ORM\Table(name="currency", indexes={@ORM\Index(name="alphabetic_codes", columns={"alphabeticCode"})})
+ * 
+ * @package CurrencyExchange
  **/
 class Currency
 {
-    /** @Id @Column(type="integer") @GeneratedValue **/
+    /** 
+     * @ORM\Id 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer") 
+     **/
     protected $id;
 
-    /** @Column(type="string") **/
+    /** 
+     * @ORM\Column(type="string") 
+     **/
     protected $entity;
 
-    /** @Column(type="string") **/
+    /** 
+     * @ORM\Column(type="string") 
+     **/
     protected $currency;
 
-    /** @Column(type="string") **/
+    /** 
+     * @ORM\Column(type="string") 
+     **/
     protected $alphabeticCode;
 
-    /** @Column(type="string") **/
+    /** 
+     * @ORM\Column(type="string") 
+     **/
     protected $numericCode;
 
-    /** @Column(type="string") **/
+    /** 
+     * @ORM\Column(type="string") 
+     **/
     protected $minorUnit;
 
     public function getId()
@@ -89,6 +110,12 @@ class Currency
         $this->minorUnit = $minorUnit;
     }
 
+    /**
+     * Hydrate object with properties of other object/array
+     * 
+     * @param mixed $element Object or array
+     * @return CurrencyExchange\Currency\Adapter\Entity\Currency
+     */
     public function hydrate($element)
     {
         if (is_object($element)) {
@@ -100,18 +127,16 @@ class Currency
                 $this->__set($key, $value);
             }
         }
+
+        return $this;
     }
 
-    public function __get($name)
-    {
-        $method = 'get' . ucfirst($name);
-        if (method_exists($this, $method)) {
-            return $this->{$method}();
-        } else {
-            return null;
-        }
-    }
-
+    /**
+     * If a setter method with composed name is found, is invoked
+     * 
+     * @param string $name
+     * @param mixed $value
+     */
     public function __set($name, $value)
     {
         $method = 'set' . ucfirst($name);
