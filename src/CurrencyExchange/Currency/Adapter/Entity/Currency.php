@@ -11,6 +11,7 @@
 
 namespace CurrencyExchange\Currency\Adapter\Entity;
 
+use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * 
  * @package CurrencyExchange
  **/
-class Currency
+class Currency implements JsonSerializable
 {
     /** 
      * @ORM\Id 
@@ -132,6 +133,22 @@ class Currency
     }
 
     /**
+     * If a getter method with composed name is found, is invoked
+     * 
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        $method = 'get' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->{$method}();
+        }
+
+        return false;
+    }
+
+    /**
      * If a setter method with composed name is found, is invoked
      * 
      * @param string $name
@@ -143,5 +160,20 @@ class Currency
         if (method_exists($this, $method)) {
             $this->{$method}($value);
         }
+    }
+
+    /**
+     * Specify how to represent object when json encoded
+     * 
+     * @return \stdClass
+     */
+    public function jsonSerialize()
+    {
+        $obj = new \stdClass();
+        foreach (get_object_vars($this) as $key => $value) {
+            $obj->{$key} = $value;
+        }
+
+        return $obj;
     }
 }

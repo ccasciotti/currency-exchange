@@ -16,6 +16,7 @@ use CurrencyExchange\Currency\Adapter\Database\Connection;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Zend\Json\Json;
+use RuntimeException;
 
 /**
  * Concrete class to handle get and set of currency's data in database
@@ -74,7 +75,13 @@ class Database extends AdapterAbstract
         if (!$this->_entityManager) {
             $this->_entityManager = EntityManager::create(
                 $this->getConnection()->getConfiguration(), 
-                Setup::createAnnotationMetadataConfiguration(array(__DIR__ . "/Entity"), false)
+                Setup::createAnnotationMetadataConfiguration(
+                    array(__DIR__ . "/Entity"), 
+                    false, 
+                    null,
+                    null,
+                    false
+                )
             );
         }
 
@@ -125,7 +132,7 @@ class Database extends AdapterAbstract
 	 */
 	public function saveData()
 	{
-        if (!$this->emptyTable()) {
+        if ($this->emptyTable() === false) {
             throw new RuntimeException('Cannot empty table, an error has occurred');
         }
 

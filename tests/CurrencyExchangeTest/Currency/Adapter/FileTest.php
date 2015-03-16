@@ -54,13 +54,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testSaveDataSuccessfullyCreatesFilenameWithExpectedContent()
     {
         $element1 = new CurrencyEntity();
-        $element1->setName('Currency1');
+        $element1->setEntity('Currency1');
         
         $element2 = new CurrencyEntity();
-        $element2->setName('Currency2');
+        $element2->setEntity('Currency2');
 
         $element3 = new CurrencyEntity();
-        $element3->setName('Currency3');
+        $element3->setEntity('Currency3');
 
         $originalData = array($element1, $element2, $element3);
         

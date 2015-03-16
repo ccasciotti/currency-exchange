@@ -24,12 +24,12 @@ class Connection
     /**
      * Constant for SQLite connection type
      */
-    const DB_CONNECTION_SQLITE = 'sqlite';
+    const DB_CONNECTION_SQLITE = 'pdo_sqlite';
 
     /**
      * Constant for MySQL connection type
      */
-    const DB_CONNECTION_MYSQL = 'mysql';
+    const DB_CONNECTION_MYSQL = 'pdo_mysql';
 
     /**
      * @var string 
@@ -102,6 +102,7 @@ class Connection
     {
         return in_array($this->getConnectionType(), array(
             static::DB_CONNECTION_SQLITE,
+            static::DB_CONNECTION_MYSQL,
         ));
     }
 
@@ -120,17 +121,34 @@ class Connection
         switch ($this->getConnectionType()) {
             case static::DB_CONNECTION_SQLITE:
 
-                if (!$path = $this->getOptions()->getOption('path')) {
+                if (!$this->getOptions()->getOption('path')) {
                     throw new InvalidArgumentException('Sqlite database path not supplied');
                 }
 
-                $config = array(
-                    'driver' => 'pdo_sqlite',
-                    'path' => $path,
-                );
+                break;
+
+            case static::DB_CONNECTION_MYSQL:
+
+                if (!$this->getOptions()->getOption('host')) {
+                    throw new InvalidArgumentException('Database host not supplied');
+                }
+
+                if (!$this->getOptions()->getOption('user')) {
+                    throw new InvalidArgumentException('Database user not supplied');
+                }
+
+                if (!$this->getOptions()->getOption('password')) {
+                    throw new InvalidArgumentException('Database password not supplied');
+                }
+
+                if (!$this->getOptions()->getOption('dbname')) {
+                    throw new InvalidArgumentException('Database name not supplied');
+                }
+
                 break;
         }
 
-        return $config;
+        $this->getOptions()->addOption('driver', $this->getConnectionType());
+        return $this->getOptions()->getOptions();
     }
 }
