@@ -128,7 +128,7 @@ class Database extends AdapterAbstract
 	 * Implementation of CurrencyExchange\Currency\Adapter\AdapterInterface::saveData
 	 * 
 	 * @throws RuntimeException
-	 * @return CurrencyExchange\Currency\Adapter\File
+	 * @return CurrencyExchange\Currency\Adapter\Database
 	 */
 	public function saveData()
 	{

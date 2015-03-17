@@ -42,14 +42,6 @@ class Connection
     protected $_options = null;
 
     /**
-     * Constructor instantiates a CurrencyExchange\Options object
-     */
-    public function __construct()
-    {
-        $this->_options = new Options();
-    }
-
-    /**
      * Return CurrencyExchange\Options object
      * 
      * @return CurrencyExchange\Options
@@ -62,7 +54,7 @@ class Connection
     /**
      * Set a new Options object
      * 
-     * @param Options $options
+     * @param Options $options A Options object
      * @return \CurrencyExchange\Currency\Adapter\Database\Connection
      */
     public function setOptions(Options $options)
