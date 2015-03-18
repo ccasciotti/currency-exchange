@@ -9,7 +9,7 @@ Add this library in your composer.json:
 
 ```js
 "require": {
-	"teknoman/currency-exchange": "2.1.*"
+	"teknoman/currency-exchange": "2.2.*"
 }
 ```
 
