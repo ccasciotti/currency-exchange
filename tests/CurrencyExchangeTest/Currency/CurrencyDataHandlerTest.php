@@ -2,6 +2,8 @@
 
 namespace CurrencyExchangeTest\Currency;
 
+use CurrencyExchange\Currency\Adapter\Entity\Currency as CurrencyExchange;
+
 class CurrencyDataHandlerTest extends \PHPUnit_Framework_TestCase
 {
 	public function testDefaultAdapterIsInstanceOfAdapterFile()
@@ -12,8 +14,8 @@ class CurrencyDataHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValidReturnTrueIfCurrencyIsFoundInDefaultAdapterData()
     {
-        $adapterDataElement = new \stdClass();
-        $adapterDataElement->AlphabeticCode = 'EUR';
+        $adapterDataElement = new CurrencyExchange();
+        $adapterDataElement->setAlphabeticCode('EUR');
 
         $stubAdapter = $this->getMockBuilder('\CurrencyExchange\Currency\Adapter\File')
                             ->setMethods(array('getData'))
@@ -36,8 +38,8 @@ class CurrencyDataHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValidReturnFalseIfCurrencyIsNotFoundInDefaultAdapterData()
     {
-        $adapterDataElement = new \stdClass();
-        $adapterDataElement->AlphabeticCode = 'EUR';
+        $adapterDataElement = new CurrencyExchange();
+        $adapterDataElement->setAlphabeticCode('EUR');
 
         $stubAdapter = $this->getMockBuilder('\CurrencyExchange\Currency\Adapter\File')
                             ->setMethods(array('getData'))
