@@ -3,6 +3,7 @@
 namespace CurrencyExchangeTest\Currency\Adapter;
 
 use CurrencyExchange\Currency\Adapter\File;
+use CurrencyExchange\Currency\Adapter\Entity\Currency as CurrencyEntity;
 use Zend\Json\Json;
 
 class FileTest extends \PHPUnit_Framework_TestCase
@@ -50,24 +51,16 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $file->saveData();
     }
 
-    public function testSaveDataThrowsRuntimeExceptionWhenDownloaderIsNotSet()
-    {
-        $this->setExpectedException('RuntimeException');
-
-        $file = new File();
-        $file->saveData();
-    }
-
     public function testSaveDataSuccessfullyCreatesFilenameWithExpectedContent()
     {
-        $element1 = new \stdClass();
-        $element1->Name = 'Currency1';
+        $element1 = new CurrencyEntity();
+        $element1->setEntity('Currency1');
         
-        $element2 = new \stdClass();
-        $element2->Name = 'Currency2';
+        $element2 = new CurrencyEntity();
+        $element2->setEntity('Currency2');
 
-        $element3 = new \stdClass();
-        $element3->Name = 'Currency3';
+        $element3 = new CurrencyEntity();
+        $element3->setEntity('Currency3');
 
         $originalData = array($element1, $element2, $element3);
         
