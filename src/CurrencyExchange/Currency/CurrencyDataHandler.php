@@ -76,7 +76,7 @@ class CurrencyDataHandler
 		}
 
 		$codes = array_map(function($element) {
-			return $element->AlphabeticCode;
+			return $element->getAlphabeticCode();
 		}, $this->_data);
 
 		return in_array($currency->getCode(), $codes);
