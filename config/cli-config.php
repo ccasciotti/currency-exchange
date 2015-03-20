@@ -9,7 +9,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 
 // Create Doctrine ORM configuration for Annotations
 $config = Setup::createAnnotationMetadataConfiguration(
-    array(__DIR__ . "/../src/CurrencyExchange/Currency/Adapter/Entity"), 
+    array(__DIR__ . "/../src/Currency/Adapter/Entity"), 
     true,
     null,
     null,
