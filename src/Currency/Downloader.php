@@ -12,7 +12,6 @@
 namespace CurrencyExchange\Currency;
 
 use CurrencyExchange\HttpClient;
-use Zend\Json\Json;
 use RuntimeException;
 
 /**
@@ -168,13 +167,13 @@ class Downloader
 	protected function _filterData($data)
 	{
         /** @var array */
-        $data = Json::decode($data);
+        $data = json_decode($data);
 
 		$filteredData = array_filter($data, function($element) {
 			return !isset($element->WithdrawalDate);
 		});
 
         // Note: use array_values to avoid malformed encoding if first element is missing
-		return Json::encode(array_values($filteredData));
+		return json_encode(array_values($filteredData));
 	}
 }

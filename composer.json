@@ -18,8 +18,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "zendframework/zend-http": "2.3.*",
-        "zendframework/zend-json": "2.3.*",
+        "guzzlehttp/guzzle": "5.*",
         "doctrine/orm": "2.*"
     },
     "require-dev": {
@@ -32,7 +31,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "2.3-dev"
         }
     }
 }

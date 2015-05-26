@@ -4,7 +4,6 @@ namespace CurrencyExchangeTest\Currency\Adapter;
 
 use CurrencyExchange\Currency\Adapter\File;
 use CurrencyExchange\Currency\Adapter\Entity\Currency as CurrencyEntity;
-use Zend\Json\Json;
 
 class FileTest extends \PHPUnit_Framework_TestCase
 {
@@ -74,7 +73,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $stubDownloader->expects($this->once())
                    ->method('getCurrencyData')
-                   ->willReturn(Json::encode($originalData));
+                   ->willReturn(json_encode($originalData));
         
         $tempFileName = tempnam(sys_get_temp_dir(), 'TMP');
 

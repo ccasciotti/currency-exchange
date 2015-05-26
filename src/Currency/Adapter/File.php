@@ -12,7 +12,6 @@
 namespace CurrencyExchange\Currency\Adapter;
 
 use CurrencyExchange\Currency\Adapter\Entity\Currency as CurrencyEntity;
-use Zend\Json\Json;
 use RuntimeException;
 
 /**
@@ -136,7 +135,7 @@ class File extends AdapterAbstract
 		}
 
 		$content = file_get_contents($fullPath);
-		return $this->_hydrateCurrencyEntity(Json::decode($content));
+		return $this->_hydrateCurrencyEntity(json_decode($content));
 	}
 
 	/**

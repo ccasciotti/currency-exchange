@@ -3,7 +3,6 @@
 namespace CurrencyExchangeTest\Currency;
 
 use CurrencyExchange\Currency\Downloader;
-use Zend\Json\Json;
 
 class DownloaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,11 +26,11 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $element3 = new \stdClass();
         $element3->Name = 'Currency3';
         
-        $data = Json::encode(array($element1, $element2, $element3));
+        $data = json_encode(array($element1, $element2, $element3));
         $downloader = new Downloader();
         $downloader->setCurrencyData($data);
         
-        $this->assertArraySubset(array($element2, $element3), Json::decode($downloader->getCurrencyData()));
+        $this->assertArraySubset(array($element2, $element3), json_decode($downloader->getCurrencyData()));
     }
 
     public function testSetCurrencyDataAvoidFilterElementsWithWithdrawalDateWhenFilterFlagIsFalse()
@@ -47,12 +46,12 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase
         $element3->Name = 'Currency3';
 
         $originalData = array($element1, $element2, $element3);
-        $data = Json::encode($originalData);
+        $data = json_encode($originalData);
 
         // Set filter flag to false
         $downloader = new Downloader(false);
         $downloader->setCurrencyData($data);
 
-        $this->assertEquals($originalData, Json::decode($downloader->getCurrencyData()));
+        $this->assertEquals($originalData, json_decode($downloader->getCurrencyData()));
     }
 }

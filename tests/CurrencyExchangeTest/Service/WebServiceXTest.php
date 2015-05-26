@@ -6,8 +6,17 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetExchangeRateReturnCorrectRate()
     {
-        $response = '<?xml version="1.0" encoding="utf-8"?>'
+        $xmlResponse = '<?xml version="1.0" encoding="utf-8"?>'
                 . '<double xmlns="http://www.webserviceX.NET/">1.23</double>';
+
+        $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
+                             ->setConstructorArgs(array(200))
+                             ->setMethods(array('getBody'))
+                             ->getMock();
+
+        $stubResponse->expects($this->any())
+                     ->method('getBody')
+                     ->willReturn($xmlResponse);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\WebServiceX')
                             ->setMethods(array('getResponseContent'))
@@ -15,17 +24,26 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
 
         $stubService->expects($this->once())
                     ->method('getResponseContent')
-                    ->willReturn($response);
+                    ->willReturn($stubResponse);
 
         $this->assertEquals(1.23, $stubService->getExchangeRate());
     }
 
-    public function testGetExchangeRateThrowsParseExceptionWhenRateIsNotFound()
+    public function testGetExchangeRateThrowsParseExceptionWhenRateIsNotFoundOrIsZero()
     {
         $this->setExpectedException('\CurrencyExchange\Exception\ParseException');
 
-        $response = '<?xml version="1.0" encoding="utf-8"?>'
+        $xmlResponse = '<?xml version="1.0" encoding="utf-8"?>'
                 . '<unknown_node>whatever</unknown_node>';
+
+        $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
+                             ->setConstructorArgs(array(200))
+                             ->setMethods(array('getBody'))
+                             ->getMock();
+
+        $stubResponse->expects($this->any())
+                     ->method('getBody')
+                     ->willReturn($xmlResponse);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\WebServiceX')
                             ->setMethods(array('getResponseContent'))
@@ -33,7 +51,7 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
 
         $stubService->expects($this->once())
                     ->method('getResponseContent')
-                    ->willReturn($response);
+                    ->willReturn($stubResponse);
 
         $stubService->getExchangeRate();
     }

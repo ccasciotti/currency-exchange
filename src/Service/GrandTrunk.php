@@ -39,7 +39,7 @@ class GrandTrunk extends ServiceAbstract
 	public function getExchangeRate()
 	{
 		/** @var float */
-		$rate = (float) $this->getResponseContent();
+		$rate = $this->getResponseContent()->getBody();
 
 		if (!$rate) {
 			throw new ParseException('Exchange rate not found');

@@ -11,7 +11,6 @@
 
 namespace CurrencyExchange\Service;
 
-use DOMDocument;
 use CurrencyExchange\Exception\ParseException;
 use CurrencyExchange\HttpClient;
 use CurrencyExchange\Factory\UriFactory;
@@ -39,19 +38,12 @@ class WebServiceX extends ServiceAbstract
 	 */
 	public function getExchangeRate()
 	{
-		$dom = new DOMDocument();
+        $object = $this->getResponseContent()->xml();
 
-		if (!$dom->loadXML($this->getResponseContent())) {
-			throw new ParseException('There was an error processing response');
-		}
-
-		/** @var DOMNodeList */
-		$objects = $dom->getElementsByTagName('double');
-
-		if (!$objects->item(0)) {
+        if (!$object[0] || (float) $object[0] == 0) {
 			throw new ParseException('Exchange rate not found');
 		}
 
-		return (float) $objects->item(0)->nodeValue;
+		return (float) $object[0];
 	}
 }

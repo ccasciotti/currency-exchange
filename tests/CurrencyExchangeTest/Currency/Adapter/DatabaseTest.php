@@ -6,7 +6,6 @@ use CurrencyExchange\Options;
 use CurrencyExchange\Currency\Adapter\Database;
 use CurrencyExchange\Currency\Adapter\Database\Connection;
 use CurrencyExchange\Currency\Adapter\Entity\Currency as CurrencyEntity;
-use Zend\Json\Json;
 
 class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
@@ -81,7 +80,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
         $stubDownloader->expects($this->once())
                    ->method('getCurrencyData')
-                   ->willReturn(Json::encode($originalData));
+                   ->willReturn(json_encode($originalData));
 
         $this->_database->setDownloader($stubDownloader);
         $this->_database->saveData();

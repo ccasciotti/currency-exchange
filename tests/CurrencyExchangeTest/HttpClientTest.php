@@ -3,7 +3,7 @@
 namespace CurrencyExchangeTest;
 
 use CurrencyExchange\HttpClient;
-use Zend\Http\Response as ZfResponse;
+use GuzzleHttp\Message\Response as GuzzleResponse;
 
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,8 +62,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\CurrencyExchange\Exception\ResponseException');
 
-        $fakeResponse = new ZfResponse();
-        $fakeResponse->setStatusCode($statusCode);
+        $fakeResponse = new GuzzleResponse($statusCode);
 
         $stubHttpClient = new HttpClient();
         $stubHttpClient->setResponse($fakeResponse);
