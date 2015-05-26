@@ -15,7 +15,6 @@ use CurrencyExchange\Currency\Adapter\Entity\Currency as CurrencyEntity;
 use CurrencyExchange\Currency\Adapter\Database\Connection;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-use Zend\Json\Json;
 use RuntimeException;
 
 /**
@@ -138,7 +137,7 @@ class Database extends AdapterAbstract
 
         $data = $this->getDownloader()->makeRequest()->getCurrencyData();
 
-        $currencies = Json::decode($data);
+        $currencies = json_decode($data);
         foreach ($currencies as $currency) {
             $currencyEntity = new CurrencyEntity();
             $currencyEntity->hydrate($currency);
