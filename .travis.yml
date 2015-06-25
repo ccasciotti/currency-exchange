@@ -12,7 +12,6 @@ before_script:
   - php composer.phar install
 
 script:
-  - vendor/bin/doctrine orm:schema-tool:create
   - vendor/bin/phpunit -c tests/phpunit.xml tests/
 
 matrix:
