@@ -11,7 +11,7 @@
 
 namespace CurrencyExchange\Service;
 
-use CurrencyExchange\HttpClient;
+use CurrencyExchange\Http\Client as HttpClient;
 use CurrencyExchange\Uri\UriAbstract;
 
 /**
@@ -43,7 +43,7 @@ abstract class ServiceAbstract
 
 		/** @var CurrencyExchange\HttpClient */
 		$httpClient = new HttpClient();
-		$httpClient->setHttpMethod($this->getUri()->getType()); // Set http method for this exchange method
+		$httpClient->getHttpRequest()->setHttpMethod($this->getUri()->getType()); // Set http method for this exchange method
 
 		$this->setHttpClient($httpClient);
 	}

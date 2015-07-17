@@ -9,56 +9,35 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-namespace CurrencyExchange;
+namespace CurrencyExchange\Http;
 
 use InvalidArgumentException;
-use RuntimeException;
+use CurrencyExchange\Exception\ResponseException;
+use CurrencyExchange\Http\Request;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Message\ResponseInterface;
-use CurrencyExchange\Options;
-use CurrencyExchange\Exception\ResponseException;
 
 /**
  * Makes a request to the current Uri
  * 
  * @package CurrencyExchange
  */
-class HttpClient
+class Client
 {
-	/**
-	 * Constant for HTTP method GET
-	 */
-	const HTTP_GET = 'GET';
-
-	/**
-	 * Constant for HTTP method POST
-	 */
-	const HTTP_POST = 'POST';
-
-    /**
-     * Constant for User Agent used in the request
-     */
-    const USER_AGENT = 'Currency Exchange';
-
 	/**
 	 * @var string The uri to call
 	 */
 	protected $_uri = null;
 
 	/**
-	 * @var string Can be GET or POST
+	 * @var CurrencyExchange\Http\Request
 	 */
-	protected $_httpMethod = null;
-
-	/**
-	 * @var CurrencyExchange\Options An object for handling request's options
-	 */
-	protected $_requestOptions = null;
+	protected $_httpRequest = null;
 
 	/**
 	 * @var array The data to send via Http POST 
 	 */
-	protected $_postData = array();
+	protected $_postData = [];
 
 	/**
 	 * @var GuzzleHttp\Message\ResponseInterface
@@ -66,11 +45,11 @@ class HttpClient
 	protected $_response = null;
 
 	/**
-	 * Constructor set default cURL options
+	 * Constructor set Options object
 	 */
 	public function __construct()
 	{
-		$this->_requestOptions = new Options();
+		$this->_httpRequest = new Request();
 	}
 
 	/**
@@ -99,11 +78,11 @@ class HttpClient
 	}
 
     /**
-	 * @return CurrencyExchange\Options
+	 * @return CurrencyExchange\Http\Request
 	 */
-	public function getRequestOptions()
+	public function getHttpRequest()
 	{
-		return $this->_requestOptions;
+		return $this->_httpRequest;
 	}
 
 	/**
@@ -112,26 +91,6 @@ class HttpClient
 	public function getPostData()
 	{
 		return $this->_postData;
-	}
-
-	/**
-	 * Checks if Http method is GET
-	 * 
-	 * @return boolean
-	 */
-	public function isHttpGet()
-	{
-		return $this->_httpMethod === static::HTTP_GET;
-	}
-
-	/**
-	 * Checks if Http method is POST
-	 * 
-	 * @return boolean
-	 */
-	public function isHttpPost()
-	{
-		return $this->_httpMethod === static::HTTP_POST;
 	}
 
     /**
@@ -151,38 +110,6 @@ class HttpClient
 	public function setUri($uri)
 	{
 		$this->_uri = (string) $uri;
-		return $this;
-	}
-
-    /**
-     * Return current http method
-     * 
-     * @return string
-     */
-    public function getHttpMethod()
-    {
-        return $this->_httpMethod;
-    }
-
-    /**
-	 * Sets the Http method, only GET or POST are actually supported
-	 * 
-	 * @param string $httpMethod Can be GET or POST
-	 * @return CurrencyExchange\HttpClient
-     * @throws InvalidArgumentException
-     * @throws RuntimeException
-	 */
-	public function setHttpMethod($httpMethod)
-	{
-        if (!is_string($httpMethod)) {
-            throw new InvalidArgumentException('Http method must be a string, ' . gettype($httpMethod) . ' given.');
-        }
-
-		if (!static::isHttpMethodSupported($httpMethod)) {
-			throw new RuntimeException('Http method can be GET or POST, ' . $httpMethod . ' given');
-		}
-
-		$this->_httpMethod = strtoupper((string) $httpMethod);
 		return $this;
 	}
 
@@ -215,24 +142,9 @@ class HttpClient
 			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
 		}
 
-		$this->getRequestOptions()->add('proxy', $proxy);
+		$this->getHttpRequest()->getOptions()->add('proxy', $proxy);
 		return $this;
 	}
-
-    /**
-     * Checks if current method is a supported http method
-     * 
-     * @static
-     * @param string $method Http method to check
-     * @return bool
-     */
-    public static function isHttpMethodSupported($method)
-    {
-        return in_array(strtoupper((string) $method), [
-            static::HTTP_GET,
-            static::HTTP_POST,
-        ]);
-    }
 
 	/**
 	 * Makes request to the uri currently set
@@ -241,16 +153,14 @@ class HttpClient
 	 */
 	public function makeRequest()
 	{
-        $requestOptions = $this->getRequestOptions()->getAll() ?: [];
+        $requestOptions = $this->getHttpRequest()->getOptions()->getAll() ?: [];
 
         $client = new GuzzleClient();
-        $request = $client->createRequest($this->getHttpMethod(), $this->getUri(), $requestOptions);
-        $request->setHeader('User-Agent', static::USER_AGENT);
-
-        $response = $client->send($request);
+        $client->setDefaultOption('headers', $this->getHttpRequest()->getHeaders()->getAll());
+        $request = $client->createRequest($this->getHttpRequest()->getHttpMethod(), $this->getUri(), $requestOptions);
 
 		// setting response
-		$this->setResponse($response);
+		$this->setResponse($client->send($request));
 		return $this;
 	}
 }

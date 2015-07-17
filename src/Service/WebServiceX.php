@@ -12,7 +12,7 @@
 namespace CurrencyExchange\Service;
 
 use CurrencyExchange\Exception\ParseException;
-use CurrencyExchange\HttpClient;
+use CurrencyExchange\Http\Request as HttpRequest;
 use CurrencyExchange\Factory\UriFactory;
 
 /**
@@ -25,7 +25,7 @@ class WebServiceX extends ServiceAbstract
 	public function __construct()
 	{
 		/** @var CurrencyExchange\Uri\UriGet */
-		$uri = UriFactory::factory(HttpClient::HTTP_GET);
+		$uri = UriFactory::factory(HttpRequest::HTTP_GET);
 		$uri->setTemplateUri('http://www.webservicex.net/CurrencyConvertor.asmx/ConversionRate?FromCurrency={%FROMCURRENCY%}&ToCurrency={%TOCURRENCY%}');
 
 		// Istantiates and initializes HttpClient and Uri objects

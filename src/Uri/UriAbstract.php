@@ -13,7 +13,7 @@ namespace CurrencyExchange\Uri;
 
 use InvalidArgumentException;
 use CurrencyExchange\Currency\Currency;
-use CurrencyExchange\HttpClient;
+use CurrencyExchange\Http\Request as HttpRequest;
 
 /**
  * Abstract Uri class, it contains commons methods for each uri type
@@ -103,7 +103,7 @@ abstract class UriAbstract
             throw new InvalidArgumentException('Uri type must be a string, ' . gettype($type) . ' given.');
         }
 
-		if (!HttpClient::isHttpMethodSupported($type)) {
+		if (!HttpRequest::isHttpMethodSupported($type)) {
 			throw new InvalidArgumentException('Uri type must be GET or POST, ' . $type . ' given');
 		}
 

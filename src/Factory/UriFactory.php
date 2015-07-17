@@ -12,7 +12,7 @@
 namespace CurrencyExchange\Factory;
 
 use InvalidArgumentException;
-use CurrencyExchange\HttpClient;
+use CurrencyExchange\Http\Request as HttpRequest;
 use CurrencyExchange\Uri\UriGet;
 use CurrencyExchange\Uri\UriPost;
 
@@ -33,18 +33,18 @@ class UriFactory
 	 */
 	public static function factory($type)
 	{
-		if (!HttpClient::isHttpMethodSupported($type)) {
+		if (!HttpRequest::isHttpMethodSupported($type)) {
 			throw new InvalidArgumentException('Unknown Uri type: ' . $type);
 		}
 
 		switch (strtoupper((string) $type)) {
-			case HttpClient::HTTP_GET :
+			case HttpRequest::HTTP_GET :
 
 				/** @var CurrencyExchange\Uri\UriGet */
 				$uri = new UriGet($type);
 				break;
 
-			case HttpClient::HTTP_POST : 
+			case HttpRequest::HTTP_POST : 
 
 				/** @var CurrencyExchange\Uri\UriPost */
 				$uri = new UriPost($type);
