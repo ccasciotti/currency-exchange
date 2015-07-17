@@ -6,7 +6,14 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetExchangeRateReturnCorrectRate()
     {
-        $response = 1.23;
+        $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
+                             ->setConstructorArgs(array(200))
+                             ->setMethods(array('getBody'))
+                             ->getMock();
+
+        $stubResponse->expects($this->any())
+                     ->method('getBody')
+                     ->willReturn(1.23);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\GrandTrunk')
                             ->setMethods(array('getResponseContent'))
@@ -14,7 +21,7 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
 
         $stubService->expects($this->once())
                     ->method('getResponseContent')
-                    ->willReturn($response);
+                    ->willReturn($stubResponse);
 
         $this->assertEquals(1.23, $stubService->getExchangeRate());
     }
@@ -23,7 +30,14 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\CurrencyExchange\Exception\ParseException');
 
-        $response = '';
+        $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
+                             ->setConstructorArgs(array(200))
+                             ->setMethods(array('getBody'))
+                             ->getMock();
+
+        $stubResponse->expects($this->any())
+                     ->method('getBody')
+                     ->willReturn(null);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\GrandTrunk')
                             ->setMethods(array('getResponseContent'))
@@ -31,7 +45,7 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
 
         $stubService->expects($this->once())
                     ->method('getResponseContent')
-                    ->willReturn($response);
+                    ->willReturn($stubResponse);
 
         $stubService->getExchangeRate();
     }

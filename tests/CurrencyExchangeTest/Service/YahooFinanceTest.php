@@ -8,13 +8,22 @@ class YahooFinanceTest extends \PHPUnit_Framework_TestCase
     {
         $response = 'firstcolumn,1.23,thirdcolumn';
 
+        $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
+                             ->setConstructorArgs(array(200))
+                             ->setMethods(array('getBody'))
+                             ->getMock();
+
+        $stubResponse->expects($this->any())
+                     ->method('getBody')
+                     ->willReturn($response);
+
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\YahooFinance')
                             ->setMethods(array('getResponseContent'))
                             ->getMock();
 
         $stubService->expects($this->once())
                     ->method('getResponseContent')
-                    ->willReturn($response);
+                    ->willReturn($stubResponse);
 
         $this->assertEquals(1.23, $stubService->getExchangeRate());
     }
@@ -25,13 +34,22 @@ class YahooFinanceTest extends \PHPUnit_Framework_TestCase
 
         $response = 'firstcolumn';
 
+        $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
+                             ->setConstructorArgs(array(200))
+                             ->setMethods(array('getBody'))
+                             ->getMock();
+
+        $stubResponse->expects($this->any())
+                     ->method('getBody')
+                     ->willReturn($response);
+
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\YahooFinance')
                             ->setMethods(array('getResponseContent'))
                             ->getMock();
 
         $stubService->expects($this->once())
                     ->method('getResponseContent')
-                    ->willReturn($response);
+                    ->willReturn($stubResponse);
 
         $stubService->getExchangeRate();
     }
@@ -42,13 +60,22 @@ class YahooFinanceTest extends \PHPUnit_Framework_TestCase
 
         $response = 'firstcolumn,0,thirdcolumn';
 
+        $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
+                             ->setConstructorArgs(array(200))
+                             ->setMethods(array('getBody'))
+                             ->getMock();
+
+        $stubResponse->expects($this->any())
+                     ->method('getBody')
+                     ->willReturn($response);
+
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\YahooFinance')
                             ->setMethods(array('getResponseContent'))
                             ->getMock();
 
         $stubService->expects($this->once())
                     ->method('getResponseContent')
-                    ->willReturn($response);
+                    ->willReturn($stubResponse);
 
         $stubService->getExchangeRate();
     }

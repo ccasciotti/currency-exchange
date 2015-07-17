@@ -94,17 +94,16 @@ abstract class ServiceAbstract
     /**
      * Make request via HttpClient object and returns response
      * 
-     * @return mixed
+     * @return GuzzleHttp\Message\ResponseInterface
      */
     public function getResponseContent()
     {
         return $this->getHttpClient()
                     ->setUri($this->getUri()->getFinalUri())
                     ->makeRequest()
-                    ->getResponse()
-                    ->getBody();
+                    ->getResponse();
     }
-    
+
 	/**
 	 * Returns the exchange rate value 
 	 * 

@@ -44,7 +44,6 @@ class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 	public function providerTestServiceFactoryReturnsInstanceOfServiceAbstract()
 	{
 		return array(
-			array('GoogleExchangeRate'),
 			array('GrandTrunk'),
 			array('WebServiceX'),
 			array('YahooFinance'),

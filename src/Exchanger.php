@@ -13,7 +13,6 @@ namespace CurrencyExchange;
 
 use CurrencyExchange\Factory\ServiceFactory;
 use CurrencyExchange\Currency\Currency;
-use CurrencyExchange\Currency\CurrencyDataHandler;
 use InvalidArgumentException;
 
 /**
@@ -34,19 +33,13 @@ class Exchanger
 	protected $_currencyDataHandler = null;
 
 	/**
-	 * @var boolean If we need to skip data check or not
-	 */
-	protected $_skipCurrencyDataCheck = false;
-
-	/**
 	 * Constructor invokes setService
 	 * 
 	 * @param object|string|null $method The exchange service used for getting exchange rate
 	 */
-	public function __construct($service = null, $skipCurrencyDataCheck = false)
+	public function __construct($service = null)
 	{
 		$this->setService($service);
-		$this->setSkipCurrencyDataCheck($skipCurrencyDataCheck);
 	}
 
 	/**
@@ -72,54 +65,6 @@ class Exchanger
 	}
 
 	/**
-	 * Retrieve currency's data handler object
-	 * 
-	 * @return CurrencyExchange\Currency\CurrencyDataHandler
-	 */
-	public function getCurrencyDataHandler()
-	{
-		if (!$this->_currencyDataHandler) {
-			$this->setCurrencyDataHandler(new CurrencyDataHandler());
-		}
-
-		return $this->_currencyDataHandler;
-	}
-
-	/**
-	 * Retrieve currency's data handler object
-	 * 
-	 * @param CurrencyExchange\Currency\CurrencyDataHandler $currencyDataHandler
-	 * @return CurrencyExchange\Currency\CurrencyDataHandler
-	 */
-	public function setCurrencyDataHandler(CurrencyDataHandler $currencyDataHandler)
-	{
-		$this->_currencyDataHandler = $currencyDataHandler;
-		return $this;
-	}
-
-	/**
-	 * Get skip currency data check flag
-	 * 
-	 * @return boolean
-	 */
-	public function getSkipCurrencyDataCheck()
-	{
-		return $this->_skipCurrencyDataCheck;
-	}
-
-	/**
-	 * Set skip currency data check
-	 * 
-	 * @param boolean $skipCurrencyDataCheck
-	 * @return CurrencyExchange\Exchanger
-	 */
-	public function setSkipCurrencyDataCheck($skipCurrencyDataCheck)
-	{
-		$this->_skipCurrencyDataCheck = (bool) $skipCurrencyDataCheck;
-		return $this;
-	}
-
-	/**
 	 * Set proxy to HttpClient object
 	 * 
 	 * @param string $proxy The proxy string in form host:port
@@ -141,16 +86,6 @@ class Exchanger
 	 */
 	public function getExchangeRate($fromCode, $toCode)
 	{
-		if (!$this->getSkipCurrencyDataCheck()) {
-			if (!$this->getCurrencyDataHandler()->isValid($fromCode)) {
-				throw new InvalidArgumentException('Currency ' . $fromCode . ' is not a valid currency');
-			}
-
-			if (!$this->getCurrencyDataHandler()->isValid($toCode)) {
-				throw new InvalidArgumentException('Currency ' . $toCode . ' is not a valid currency');
-			}
-		}
-
 		$this->getService()
 			->getUri()
 			->setFromCurrency(new Currency($fromCode))

@@ -12,10 +12,9 @@
 namespace CurrencyExchange;
 
 use InvalidArgumentException;
-use Zend\Http\Request as HttpRequest;
-use Zend\Http\Client\Adapter\Curl as CurlAdapter;
-use Zend\Http\Client as ZfHttpClient;
-use Zend\Http\Response as ZfHttpResponse;
+use RuntimeException;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Message\ResponseInterface;
 use CurrencyExchange\Options;
 use CurrencyExchange\Exception\ResponseException;
 
@@ -36,6 +35,11 @@ class HttpClient
 	 */
 	const HTTP_POST = 'POST';
 
+    /**
+     * Constant for User Agent used in the request
+     */
+    const USER_AGENT = 'Currency Exchange';
+
 	/**
 	 * @var string The uri to call
 	 */
@@ -47,9 +51,9 @@ class HttpClient
 	protected $_httpMethod = null;
 
 	/**
-	 * @var CurrencyExchange\Options An object for handling options for cURL
+	 * @var CurrencyExchange\Options An object for handling request's options
 	 */
-	protected $_curlOptions = null;
+	protected $_requestOptions = null;
 
 	/**
 	 * @var array The data to send via Http POST 
@@ -57,7 +61,7 @@ class HttpClient
 	protected $_postData = array();
 
 	/**
-	 * @var Zend\Http\Response
+	 * @var GuzzleHttp\Message\ResponseInterface
 	 */
 	protected $_response = null;
 
@@ -66,15 +70,11 @@ class HttpClient
 	 */
 	public function __construct()
 	{
-		$this->_curlOptions = new Options();
-		$this->_curlOptions->setOptions(array(
-			CURLOPT_HEADER => false,
-			CURLOPT_RETURNTRANSFER => true,
-		));
+		$this->_requestOptions = new Options();
 	}
 
 	/**
-	 * @return Zend\Http\Response
+	 * @return GuzzleHttp\Message\ResponseInterface
 	 */
 	public function getResponse()
 	{
@@ -84,14 +84,14 @@ class HttpClient
 	/**
 	 * Set Http response in case of successful request
 	 * 
-	 * @param Zend\Http\Response $response
+	 * @param GuzzleHttp\Message\ResponseInterface $response
      * @throws CurrencyExchange\Exception\ResponseException
 	 * @return CurrencyExchange\HttpClient
 	 */
-	public function setResponse(ZfHttpResponse $response)
+	public function setResponse(ResponseInterface $response)
 	{
-        if (!$response->isSuccess()) {
-			throw new ResponseException('HTTP Error ' . $response->getStatusCode() . ' on ' . $this->getUri());
+        if ($response->getStatusCode() != 200) {
+			throw new ResponseException('Unsuccessful HTTP request: ' . $response->getStatusCode() . ' on ' . $this->getUri());
 		}
 
         $this->_response = $response;
@@ -101,9 +101,9 @@ class HttpClient
     /**
 	 * @return CurrencyExchange\Options
 	 */
-	public function getCurlOptions()
+	public function getRequestOptions()
 	{
-		return $this->_curlOptions;
+		return $this->_requestOptions;
 	}
 
 	/**
@@ -173,13 +173,15 @@ class HttpClient
 	 */
 	public function setHttpMethod($httpMethod)
 	{
-		$httpMethod = strtoupper((string) $httpMethod);
+        if (!is_string($httpMethod)) {
+            throw new InvalidArgumentException('Http method must be a string, ' . gettype($httpMethod) . ' given.');
+        }
 
-		if (!in_array($httpMethod, array(static::HTTP_GET, static::HTTP_POST))) {
-			throw new InvalidArgumentException('Http method can be GET or POST, ' . $httpMethod . ' given');
+		if (!static::isHttpMethodSupported($httpMethod)) {
+			throw new RuntimeException('Http method can be GET or POST, ' . $httpMethod . ' given');
 		}
 
-		$this->_httpMethod = $httpMethod;
+		$this->_httpMethod = strtoupper((string) $httpMethod);
 		return $this;
 	}
 
@@ -204,15 +206,32 @@ class HttpClient
 	 */
 	public function setProxy($proxy)
 	{
-		$proxy = (string) $proxy;
+		if (!is_string($proxy)) {
+            throw new InvalidArgumentException('Proxy must be a string, ' . gettype($proxy) . ' given.');
+        }
 
 		if (!preg_match('/^[a-z0-9\.]+:[0-9]+$/iu', $proxy)) {
 			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
 		}
 
-		$this->getCurlOptions()->addOption(CURLOPT_PROXY, $proxy);
+		$this->getRequestOptions()->addOption('proxy', $proxy);
 		return $this;
 	}
+
+    /**
+     * Checks if current method is a supported http method
+     * 
+     * @access static
+     * @param string $method Http method to check
+     * @return bool
+     */
+    public static function isHttpMethodSupported($method)
+    {
+        return in_array(strtoupper((string) $method), [
+            static::HTTP_GET,
+            static::HTTP_POST,
+        ]);
+    }
 
 	/**
 	 * Makes request to the uri currently set
@@ -221,29 +240,16 @@ class HttpClient
 	 */
 	public function makeRequest()
 	{
-		/** @var Zend\Http\Request */
-		$request = new HttpRequest();
-		$request->setUri($this->getUri());
-		$request->setMethod($this->getHttpMethod());
+        $requestOptions = $this->getRequestOptions()->getOptions() ?: [];
 
-		if ($this->isHttpPost()) {
-			$this->getCurlOptions()->addOption(CURLOPT_POST, true);
-			$this->getCurlOptions()->addOption(CURLOPT_POSTFIELDS, $this->getPostData());
-		}
+        $client = new GuzzleClient();
+        $request = $client->createRequest($this->getHttpMethod(), $this->getUri(), $requestOptions);
+        $request->setHeader('User-Agent', static::USER_AGENT);
 
-		/** @var Zend\Http\Client\Adapter\Curl */
-		$adapter = new CurlAdapter();
-		$adapter->setOptions(array(
-			'curloptions' => $this->getCurlOptions()->getOptions()
-		));
-
-		/** @var Zend\Http\Client */
-		$client = new ZfHttpClient();
-		$client->setAdapter($adapter);
+        $response = $client->send($request);
 
 		// setting response
-		$this->setResponse($client->dispatch($request));
-
+		$this->setResponse($response);
 		return $this;
 	}
 }

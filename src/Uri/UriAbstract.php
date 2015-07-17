@@ -58,21 +58,6 @@ abstract class UriAbstract
 	}
 
 	/**
-	 * Returns the final uri with currency codes set
-	 * 
-	 * @return string
-	 */
-	abstract public function getFinalUri();
-
-	/**
-	 * Set template uri with currency placeholders (if uri type is GET)
-	 * 
-	 * @param string $templateUri
-	 * @return CurrencyExchange\Uri\UriAbstract
-	 */
-	abstract public function setTemplateUri($templateUri);
-
-	/**
 	 * @return string
 	 */
 	public function getType()
@@ -113,13 +98,15 @@ abstract class UriAbstract
 	 */
 	public function setType($type)
 	{
-		$type = strtoupper((string) $type);
+        if (!is_string($type)) {
+            throw new InvalidArgumentException('Uri type must be a string, ' . gettype($type) . ' given.');
+        }
 
-		if (!in_array($type, array(HttpClient::HTTP_GET, HttpClient::HTTP_POST))) {
+		if (!HttpClient::isHttpMethodSupported($type)) {
 			throw new InvalidArgumentException('Uri type must be GET or POST, ' . $type . ' given');
 		}
 
-		$this->_type = $type;
+		$this->_type = strtoupper((string) $type);
 		return $this;
 	}
 
@@ -146,4 +133,19 @@ abstract class UriAbstract
 		$this->_toCurrency = $currency;
 		return $this;
 	}
+
+    /**
+	 * Returns the final uri with currency codes set
+	 * 
+	 * @return string
+	 */
+	abstract public function getFinalUri();
+
+	/**
+	 * Set template uri with currency placeholders (if uri type is GET)
+	 * 
+	 * @param string $templateUri
+	 * @return CurrencyExchange\Uri\UriAbstract
+	 */
+	abstract public function setTemplateUri($templateUri);
 }

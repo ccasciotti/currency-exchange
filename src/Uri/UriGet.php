@@ -40,8 +40,8 @@ class UriGet extends UriAbstract
 			throw new InvalidArgumentException('"To Currency" not set');
 		}
 
-		$search = array('{%FROMCURRENCY%}', '{%TOCURRENCY%}');
-		$replace = array($this->getFromCurrency()->getCode(), $this->getToCurrency()->getCode());
+		$search = ['{%FROMCURRENCY%}', '{%TOCURRENCY%}'];
+		$replace = [$this->getFromCurrency()->getCode(), $this->getToCurrency()->getCode()];
 
 		$this->_uri = str_replace($search, $replace, $this->getTemplateUri());
 		return $this->_uri;

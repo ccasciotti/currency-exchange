@@ -77,9 +77,7 @@ class Options
 			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
-        $replace = (bool) $replace;
-
-		if (!array_key_exists($option, $this->_options) || $replace) {
+		if (!array_key_exists($option, $this->_options) || $replace === true) {
 			$this->_options[$option] = $value;
 		}
 
