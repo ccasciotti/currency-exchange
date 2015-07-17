@@ -43,10 +43,10 @@ class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
 	public function providerTestServiceFactoryReturnsInstanceOfServiceAbstract()
 	{
-		return array(
-			array('GrandTrunk'),
-			array('WebServiceX'),
-			array('YahooFinance'),
-		);
+		return [
+            ['GrandTrunk'],
+			['WebServiceX'],
+			['YahooFinance'],
+        ];
 	}
 }

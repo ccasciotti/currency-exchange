@@ -26,9 +26,10 @@ class UriFactory
 	/**
 	 * Factory method that instantiates a new UriAbstract object
 	 * 
+     * @static
 	 * @param string $type The type of Uri, can be GET or POST
-	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Uri\UriAbstract
+     * @throws InvalidArgumentException
 	 */
 	public static function factory($type)
 	{

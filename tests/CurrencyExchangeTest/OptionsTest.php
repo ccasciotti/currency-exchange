@@ -9,27 +9,27 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
     public function testAddOptionSuccessfullySetOption()
     {
         $options = new Options();
-        $options->addOption('my-option', 'my-option-value');
+        $options->add('my-option', 'my-option-value');
 
-        $this->assertEquals('my-option-value', $options->getOption('my-option'));
+        $this->assertEquals('my-option-value', $options->get('my-option'));
     }
 
     public function testAddOptionWithReplaceFlagTrueSuccessfullyOverrideOption()
     {
         $options = new Options();
-        $options->addOption('my-option', 'my-option-value');
-        $options->addOption('my-option', 'my-overrided-value', true);
+        $options->add('my-option', 'my-option-value');
+        $options->add('my-option', 'my-overrided-value', true);
 
-        $this->assertEquals('my-overrided-value', $options->getOption('my-option'));
+        $this->assertEquals('my-overrided-value', $options->get('my-option'));
     }
 
     public function testAddOptionWithoutReplaceFlagIgnoreOverridedOption()
     {
         $options = new Options();
-        $options->addOption('my-option', 'my-option-value');
-        $options->addOption('my-option', 'my-overrided-value');
+        $options->add('my-option', 'my-option-value');
+        $options->add('my-option', 'my-overrided-value');
 
-        $this->assertEquals('my-option-value', $options->getOption('my-option'));
+        $this->assertEquals('my-option-value', $options->get('my-option'));
     }
 
     public function testAddOptionThrowsInvalidArgumentExceptionPassingNonScalarValue()
@@ -37,7 +37,7 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException');
 
         $options = new Options();
-        $options->addOption(array(), 'option-value');
+        $options->add([], 'option-value');
     }
 
     public function testGetOptionThrowsInvalidArgumentExceptionPassingNonScalarValue()
@@ -45,25 +45,25 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException');
 
         $options = new Options();
-        $options->getOption(array());
+        $options->get([]);
     }
 
     public function testGetOptionReturnFalsePassingInexistentOption()
     {
         $options = new Options();
-        $value = $options->getOption('my-option');
+        $value = $options->get('my-option');
 
-        $this->assertFalse($value);
+        $this->assertNull($value);
     }
 
     public function testRemoveOptionSuccessfullyUnsetOption()
     {
         $options = new Options();
-        $options->addOption('my-option', 'my-option-value');
-        $options->removeOption('my-option');
-        $value = $options->getOption('my-option');
+        $options->add('my-option', 'my-option-value');
+        $options->remove('my-option');
+        $value = $options->get('my-option');
 
-        $this->assertFalse($value);
+        $this->assertNull($value);
     }
 
     public function testRemoveOptionThrowsInvalidArgumentExceptionPassingNonScalarValue()
@@ -71,33 +71,73 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException');
 
         $options = new Options();
-        $options->removeOption(array());
+        $options->remove([]);
     }
 
-    public function testGetOptionsReturnsArray()
+    public function testGetOptionsReturnsArrayAndIsFilled()
     {
-        $opts = array(
+        $opts = [
             'key1' => 'value1',
             'key2' => 'value2',
-        );
+        ];
 
         $options = new Options();
         $options->setOptions($opts);
 
-        $this->assertTrue(is_array($options->getOptions()));
+        $this->assertTrue(is_array($options->getAll()));
+        $this->assertNotEmpty($options->getAll());
     }
 
-    public function testResetOptionsReturnsEmptyArray()
+    public function testClearReturnsEmptyArray()
     {
-        $opts = array(
+        $opts = [
             'key1' => 'value1',
             'key2' => 'value2',
-        );
+        ];
 
         $options = new Options();
         $options->setOptions($opts);
-        $options->resetOptions();
+        $options->clear();
 
-        $this->assertEmpty($options->getOptions());
+        $this->assertTrue(is_array($options->getAll()));
+        $this->assertEmpty($options->getAll());
+    }
+
+    public function testSetOptionsIgnoringExistentValuesWhenPassingFalseAsSecondParameter()
+    {
+        $opts = [
+            'key1' => 'value1',
+            'key2' => 'value2',
+        ];
+
+        $options = new Options();
+        $options->setOptions($opts);
+
+        $options->setOptions([
+            'key1' => 'overrided-value1',
+            'key3' => 'value3',
+        ]);
+
+        $this->assertEquals('value1', $options->get('key1'));
+        $this->assertEquals('value3', $options->get('key3'));
+    }
+
+    public function testSetOptionsOverrideExistentValuesWhenPassingTrueAsSecondParameter()
+    {
+        $opts = [
+            'key1' => 'value1',
+            'key2' => 'value2',
+        ];
+
+        $options = new Options();
+        $options->setOptions($opts);
+
+        $options->setOptions([
+            'key1' => 'overrided-value1',
+            'key3' => 'value3',
+        ], true);
+
+        $this->assertEquals('overrided-value1', $options->get('key1'));
+        $this->assertEquals('value3', $options->get('key3'));
     }
 }

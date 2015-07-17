@@ -85,8 +85,8 @@ class HttpClient
 	 * Set Http response in case of successful request
 	 * 
 	 * @param GuzzleHttp\Message\ResponseInterface $response
-     * @throws CurrencyExchange\Exception\ResponseException
 	 * @return CurrencyExchange\HttpClient
+     * @throws CurrencyExchange\Exception\ResponseException
 	 */
 	public function setResponse(ResponseInterface $response)
 	{
@@ -168,8 +168,9 @@ class HttpClient
 	 * Sets the Http method, only GET or POST are actually supported
 	 * 
 	 * @param string $httpMethod Can be GET or POST
-	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\HttpClient
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
 	 */
 	public function setHttpMethod($httpMethod)
 	{
@@ -201,8 +202,8 @@ class HttpClient
 	 * Set proxy for the http client
 	 * 
 	 * @param string $proxy A string that identifies proxy server, in the format 'host:port'
-	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\HttpClient
+     * @throws InvalidArgumentException
 	 */
 	public function setProxy($proxy)
 	{
@@ -214,14 +215,14 @@ class HttpClient
 			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
 		}
 
-		$this->getRequestOptions()->addOption('proxy', $proxy);
+		$this->getRequestOptions()->add('proxy', $proxy);
 		return $this;
 	}
 
     /**
      * Checks if current method is a supported http method
      * 
-     * @access static
+     * @static
      * @param string $method Http method to check
      * @return bool
      */
@@ -240,7 +241,7 @@ class HttpClient
 	 */
 	public function makeRequest()
 	{
-        $requestOptions = $this->getRequestOptions()->getOptions() ?: [];
+        $requestOptions = $this->getRequestOptions()->getAll() ?: [];
 
         $client = new GuzzleClient();
         $request = $client->createRequest($this->getHttpMethod(), $this->getUri(), $requestOptions);

@@ -24,9 +24,9 @@ class UriFactoryTest extends \PHPUnit_Framework_TestCase
 
 	public function providerTestUriFactoryReturnsInstanceOfUriAbstract()
 	{
-		return array(
-			array('get'),
-			array('post'),
-		);
+		return [
+            ['get'],
+			['post'],
+        ];
 	}
 }

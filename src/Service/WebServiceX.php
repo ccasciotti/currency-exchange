@@ -16,6 +16,8 @@ use CurrencyExchange\HttpClient;
 use CurrencyExchange\Factory\UriFactory;
 
 /**
+ * Concrete class to handle webservice from WebServiceX
+ * 
  * @package CurrencyExchange
  */
 class WebServiceX extends ServiceAbstract
@@ -33,8 +35,8 @@ class WebServiceX extends ServiceAbstract
 	/**
 	 * Implementation of abstract method getExchangeRate
 	 * 
-	 * @throws CurrencyExchange\Exception\ParseException
 	 * @return float
+     * @throws CurrencyExchange\Exception\ParseException
 	 */
 	public function getExchangeRate()
 	{

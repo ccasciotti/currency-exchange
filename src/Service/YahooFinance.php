@@ -16,6 +16,8 @@ use CurrencyExchange\HttpClient;
 use CurrencyExchange\Factory\UriFactory;
 
 /**
+ * Concrete class to handle webservice from YahooFinance
+ * 
  * @package CurrencyExchange
  */
 class YahooFinance extends ServiceAbstract
@@ -33,8 +35,8 @@ class YahooFinance extends ServiceAbstract
 	/**
 	 * Implementation of abstract method getExchangeRate
 	 * 
-	 * @throws CurrencyExchange\Exception\ParseException
 	 * @return float
+     * @throws CurrencyExchange\Exception\ParseException
 	 */
 	public function getExchangeRate()
 	{

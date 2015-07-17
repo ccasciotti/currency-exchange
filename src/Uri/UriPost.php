@@ -23,8 +23,8 @@ class UriPost extends UriAbstract
 	/**
 	 * Returns the final uri with currency codes set
 	 * 
-	 * @throws InvalidArgumentException
 	 * @return string
+     * @throws InvalidArgumentException
 	 */
 	public function getFinalUri()
 	{

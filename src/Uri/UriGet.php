@@ -23,8 +23,8 @@ class UriGet extends UriAbstract
 	/**
 	 * Returns the final uri with currency codes set
 	 * 
-	 * @throws InvalidArgumentException
 	 * @return string
+     * @throws InvalidArgumentException
 	 */
 	public function getFinalUri()
 	{
@@ -51,8 +51,8 @@ class UriGet extends UriAbstract
 	 * Set template uri with currency placeholders
 	 * 
 	 * @param string $templateUri
-	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Uri\UriGet
+     * @throws InvalidArgumentException
 	 */
 	public function setTemplateUri($templateUri)
 	{

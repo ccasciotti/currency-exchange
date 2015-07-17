@@ -81,7 +81,6 @@ class Exchanger
 	 * 
 	 * @param string $fromCode Currency code according to the format of 3 uppercase characters
 	 * @param string $toCode Currency code according to the format of 3 uppercase characters
-	 * @throws InvalidArgumentException
 	 * @return float
 	 */
 	public function getExchangeRate($fromCode, $toCode)

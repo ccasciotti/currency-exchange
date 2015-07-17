@@ -18,6 +18,7 @@ use CurrencyExchange\Uri\UriAbstract;
  * Abstract class for each exchange service
  * 
  * @package CurrencyExchange
+ * @abstract
  */
 abstract class ServiceAbstract
 {
@@ -107,6 +108,7 @@ abstract class ServiceAbstract
 	/**
 	 * Returns the exchange rate value 
 	 * 
+     * @abstract
 	 * @return float
 	 */
 	abstract public function getExchangeRate();

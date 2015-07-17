@@ -68,13 +68,34 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
         $stubHttpClient->setResponse($fakeResponse);
     }
 
+    public function testIsHttpMethodSupportedReturnsFalseIfMethodIsUnsupported()
+    {
+        $this->assertFalse(HttpClient::isHttpMethodSupported('put'));
+    }
+
+    /**
+     * @dataProvider providerTestIsHttpMethodSupportedReturnsTrueIfMethodIsGetOrPost
+     */
+    public function testIsHttpMethodSupportedReturnsTrueIfMethodIsGetOrPost($httpMethod)
+    {
+        $this->assertTrue(HttpClient::isHttpMethodSupported($httpMethod));
+    }
+
+    public function providerTestIsHttpMethodSupportedReturnsTrueIfMethodIsGetOrPost()
+    {
+        return [
+            ['get'],
+            ['post']
+        ];
+    }
+
     public function providerTestSetResponseThrowsResponseExceptionWhenRequestIsNotSuccess()
     {
-        return array(
-            array(100),
-            array(300),
-            array(400),
-            array(500),
-        );
+        return [
+            [100],
+            [300],
+            [400],
+            [500],
+        ];
     }
 }

@@ -10,8 +10,8 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
                 . '<double xmlns="http://www.webserviceX.NET/">1.23</double>';
 
         $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
-                             ->setConstructorArgs(array(200))
-                             ->setMethods(array('getBody'))
+                             ->setConstructorArgs([200])
+                             ->setMethods(['getBody'])
                              ->getMock();
 
         $stubResponse->expects($this->any())
@@ -19,7 +19,7 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
                      ->willReturn($xmlResponse);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\WebServiceX')
-                            ->setMethods(array('getResponseContent'))
+                            ->setMethods(['getResponseContent'])
                             ->getMock();
 
         $stubService->expects($this->once())
@@ -37,8 +37,8 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
                 . '<unknown_node>whatever</unknown_node>';
 
         $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
-                             ->setConstructorArgs(array(200))
-                             ->setMethods(array('getBody'))
+                             ->setConstructorArgs([200])
+                             ->setMethods(['getBody'])
                              ->getMock();
 
         $stubResponse->expects($this->any())
@@ -46,7 +46,7 @@ class WebServiceXTest extends \PHPUnit_Framework_TestCase
                      ->willReturn($xmlResponse);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\WebServiceX')
-                            ->setMethods(array('getResponseContent'))
+                            ->setMethods(['getResponseContent'])
                             ->getMock();
 
         $stubService->expects($this->once())
