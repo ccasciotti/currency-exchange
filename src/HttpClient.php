@@ -12,6 +12,7 @@
 namespace CurrencyExchange;
 
 use InvalidArgumentException;
+use RuntimeException;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Message\ResponseInterface;
 use CurrencyExchange\Options;
@@ -37,7 +38,7 @@ class HttpClient
     /**
      * Constant for User Agent used in the request
      */
-    const USER_AGENT = 'Currency Exchange v2.3';
+    const USER_AGENT = 'Currency Exchange';
 
 	/**
 	 * @var string The uri to call
@@ -172,13 +173,15 @@ class HttpClient
 	 */
 	public function setHttpMethod($httpMethod)
 	{
-		$httpMethod = strtoupper((string) $httpMethod);
+        if (!is_string($httpMethod)) {
+            throw new InvalidArgumentException('Http method must be a string, ' . gettype($httpMethod) . ' given.');
+        }
 
-		if (!in_array($httpMethod, array(static::HTTP_GET, static::HTTP_POST))) {
-			throw new InvalidArgumentException('Http method can be GET or POST, ' . $httpMethod . ' given');
+		if (!static::isHttpMethodSupported($httpMethod)) {
+			throw new RuntimeException('Http method can be GET or POST, ' . $httpMethod . ' given');
 		}
 
-		$this->_httpMethod = $httpMethod;
+		$this->_httpMethod = strtoupper((string) $httpMethod);
 		return $this;
 	}
 
@@ -203,7 +206,9 @@ class HttpClient
 	 */
 	public function setProxy($proxy)
 	{
-		$proxy = (string) $proxy;
+		if (!is_string($proxy)) {
+            throw new InvalidArgumentException('Proxy must be a string, ' . gettype($proxy) . ' given.');
+        }
 
 		if (!preg_match('/^[a-z0-9\.]+:[0-9]+$/iu', $proxy)) {
 			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
@@ -212,6 +217,21 @@ class HttpClient
 		$this->getRequestOptions()->addOption('proxy', $proxy);
 		return $this;
 	}
+
+    /**
+     * Checks if current method is a supported http method
+     * 
+     * @access static
+     * @param string $method Http method to check
+     * @return bool
+     */
+    public static function isHttpMethodSupported($method)
+    {
+        return in_array(strtoupper((string) $method), [
+            static::HTTP_GET,
+            static::HTTP_POST,
+        ]);
+    }
 
 	/**
 	 * Makes request to the uri currently set

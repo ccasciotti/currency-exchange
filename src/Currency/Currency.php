@@ -52,13 +52,11 @@ class Currency
 	 */
 	public function setCode($code)
 	{
-        $code = strtoupper((string) $code);
-
         if (!$this->isFormatValid($code)) {
 			throw new InvalidArgumentException('Currency code must have exactly 3 characters, according to ISO 4217 standard');
 		}
 
-        $this->_code = $code;
+        $this->_code = strtoupper((string) $code);
 		return $this;
 	}
 
@@ -70,6 +68,6 @@ class Currency
      */
     public function isFormatValid($code)
     {
-        return preg_match('/^[A-Z]{3}$/', $code);
+        return preg_match('/^[A-Z]{3}$/', strtoupper((string) $code));
     }
 }

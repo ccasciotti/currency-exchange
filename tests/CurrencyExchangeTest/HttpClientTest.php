@@ -17,7 +17,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
 	public function testSetHttpMethodThrowsInvalidArgumentExceptionWhenPassingUnknownMethod()
 	{
-		$this->setExpectedException('\InvalidArgumentException');
+		$this->setExpectedException('\RuntimeException');
 
         $httpClient = new HttpClient();
 		$httpClient->setHttpMethod('unknown-method');

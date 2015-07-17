@@ -32,14 +32,11 @@ class UriFactory
 	 */
 	public static function factory($type)
 	{
-		/** @var string */
-		$type = strtoupper((string) $type);
-
-		if (!in_array($type, array(HttpClient::HTTP_GET, HttpClient::HTTP_POST))) {
+		if (!HttpClient::isHttpMethodSupported($type)) {
 			throw new InvalidArgumentException('Unknown Uri type: ' . $type);
 		}
 
-		switch ($type) {
+		switch (strtoupper((string) $type)) {
 			case HttpClient::HTTP_GET :
 
 				/** @var CurrencyExchange\Uri\UriGet */
