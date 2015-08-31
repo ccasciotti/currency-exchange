@@ -23,14 +23,14 @@ class Options
 	/**
 	 * @var array
 	 */
-	protected $_options;
+	protected $_container;
 
 	/**
 	 * Initialize option's array
 	 */
 	public function __construct()
 	{
-		$this->_options = array();
+		$this->_container = [];
 	}
 
 	/**
@@ -38,29 +38,27 @@ class Options
 	 * 
 	 * @return array
 	 */
-	public function getOptions()
+	public function getAll()
 	{
-		return $this->_options;
+		return $this->_container;
 	}
 
 	/**
 	 * Retrieve one option
 	 * 
 	 * @param mixed $option
-	 * @throws InvalidArgumentException
 	 * @return mixed
+     * @throws InvalidArgumentException
 	 */
-	public function getOption($option)
+	public function get($option)
 	{
 		if (!is_scalar($option)) {
 			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
-		if (isset($this->_options[$option])) {
-			return $this->_options[$option];
-		}
-
-		return false;
+        return isset($this->_container[$option]) ? 
+               $this->_container[$option] : 
+               null;
 	}
 
 	/**
@@ -70,15 +68,16 @@ class Options
 	 * @param mixed $value
 	 * @param boolean $replace if true, the existent value of $option will be replaced
 	 * @return CurrencyExchange\Options
+     * @throws InvalidArgumentException
 	 */
-	public function addOption($option, $value, $replace = false)
+	public function add($option, $value, $replace = false)
 	{
         if (!is_scalar($option)) {
 			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
-		if (!array_key_exists($option, $this->_options) || $replace === true) {
-			$this->_options[$option] = $value;
+		if (!array_key_exists($option, $this->_container) || $replace === true) {
+			$this->_container[$option] = $value;
 		}
 
 		return $this;
@@ -88,17 +87,17 @@ class Options
 	 * Remove option
 	 * 
 	 * @param mixed $option
-	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Options
+     * @throws InvalidArgumentException
 	 */
-	public function removeOption($option)
+	public function remove($option)
 	{
 		if (!is_scalar($option)) {
 			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
-		if (array_key_exists($option, $this->_options)) {
-			unset($this->_options[$option]);
+		if (array_key_exists($option, $this->_container)) {
+			unset($this->_container[$option]);
 		}
 
 		return $this;
@@ -108,11 +107,15 @@ class Options
 	 * Sets array of options
 	 * 
 	 * @param array $options
+     * @param bool $replace If true, an existent option will be overwritter
 	 * @return CurrencyExchange\Options
 	 */
-	public function setOptions(array $options)
+	public function setOptions(array $options, $replace = false)
 	{
-		$this->_options = $options;
+		foreach ($options as $option => $value) {
+            $this->add($option, $value, $replace);
+        }
+
 		return $this;
 	}
 
@@ -121,9 +124,9 @@ class Options
 	 * 
 	 * @return CurrencyExchange\Options
 	 */
-	public function resetOptions()
+	public function clear()
 	{
-		$this->_options = array();
+		$this->_container = [];
 		return $this;
 	}
 }

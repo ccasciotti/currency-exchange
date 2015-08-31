@@ -11,13 +11,14 @@
 
 namespace CurrencyExchange\Service;
 
-use CurrencyExchange\HttpClient;
+use CurrencyExchange\Http\Client as HttpClient;
 use CurrencyExchange\Uri\UriAbstract;
 
 /**
  * Abstract class for each exchange service
  * 
  * @package CurrencyExchange
+ * @abstract
  */
 abstract class ServiceAbstract
 {
@@ -42,7 +43,7 @@ abstract class ServiceAbstract
 
 		/** @var CurrencyExchange\HttpClient */
 		$httpClient = new HttpClient();
-		$httpClient->setHttpMethod($this->getUri()->getType()); // Set http method for this exchange method
+		$httpClient->getHttpRequest()->setHttpMethod($this->getUri()->getType()); // Set http method for this exchange method
 
 		$this->setHttpClient($httpClient);
 	}
@@ -107,6 +108,7 @@ abstract class ServiceAbstract
 	/**
 	 * Returns the exchange rate value 
 	 * 
+     * @abstract
 	 * @return float
 	 */
 	abstract public function getExchangeRate();

@@ -12,10 +12,12 @@
 namespace CurrencyExchange\Service;
 
 use CurrencyExchange\Exception\ParseException;
-use CurrencyExchange\HttpClient;
+use CurrencyExchange\Http\Request as HttpRequest;
 use CurrencyExchange\Factory\UriFactory;
 
 /**
+ * Concrete class to handle webservice from GrandTrunk
+ * 
  * @package CurrencyExchange
  */
 class GrandTrunk extends ServiceAbstract
@@ -23,7 +25,7 @@ class GrandTrunk extends ServiceAbstract
 	public function __construct()
 	{
 		/** @var CurrencyExchange\Uri\UriGet */
-		$uri = UriFactory::factory(HttpClient::HTTP_GET);
+		$uri = UriFactory::factory(HttpRequest::HTTP_GET);
 		$uri->setTemplateUri('http://currencies.apps.grandtrunk.net/getlatest/{%FROMCURRENCY%}/{%TOCURRENCY%}');
 
 		// Istantiates and initializes HttpClient and Uri objects
@@ -33,8 +35,8 @@ class GrandTrunk extends ServiceAbstract
 	/**
 	 * Implementation of abstract method getExchangeRate
 	 * 
-	 * @throws CurrencyExchange\Exception\ParseException
 	 * @return float
+     * @throws CurrencyExchange\Exception\ParseException
 	 */
 	public function getExchangeRate()
 	{

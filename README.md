@@ -9,7 +9,7 @@ Add this library in your composer.json:
 
 ```js
 "require": {
-	"teknoman/currency-exchange": "2.2.*"
+	"teknoman/currency-exchange": "3.*"
 }
 ```
 
@@ -23,6 +23,9 @@ Composer will install the library to your project `vendor/teknoman` directory.
 ## Usage
 ```php
 <?php
+
+// require composer's autoload
+require 'vendor/autoload.php';
 
 $exchanger = new \CurrencyExchange\Exchanger();
 
@@ -50,7 +53,7 @@ If you need to use a proxy, you can set it by invoking `setProxy()` method on `$
 ```php
 $exchanger->setProxy('example.host.com:8080'); // In the format 'host:port'
 ```
-## Release 3.0
-In release 3.0.* the db part has been removed and will be included in a future new package 
+## Release 3
+In release 3.* the db part has been removed and will be included in a future new package 
 that will require this package as a dependency. Moreover, in this release the 
 Zend's packages has been removed and the http requests are performed with Guzzle

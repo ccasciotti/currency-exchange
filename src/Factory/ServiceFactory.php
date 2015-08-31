@@ -23,15 +23,17 @@ class ServiceFactory
 {
 	/**
 	 * @var string the default exchange service class
+     * @static
 	 */
 	protected static $_defaultExchangeService = 'YahooFinance';
 
 	/**
 	 * Factory method that instantiates a new ServiceAbstract object
 	 * 
+     * @static
 	 * @param object|string|null $service The exchange service used for getting exchange rate. If null, it will be used the default exchange service
-	 * @throws RuntimeException
 	 * @return CurrencyExchange\Service\ServiceAbstract
+     * @throws RuntimeException
 	 */
 	public static function factory($service = null)
 	{

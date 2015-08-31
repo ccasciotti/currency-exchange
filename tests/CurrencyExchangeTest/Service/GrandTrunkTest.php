@@ -7,8 +7,8 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
     public function testGetExchangeRateReturnCorrectRate()
     {
         $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
-                             ->setConstructorArgs(array(200))
-                             ->setMethods(array('getBody'))
+                             ->setConstructorArgs([200])
+                             ->setMethods(['getBody'])
                              ->getMock();
 
         $stubResponse->expects($this->any())
@@ -16,7 +16,7 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
                      ->willReturn(1.23);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\GrandTrunk')
-                            ->setMethods(array('getResponseContent'))
+                            ->setMethods(['getResponseContent'])
                             ->getMock();
 
         $stubService->expects($this->once())
@@ -31,8 +31,8 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\CurrencyExchange\Exception\ParseException');
 
         $stubResponse = $this->getMockBuilder('\GuzzleHttp\Message\Response')
-                             ->setConstructorArgs(array(200))
-                             ->setMethods(array('getBody'))
+                             ->setConstructorArgs([200])
+                             ->setMethods(['getBody'])
                              ->getMock();
 
         $stubResponse->expects($this->any())
@@ -40,7 +40,7 @@ class GrandTrunkTest extends \PHPUnit_Framework_TestCase
                      ->willReturn(null);
 
         $stubService = $this->getMockBuilder('\CurrencyExchange\Service\GrandTrunk')
-                            ->setMethods(array('getResponseContent'))
+                            ->setMethods(['getResponseContent'])
                             ->getMock();
 
         $stubService->expects($this->once())

@@ -13,12 +13,13 @@ namespace CurrencyExchange\Uri;
 
 use InvalidArgumentException;
 use CurrencyExchange\Currency\Currency;
-use CurrencyExchange\HttpClient;
+use CurrencyExchange\Http\Request as HttpRequest;
 
 /**
  * Abstract Uri class, it contains commons methods for each uri type
  * 
  * @package CurrencyExchange
+ * @abstract
  */
 abstract class UriAbstract
 {
@@ -66,7 +67,7 @@ abstract class UriAbstract
 	}
 
     /**
-     * @return string;
+     * @return string
      */
     public function getTemplateUri()
     {
@@ -93,8 +94,8 @@ abstract class UriAbstract
 	 * Sets the type of this Uri, can be GET or POST
 	 * 
 	 * @param string $type Uri type, can be GET or POST
-	 * @throws InvalidArgumentException
 	 * @return CurrencyExchange\Uri\UriAbstract
+     * @throws InvalidArgumentException
 	 */
 	public function setType($type)
 	{
@@ -102,7 +103,7 @@ abstract class UriAbstract
             throw new InvalidArgumentException('Uri type must be a string, ' . gettype($type) . ' given.');
         }
 
-		if (!HttpClient::isHttpMethodSupported($type)) {
+		if (!HttpRequest::isHttpMethodSupported($type)) {
 			throw new InvalidArgumentException('Uri type must be GET or POST, ' . $type . ' given');
 		}
 
@@ -137,6 +138,7 @@ abstract class UriAbstract
     /**
 	 * Returns the final uri with currency codes set
 	 * 
+     * @abstract
 	 * @return string
 	 */
 	abstract public function getFinalUri();
@@ -144,6 +146,7 @@ abstract class UriAbstract
 	/**
 	 * Set template uri with currency placeholders (if uri type is GET)
 	 * 
+     * @abstract
 	 * @param string $templateUri
 	 * @return CurrencyExchange\Uri\UriAbstract
 	 */

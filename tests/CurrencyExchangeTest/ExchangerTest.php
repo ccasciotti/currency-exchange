@@ -7,7 +7,7 @@ class ExchangerTest extends \PHPUnit_Framework_TestCase
 	public function testExchangeMethodReturnsRightValue()
 	{
 		$exchanger = $this->getMockBuilder('\CurrencyExchange\Exchanger')
-						  ->setMethods(array('getExchangeRate'))
+						  ->setMethods(['getExchangeRate'])
 						  ->getMock();
 
 		$exchanger->expects($this->once())
