@@ -37,8 +37,14 @@ class Request
      */
     const DEFAULT_USER_AGENT = 'Currency Exchange';
 
+    /**
+     * @var string
+     */
     protected $_httpMethod;
 
+    /**
+     * @var array
+     */
     protected $_httpHeaders;
 
     /**
@@ -110,6 +116,16 @@ class Request
 	{
 		return $this->getHttpMethod() === static::HTTP_POST;
 	}
+
+    /**
+     * Returns User Agent for request
+     * 
+     * @return string
+     */
+    public function getUserAgent()
+    {
+        return $this->getHeaders()->get('User-Agent');
+    }
 
     /**
 	 * Sets the Http method, only GET or POST are actually supported
