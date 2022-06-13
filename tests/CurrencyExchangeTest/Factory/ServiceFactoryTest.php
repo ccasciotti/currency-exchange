@@ -12,7 +12,7 @@ class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 	public function testServiceFactoryReturnsInstanceOfServiceAbstract($service)
 	{
 		$instance = ServiceFactory::factory($service);
-		return $this->assertInstanceOf('\CurrencyExchange\Service\ServiceAbstract', $instance);
+		return $this->assertInstanceOf('\CurrencyExchange\Service\AbstractService', $instance);
 	}
 
 	public function testServiceFactoryThrowsRuntimeExceptionWhenPassingUnknownMethodAsString()

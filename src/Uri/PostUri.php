@@ -5,7 +5,7 @@
  * 
  * A library to retrieve currency exchanges using several web services
  * 
- * @link https://github.com/teknoman/currency-exchange
+ * @link https://github.com/ccasciotti/currency-exchange
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
@@ -18,7 +18,7 @@ use InvalidArgumentException;
  * 
  * @package CurrencyExchange
  */
-class UriPost extends UriAbstract
+class PostUri extends AbstractUri
 {
 	/**
 	 * Returns the final uri with currency codes set

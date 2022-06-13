@@ -19,7 +19,7 @@ class UriFactoryTest extends \PHPUnit_Framework_TestCase
 	public function testUriFactoryReturnsInstanceOfUriAbstract($service)
 	{
 		$instance = UriFactory::factory($service);
-		return $this->assertInstanceOf('\CurrencyExchange\Uri\UriAbstract', $instance);
+		return $this->assertInstanceOf('\CurrencyExchange\Uri\AbstractUri', $instance);
 	}
 
 	public function providerTestUriFactoryReturnsInstanceOfUriAbstract()

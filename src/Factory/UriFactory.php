@@ -5,16 +5,17 @@
  * 
  * A library to retrieve currency exchanges using several web services
  * 
- * @link https://github.com/teknoman/currency-exchange
+ * @link https://github.com/ccasciotti/currency-exchange
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
 namespace CurrencyExchange\Factory;
 
+use CurrencyExchange\Uri\AbstractUri;
 use InvalidArgumentException;
 use CurrencyExchange\Http\Request as HttpRequest;
-use CurrencyExchange\Uri\UriGet;
-use CurrencyExchange\Uri\UriPost;
+use CurrencyExchange\Uri\GetUri;
+use CurrencyExchange\Uri\PostUri;
 
 /**
  * Factory method class for Uri objects
@@ -27,30 +28,21 @@ class UriFactory
 	 * Factory method that instantiates a new UriAbstract object
 	 * 
      * @static
-	 * @param string $type The type of Uri, can be GET or POST
-	 * @return CurrencyExchange\Uri\UriAbstract
+	 * @param string $type
+	 * @return AbstractUri
      * @throws InvalidArgumentException
 	 */
-	public static function factory($type)
+	public static function create(string $type): AbstractUri
 	{
 		if (!HttpRequest::isHttpMethodSupported($type)) {
-			throw new InvalidArgumentException('Unknown Uri type: ' . $type);
+			throw new InvalidArgumentException(
+                sprintf('Unknown Uri type: %s', $type)
+            );
 		}
 
-		switch (strtoupper((string) $type)) {
-			case HttpRequest::HTTP_GET :
-
-				/** @var CurrencyExchange\Uri\UriGet */
-				$uri = new UriGet($type);
-				break;
-
-			case HttpRequest::HTTP_POST : 
-
-				/** @var CurrencyExchange\Uri\UriPost */
-				$uri = new UriPost($type);
-				break;
-		}
-
-		return $uri;
+        return match (strtoupper($type)) {
+            HttpRequest::HTTP_GET => new GetUri($type),
+            HttpRequest::HTTP_POST => new PostUri($type),
+        };
 	}
 }
