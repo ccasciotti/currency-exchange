@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurrencyExchangeTest\Uri;
 
 use CurrencyExchange\Uri\PostUri;

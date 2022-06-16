@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * CurrencyExchange
  * 
@@ -68,6 +70,6 @@ final class Currency
      */
     public function isFormatValid(string $code): bool
     {
-        return preg_match('/^[a-z]{3}$/i', $code);
+        return (bool) preg_match('/^[a-z]{3}$/i', $code);
     }
 }
