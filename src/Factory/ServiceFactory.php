@@ -19,14 +19,15 @@ use RuntimeException;
  * Factory method class for exchange services
  * 
  * @package CurrencyExchange
+ * @final
  */
-class ServiceFactory
+final class ServiceFactory
 {
 	/**
 	 * @var string the default exchange service class
      * @static
 	 */
-	protected static string $defaultExchangeService = GrandTrunk::class;
+	public static string $defaultExchangeService = GrandTrunk::class;
 
 	/**
 	 * Factory method that instantiates a new ServiceAbstract object
@@ -39,7 +40,7 @@ class ServiceFactory
 	public static function create(AbstractService|string $service = null): AbstractService
 	{
 		if ($service === null) {
-			$service = static::$defaultExchangeService;
+			$service = self::$defaultExchangeService;
 		}
 
 		if (is_string($service)) {

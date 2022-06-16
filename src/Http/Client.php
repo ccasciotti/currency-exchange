@@ -11,11 +11,12 @@
 
 namespace CurrencyExchange\Http;
 
+use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use CurrencyExchange\Exception\ResponseException;
-use CurrencyExchange\Http\Request;
+use CurrencyExchange\Http\Request as HttpRequest;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Makes a request to the current Uri
@@ -25,91 +26,97 @@ use GuzzleHttp\Message\ResponseInterface;
 class Client
 {
 	/**
-	 * @var string The uri to call
+	 * @var string|null
 	 */
-	protected $_uri = null;
+	protected ?string $uri = null;
 
 	/**
-	 * @var CurrencyExchange\Http\Request
-	 */
-	protected $_httpRequest = null;
+	 * @var HttpRequest|null
+     */
+	protected ?Request $httpRequest = null;
 
 	/**
 	 * @var array The data to send via Http POST 
 	 */
-	protected $_postData = [];
+	protected array $postData = [];
 
 	/**
-	 * @var GuzzleHttp\Message\ResponseInterface
-	 */
-	protected $_response = null;
+	 * @var Response|null
+     */
+	protected ?Response $response = null;
 
 	/**
 	 * Constructor set Options object
 	 */
 	public function __construct()
 	{
-		$this->_httpRequest = new Request();
+		$this->httpRequest = new Request();
 	}
 
-	/**
-	 * @return GuzzleHttp\Message\ResponseInterface
-	 */
-	public function getResponse()
-	{
-		return $this->_response;
+    /**
+     * @return Response|null
+     */
+	public function getResponse(): ?Response
+    {
+		return $this->response;
 	}
 
 	/**
 	 * Set Http response in case of successful request
 	 * 
-	 * @param GuzzleHttp\Message\ResponseInterface $response
-	 * @return CurrencyExchange\HttpClient
-     * @throws CurrencyExchange\Exception\ResponseException
+	 * @param Response $response
+	 * @return $this
+     * @throws ResponseException
 	 */
-	public function setResponse(ResponseInterface $response)
-	{
-        if ($response->getStatusCode() != 200) {
-			throw new ResponseException('Unsuccessful HTTP request: ' . $response->getStatusCode() . ' on ' . $this->getUri());
+	public function setResponse(Response $response): static
+    {
+        if ($response->getStatusCode() !== 200) {
+			throw new ResponseException(
+                sprintf(
+                    'Unsuccessful HTTP request: %d on %s',
+                    $response->getStatusCode(),
+                    $this->getUri()
+                )
+            );
 		}
 
-        $this->_response = $response;
+        $this->response = $response;
 		return $this;
 	}
 
     /**
-	 * @return CurrencyExchange\Http\Request
-	 */
-	public function getHttpRequest()
-	{
-		return $this->_httpRequest;
+     * @return Request|null
+     */
+	public function getHttpRequest(): ?Request
+    {
+		return $this->httpRequest;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getPostData()
-	{
-		return $this->_postData;
+	public function getPostData(): array
+    {
+		return $this->postData;
 	}
 
     /**
      * Return current uri
-     * 
-     * @return string
+     *
+     * @return string|null
      */
-    public function getUri()
+    public function getUri(): ?string
     {
-        return $this->_uri;
+        return $this->uri;
     }
 
     /**
 	 * @param string $uri
-	 * @return CurrencyExchange\HttpClient
+	 * @return $this
 	 */
-	public function setUri($uri)
-	{
-		$this->_uri = (string) $uri;
+	public function setUri(string $uri): static
+    {
+		$this->uri = $uri;
 		return $this;
 	}
 
@@ -117,11 +124,11 @@ class Client
 	 * Set data to be sent via Http POST
 	 * 
 	 * @param array $postData
-	 * @return CurrencyExchange\HttpClient
+	 * @return $this
 	 */
-	public function setPostData(array $postData)
-	{
-		$this->_postData = $postData;
+	public function setPostData(array $postData): static
+    {
+		$this->postData = $postData;
 		return $this;
 	}
 
@@ -129,16 +136,12 @@ class Client
 	 * Set proxy for the http client
 	 * 
 	 * @param string $proxy A string that identifies proxy server, in the format 'host:port'
-	 * @return CurrencyExchange\HttpClient
+	 * @return $this
      * @throws InvalidArgumentException
 	 */
-	public function setProxy($proxy)
-	{
-		if (!is_string($proxy)) {
-            throw new InvalidArgumentException('Proxy must be a string, ' . gettype($proxy) . ' given.');
-        }
-
-		if (!preg_match('/^[a-z0-9\.]+:[0-9]+$/iu', $proxy)) {
+	public function setProxy(string $proxy): static
+    {
+		if (!preg_match('/^[a-z\d\.]+:\d+$/iu', $proxy)) {
 			throw new InvalidArgumentException('Proxy must be a string according to format host:port');
 		}
 
@@ -146,21 +149,24 @@ class Client
 		return $this;
 	}
 
-	/**
-	 * Makes request to the uri currently set
-	 * 
-	 * @return CurrencyExchange\HttpClient
-	 */
-	public function makeRequest()
-	{
-        $requestOptions = $this->getHttpRequest()->getOptions()->getAll() ?: [];
+    /**
+     * Makes request to the uri currently set
+     *
+     * @return $this
+     * @throws ResponseException
+     * @throws GuzzleException
+     */
+	public function makeRequest(): static
+    {
+        $requestOptions = $this->getHttpRequest()?->getOptions()->getAll() ?: [];
 
-        $client = new GuzzleClient();
-        $client->setDefaultOption('headers', $this->getHttpRequest()->getHeaders()->getAll());
-        $request = $client->createRequest($this->getHttpRequest()->getHttpMethod(), $this->getUri(), $requestOptions);
+        $client = new GuzzleClient([
+            'headers' => $this->getHttpRequest()?->getHeaders()->getAll()
+        ]);
+        $response = $client->request($this->getHttpRequest()->getHttpMethod(), $this->getUri(), $requestOptions);
 
 		// setting response
-		$this->setResponse($client->send($request));
+		$this->setResponse($response);
 		return $this;
 	}
 }

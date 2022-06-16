@@ -21,8 +21,9 @@ use CurrencyExchange\Uri\PostUri;
  * Factory method class for Uri objects
  * 
  * @package CurrencyExchange
+ * @final
  */
-class UriFactory
+final class UriFactory
 {
 	/**
 	 * Factory method that instantiates a new UriAbstract object

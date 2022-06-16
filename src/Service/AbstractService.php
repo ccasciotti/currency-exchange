@@ -11,9 +11,11 @@
 
 namespace CurrencyExchange\Service;
 
+use CurrencyExchange\Exception\ResponseException;
 use CurrencyExchange\Http\Client as HttpClient;
 use CurrencyExchange\Uri\AbstractUri;
-use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Abstract class for each exchange service
@@ -21,7 +23,7 @@ use GuzzleHttp\Message\ResponseInterface;
  * @package CurrencyExchange
  * @abstract
  */
-abstract class AbstractService
+abstract class AbstractService implements ServiceInterface
 {
 	/**
 	 * @var AbstractUri|null
@@ -43,7 +45,8 @@ abstract class AbstractService
 		$this->setUri($uri);
 
 		/** @var HttpClient */
-		$httpClient = (new HttpClient())->getHttpRequest()?->setHttpMethod($this->getUri()->getType());
+		$httpClient = new HttpClient();
+        $httpClient->getHttpRequest()?->setHttpMethod($this->getUri()->getType());
 
 		$this->setHttpClient($httpClient);
 	}
@@ -95,9 +98,11 @@ abstract class AbstractService
     /**
      * Make request via HttpClient object and returns response
      *
-     * @return ResponseInterface|null
+     * @return Response|null
+     * @throws ResponseException
+     * @throws GuzzleException
      */
-    public function getResponseContent(): ?ResponseInterface
+    public function getResponseContent(): ?Response
     {
         return $this
             ->getHttpClient()
@@ -106,12 +111,4 @@ abstract class AbstractService
             ->getResponse()
         ;
     }
-
-	/**
-	 * Returns the exchange rate value 
-	 * 
-     * @abstract
-	 * @return float
-	 */
-	abstract public function getExchangeRate(): float;
 }

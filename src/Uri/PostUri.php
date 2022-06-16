@@ -26,33 +26,33 @@ class PostUri extends AbstractUri
 	 * @return string
      * @throws InvalidArgumentException
 	 */
-	public function getFinalUri()
-	{
-		if (!$this->_templateUri) {
+	public function getFinalUri(): string
+    {
+		if (!$this->getTemplateUri()) {
 			throw new InvalidArgumentException('Template Uri not set');
 		}
 
-		if (!$this->_fromCurrency) {
+		if (!$this->getFromCurrency()) {
 			throw new InvalidArgumentException('"From Currency" not set');
 		}
 
-		if (!$this->_toCurrency) {
+		if (!$this->getToCurrency()) {
 			throw new InvalidArgumentException('"To Currency" not set');
 		}
 
-		$this->_uri = $this->_templateUri;
-		return $this->_uri;
+		$this->uri = $this->templateUri;
+		return $this->uri;
 	}
 
 	/**
 	 * Set template uri
 	 * 
 	 * @param string $templateUri
-	 * @return CurrencyExchange\Uri\UriPost
+	 * @return $this
 	 */
-	public function setTemplateUri($templateUri)
-	{
-		$this->_templateUri = (string) $templateUri;
+	public function setTemplateUri(string $templateUri): static
+    {
+		$this->templateUri = $templateUri;
 		return $this;
 	}
 }

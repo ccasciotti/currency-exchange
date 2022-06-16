@@ -4,11 +4,15 @@
 		 convertNoticesToExceptions="true"
 		 convertWarningsToExceptions="true"
 		 stopOnFailure="false"
-		 bootstrap="bootstrap.php">
+         cacheResult="false"
+		 bootstrap="./bootstrap.php">
     <testsuites>
-        <testsuite name="CurrencyExchange TestSuite">
-            <directory>./CurrencyExchangeTest/</directory>
+        <testsuite name="CurrencyExchange Unit Tests">
+            <directory>./</directory>
+            <exclude>./Extension</exclude>
         </testsuite>
     </testsuites>
+    <extensions>
+        <extension class="CurrencyExchangeTest\Extension\BypassFinalHook" />
+    </extensions>
 </phpunit>
-

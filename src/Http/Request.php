@@ -11,9 +11,9 @@
 
 namespace CurrencyExchange\Http;
 
+use CurrencyExchange\Options\Options;
 use InvalidArgumentException;
 use RuntimeException;
-use CurrencyExchange\Options;
 
 /**
  * Handles the Http request options
@@ -25,46 +25,46 @@ class Request
     /**
 	 * Constant for HTTP method GET
 	 */
-	const HTTP_GET = 'GET';
+	public const HTTP_GET = 'GET';
 
 	/**
 	 * Constant for HTTP method POST
 	 */
-	const HTTP_POST = 'POST';
+	public const HTTP_POST = 'POST';
 
     /**
      * Constant for Defaut User Agent
      */
-    const DEFAULT_USER_AGENT = 'Currency Exchange';
+    public const DEFAULT_USER_AGENT = 'Currency Exchange';
 
     /**
      * @var string
      */
-    protected $_httpMethod;
+    protected string $httpMethod;
 
     /**
-     * @var array
+     * @var Options
      */
-    protected $_httpHeaders;
+    protected Options $httpHeaders;
 
     /**
-     * @var CurrencyExchange\Options Request's options
+     * @var Options
      */
-    protected $_options;
+    protected Options $options;
 
     /**
      * Constructor initialize Options object with standard options
      */
     public function __construct()
     {
-        $this->_httpMethod = static::HTTP_GET;
+        $this->httpMethod = static::HTTP_GET;
 
-        $this->_httpHeaders = new Options();
-        $this->_httpHeaders->setOptions([
+        $this->httpHeaders = new Options();
+        $this->httpHeaders->setOptions([
            'User-Agent' => static::DEFAULT_USER_AGENT,
         ]);
 
-        $this->_options = new Options();
+        $this->options = new Options();
     }
 
     /**
@@ -72,29 +72,29 @@ class Request
      * 
      * @return string
      */
-    public function getHttpMethod()
+    public function getHttpMethod(): string
     {
-        return $this->_httpMethod;
+        return $this->httpMethod;
     }
 
     /**
      * Returns Options object
      * 
-     * @return CurrencyExchange\Options
+     * @return Options
      */
-    public function getOptions()
+    public function getOptions(): Options
     {
-        return $this->_options;
+        return $this->options;
     }
 
     /**
      * Returns Options object
      * 
-     * @return CurrencyExchange\Options
+     * @return Options
      */
-    public function getHeaders()
+    public function getHeaders(): Options
     {
-        return $this->_httpHeaders;
+        return $this->httpHeaders;
     }
 
     /**
@@ -102,8 +102,8 @@ class Request
 	 * 
 	 * @return boolean
 	 */
-	public function isHttpGet()
-	{
+	public function isHttpGet(): bool
+    {
 		return $this->getHttpMethod() === static::HTTP_GET;
 	}
 
@@ -112,8 +112,8 @@ class Request
 	 * 
 	 * @return boolean
 	 */
-	public function isHttpPost()
-	{
+	public function isHttpPost(): bool
+    {
 		return $this->getHttpMethod() === static::HTTP_POST;
 	}
 
@@ -122,7 +122,7 @@ class Request
      * 
      * @return string
      */
-    public function getUserAgent()
+    public function getUserAgent(): string
     {
         return $this->getHeaders()->get('User-Agent');
     }
@@ -131,21 +131,17 @@ class Request
 	 * Sets the Http method, only GET or POST are actually supported
 	 * 
 	 * @param string $httpMethod Can be GET or POST
-	 * @return CurrencyExchange\Http\Method
+	 * @return $this
      * @throws InvalidArgumentException
      * @throws RuntimeException
 	 */
-	public function setHttpMethod($httpMethod)
-	{
-        if (!is_string($httpMethod)) {
-            throw new InvalidArgumentException('Http method must be a string, ' . gettype($httpMethod) . ' given.');
-        }
-
+	public function setHttpMethod(string $httpMethod): static
+    {
 		if (!static::isHttpMethodSupported($httpMethod)) {
 			throw new RuntimeException('Unsupported http method supplied: ' . $httpMethod);
 		}
 
-		$this->_httpMethod = (string) $httpMethod;
+		$this->httpMethod = $httpMethod;
 		return $this;
 	}
 
@@ -153,15 +149,11 @@ class Request
      * Sets new User Agent for request
      * 
      * @param string $userAgent
-     * @return CurrencyExchange\Http\Request
+     * @return $this
      * @throws InvalidArgumentException
      */
-    public function setUserAgent($userAgent)
+    public function setUserAgent(string $userAgent): static
     {
-        if (!is_string($userAgent)) {
-            throw new InvalidArgumentException('User Agent must be a string, ' . gettype($userAgent) . ' given.');
-        }
-
         $this->getHeaders()->add('User-Agent', $userAgent, true);
         return $this;
     }
@@ -173,11 +165,11 @@ class Request
      * @param string $method Http method to check
      * @return bool
      */
-    public static function isHttpMethodSupported($method)
+    public static function isHttpMethodSupported(string $method): bool
     {
-        return in_array(strtoupper((string) $method), [
-            static::HTTP_GET,
-            static::HTTP_POST,
-        ]);
+        return in_array(
+            strtoupper($method),
+            [static::HTTP_GET, static::HTTP_POST]
+        );
     }
 }

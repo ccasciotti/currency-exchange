@@ -9,18 +9,19 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-namespace CurrencyExchange;
+namespace CurrencyExchange\Exchanger;
 
-use CurrencyExchange\Factory\ServiceFactory;
 use CurrencyExchange\Currency\Currency;
+use CurrencyExchange\Factory\ServiceFactory;
 use CurrencyExchange\Service\AbstractService;
 
 /**
  * Main class that retrieve exchange rates from the current web service set
  * 
  * @package CurrencyExchange
+ * @final
  */
-class Exchanger
+final class Exchanger
 {
 	/**
 	 * @var AbstractService|null Current exchange service
@@ -53,26 +54,30 @@ class Exchanger
 	 * @param string|AbstractService|null $service The exchange service used for getting exchange rate
 	 * @return $this
 	 */
-	public function setService(AbstractService|string $service = null): static
+	public function setService(AbstractService|string $service = null): Exchanger
     {
 		$this->service = ServiceFactory::create($service);
 		return $this;
 	}
 
-	/**
-	 * Get current exchange rate of selected method
-	 * 
-	 * @param string $fromCode Currency code according to the format of 3 uppercase characters
-	 * @param string $toCode Currency code according to the format of 3 uppercase characters
-	 * @return float
-	 */
-	public function getExchangeRate(string $fromCode, string $toCode): float
+    /**
+     * Get current exchange rate of selected method
+     *
+     * @param string $fromCode Currency code according to the format of 3 uppercase characters
+     * @param string $toCode Currency code according to the format of 3 uppercase characters
+     * @param string|null $date
+     * @return float
+     */
+	public function getExchangeRate(string $fromCode, string $toCode, ?string $date = null): float
     {
 		$this->getService()
 			->getUri()
 			->setFromCurrency(new Currency($fromCode))
 			->setToCurrency(new Currency($toCode));
 
-		return $this->getService()->getExchangeRate();
+		return $date ?
+            $this->getService()->getHistoricalExchangeRate($date) :
+            $this->getService()->getExchangeRate()
+        ;
 	}
 }

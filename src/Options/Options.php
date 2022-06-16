@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-namespace CurrencyExchange;
+namespace CurrencyExchange\Options;
 
 use InvalidArgumentException;
 
@@ -18,19 +18,19 @@ use InvalidArgumentException;
  * 
  * @package CurrencyExchange
  */
-class Options
+final class Options
 {
 	/**
 	 * @var array
 	 */
-	protected $_container;
+	protected array $container;
 
 	/**
 	 * Initialize option's array
 	 */
 	public function __construct()
 	{
-		$this->_container = [];
+		$this->container = [];
 	}
 
 	/**
@@ -38,9 +38,9 @@ class Options
 	 * 
 	 * @return array
 	 */
-	public function getAll()
-	{
-		return $this->_container;
+	public function getAll(): array
+    {
+		return $this->container;
 	}
 
 	/**
@@ -50,15 +50,13 @@ class Options
 	 * @return mixed
      * @throws InvalidArgumentException
 	 */
-	public function get($option)
-	{
+	public function get(mixed $option): mixed
+    {
 		if (!is_scalar($option)) {
 			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
-        return isset($this->_container[$option]) ? 
-               $this->_container[$option] : 
-               null;
+        return $this->container[$option] ?? null;
 	}
 
 	/**
@@ -67,17 +65,17 @@ class Options
 	 * @param mixed $option
 	 * @param mixed $value
 	 * @param boolean $replace if true, the existent value of $option will be replaced
-	 * @return CurrencyExchange\Options
+	 * @return $this
      * @throws InvalidArgumentException
 	 */
-	public function add($option, $value, $replace = false)
-	{
+	public function add(mixed $option, mixed $value, bool $replace = false): Options
+    {
         if (!is_scalar($option)) {
 			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
-		if (!array_key_exists($option, $this->_container) || $replace === true) {
-			$this->_container[$option] = $value;
+		if (!array_key_exists($option, $this->container) || $replace === true) {
+			$this->container[$option] = $value;
 		}
 
 		return $this;
@@ -87,17 +85,17 @@ class Options
 	 * Remove option
 	 * 
 	 * @param mixed $option
-	 * @return CurrencyExchange\Options
+	 * @return $this
      * @throws InvalidArgumentException
 	 */
-	public function remove($option)
-	{
+	public function remove(mixed $option): Options
+    {
 		if (!is_scalar($option)) {
 			throw new InvalidArgumentException('Option must be a scalar value, ' . gettype($option) . ' given');
 		}
 
-		if (array_key_exists($option, $this->_container)) {
-			unset($this->_container[$option]);
+		if (array_key_exists($option, $this->container)) {
+			unset($this->container[$option]);
 		}
 
 		return $this;
@@ -107,11 +105,11 @@ class Options
 	 * Sets array of options
 	 * 
 	 * @param array $options
-     * @param bool $replace If true, an existent option will be overwritter
-	 * @return CurrencyExchange\Options
+     * @param bool $replace If true, an existent option will be overwritten
+	 * @return $this
 	 */
-	public function setOptions(array $options, $replace = false)
-	{
+	public function setOptions(array $options, bool $replace = false): Options
+    {
 		foreach ($options as $option => $value) {
             $this->add($option, $value, $replace);
         }
@@ -122,11 +120,11 @@ class Options
 	/**
 	 * Resets options
 	 * 
-	 * @return CurrencyExchange\Options
+	 * @return $this
 	 */
-	public function clear()
-	{
-		$this->_container = [];
+	public function clear(): Options
+    {
+		$this->container = [];
 		return $this;
 	}
 }

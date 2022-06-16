@@ -26,8 +26,8 @@ class GetUri extends AbstractUri
 	 * @return string
      * @throws InvalidArgumentException
 	 */
-	public function getFinalUri()
-	{
+	public function getFinalUri(): string
+    {
 		if (!$this->getTemplateUri()) {
 			throw new InvalidArgumentException('Template Uri not set');
 		}
@@ -43,30 +43,28 @@ class GetUri extends AbstractUri
 		$search = ['{%FROMCURRENCY%}', '{%TOCURRENCY%}'];
 		$replace = [$this->getFromCurrency()->getCode(), $this->getToCurrency()->getCode()];
 
-		$this->_uri = str_replace($search, $replace, $this->getTemplateUri());
-		return $this->_uri;
+		$this->uri = str_replace($search, $replace, $this->getTemplateUri());
+		return $this->uri;
 	}
 
 	/**
 	 * Set template uri with currency placeholders
 	 * 
 	 * @param string $templateUri
-	 * @return CurrencyExchange\Uri\UriGet
+	 * @return $this
      * @throws InvalidArgumentException
 	 */
-	public function setTemplateUri($templateUri)
-	{
-		$templateUri = (string) $templateUri;
-
-		if (strpos($templateUri, '{%FROMCURRENCY%}') === false) {
+	public function setTemplateUri(string $templateUri): static
+    {
+		if (!str_contains($templateUri, '{%FROMCURRENCY%}')) {
 			throw new InvalidArgumentException('Cannot find "From Currency" placeholder');
 		}
 
-		if (strpos($templateUri, '{%TOCURRENCY%}') === false) {
+		if (!str_contains($templateUri, '{%TOCURRENCY%}')) {
 			throw new InvalidArgumentException('Cannot find "To Currency" placeholder');
 		}
 
-		$this->_templateUri = $templateUri;
+		$this->templateUri = $templateUri;
 		return $this;
 	}
 }

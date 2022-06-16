@@ -18,19 +18,19 @@ use InvalidArgumentException;
  * 
  * @package CurrencyExchange
  */
-class Currency
+final class Currency
 {
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $_code = null;
+	protected ?string $code = null;
 
 	/**
 	 * Constructor invokes setCode method
 	 * 
 	 * @param string $code
 	 */
-	public function __construct($code)
+	public function __construct(string $code)
 	{
 		$this->setCode($code);
 	}
@@ -38,25 +38,25 @@ class Currency
 	/**
 	 * @return string
 	 */
-	public function getCode()
-	{
-		return $this->_code;
+	public function getCode(): string
+    {
+		return $this->code;
 	}
 
 	/**
 	 * Sets code
 	 * 
 	 * @param string $code
-	 * @return CurrencyExchange\Currency\Currency
+	 * @return $this
      * @throws InvalidArgumentException
 	 */
-	public function setCode($code)
-	{
+	public function setCode(string $code): Currency
+    {
         if (!$this->isFormatValid($code)) {
 			throw new InvalidArgumentException('Currency code must have exactly 3 characters, according to ISO 4217 standard');
 		}
 
-        $this->_code = strtoupper((string) $code);
+        $this->code = strtoupper($code);
 		return $this;
 	}
 
@@ -66,8 +66,8 @@ class Currency
      * @param string $code
      * @return bool
      */
-    public function isFormatValid($code)
+    public function isFormatValid(string $code): bool
     {
-        return preg_match('/^[A-Z]{3}$/', strtoupper((string) $code));
+        return preg_match('/^[a-z]{3}$/i', $code);
     }
 }

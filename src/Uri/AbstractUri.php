@@ -24,36 +24,36 @@ use CurrencyExchange\Http\Request as HttpRequest;
 abstract class AbstractUri
 {
 	/**
-	 * @var string The template uri that must be set with the http uri of web service
+	 * @var string|null The template uri that must be set with the http uri of web service
 	 */
-	protected $_templateUri = null;
+	protected ?string $templateUri = null;
 
 	/**
 	 * @var string The final uri with the $_fromCurrency and $_toCurrency set
 	 */
-	protected $_uri = null;
+	protected string $uri;
 
 	/**
 	 * @var string Http type for this Uri (GET or POST)
 	 */
-	protected $_type = null;
+	protected string $type;
 
 	/**
-	 * @var CurrencyExchange\Currency\Currency
-	 */
-	protected $_fromCurrency = null;
+	 * @var Currency|null
+     */
+	protected ?Currency $fromCurrency = null;
 
 	/**
-	 * @var CurrencyExchange\Currency\Currency
-	 */
-	protected $_toCurrency = null;
+	 * @var Currency|null
+     */
+	protected ?Currency $toCurrency = null;
 
 	/**
 	 * Constructor invokes setType method
 	 * 
 	 * @param string $type
 	 */
-	public function __construct($type)
+	public function __construct(string $type)
 	{
 		$this->setType($type);
 	}
@@ -61,77 +61,73 @@ abstract class AbstractUri
 	/**
 	 * @return string
 	 */
-	public function getType()
-	{
-		return $this->_type;
+	public function getType(): string
+    {
+		return $this->type;
 	}
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTemplateUri()
+    public function getTemplateUri(): ?string
     {
-        return $this->_templateUri;
+        return $this->templateUri;
     }
 
     /**
-	 * @return CurrencyExchange\Currency\Currency
-	 */
-	public function getFromCurrency()
-	{
-		return $this->_fromCurrency;
+     * @return Currency|null
+     */
+	public function getFromCurrency(): ?Currency
+    {
+		return $this->fromCurrency;
 	}
 
-	/**
-	 * @return CurrencyExchange\Currency\Currency
-	 */
-	public function getToCurrency()
-	{
-		return $this->_toCurrency;
+    /**
+     * @return Currency|null
+     */
+	public function getToCurrency(): ?Currency
+    {
+		return $this->toCurrency;
 	}
 
 	/**
 	 * Sets the type of this Uri, can be GET or POST
 	 * 
 	 * @param string $type Uri type, can be GET or POST
-	 * @return CurrencyExchange\Uri\UriAbstract
+	 * @return $this
      * @throws InvalidArgumentException
 	 */
-	public function setType($type)
-	{
-        if (!is_string($type)) {
-            throw new InvalidArgumentException('Uri type must be a string, ' . gettype($type) . ' given.');
-        }
-
+	public function setType(string $type): static
+    {
 		if (!HttpRequest::isHttpMethodSupported($type)) {
 			throw new InvalidArgumentException('Uri type must be GET or POST, ' . $type . ' given');
 		}
 
-		$this->_type = strtoupper((string) $type);
+		$this->type = strtoupper($type);
 		return $this;
 	}
 
 	/**
 	 * Set "From Currency" object
 	 * 
-	 * @param CurrencyExchange\Currency\Currency $currency
-	 * @return CurrencyExchange\Uri\UriAbstract
+	 * @param Currency $currency
+	 * @return $this
 	 */
-	public function setFromCurrency(Currency $currency)
-	{
-		$this->_fromCurrency = $currency;
+	public function setFromCurrency(Currency $currency): static
+    {
+		$this->fromCurrency = $currency;
 		return $this;
 	}
 
 	/**
 	 * Set "To Currency" object
 	 * 
-	 * @param CurrencyExchange\Currency\Currency $currency
-	 * @return CurrencyExchange\Uri\UriAbstract
+	 * @param Currency $currency
+	 * @return $this
 	 */
-	public function setToCurrency(Currency $currency)
-	{
-		$this->_toCurrency = $currency;
+	public function setToCurrency(Currency $currency): static
+    {
+		$this->toCurrency = $currency;
 		return $this;
 	}
 
@@ -141,14 +137,14 @@ abstract class AbstractUri
      * @abstract
 	 * @return string
 	 */
-	abstract public function getFinalUri();
+	abstract public function getFinalUri(): string;
 
 	/**
 	 * Set template uri with currency placeholders (if uri type is GET)
 	 * 
      * @abstract
 	 * @param string $templateUri
-	 * @return CurrencyExchange\Uri\UriAbstract
+	 * @return $this
 	 */
-	abstract public function setTemplateUri($templateUri);
+	abstract public function setTemplateUri(string $templateUri): static;
 }
